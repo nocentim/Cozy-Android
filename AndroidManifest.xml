@@ -18,6 +18,31 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity 
+            android:name=".TabListe"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation" >
+        </activity>
+         <activity 
+            android:name=".TabCalendrier"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation" >
+        </activity>
+        <activity 
+            android:name=".TabPlus"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation" >
+        </activity>
+        <activity 
+            android:name=".TabTags"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation" >
+        </activity>
+        <activity 
+            android:name=".TabRecherche"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation" >
+        </activity>
     </application>
 
 </manifest>

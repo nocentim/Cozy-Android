@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tab_news"
+	android:layout_width="fill_parent"
+	android:layout_height="40dp"
+	android:padding="3dp"
+	android:orientation="vertical"
+	android:background="@drawable/tab_bg_selector"
+	>
+	<ImageView
+    	android:id="@+id/tabNewsIcone"
+		android:layout_width="fill_parent"
+		android:layout_height="30dp"
+		android:gravity="right" 
+		android:src="@+drawable/news">
+	</ImageView>
+</LinearLayout>
