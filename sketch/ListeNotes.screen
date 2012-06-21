@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:Panel" id="1" width="480" height="800" measuredWidth="480" measuredHeight="800"/>
+  <widgets xsi:type="model:TextArea" id="8" y="39" width="480" height="42" text=" Cozy Android" measuredWidth="480" measuredHeight="42" background="#999999">
+    <font size="20px" bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:Icon" id="9" x="312" y="8" measuredWidth="32" measuredHeight="32" icon="signal (large)"/>
+  <widgets xsi:type="model:Icon" id="10" x="352" y="8" measuredWidth="32" measuredHeight="32" icon="battery (large)"/>
+  <widgets xsi:type="model:TextField" id="12" x="272" y="9" text="3G" measuredWidth="32" measuredHeight="29">
+    <font size="17px"/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="17" x="391" y="9" text="10:15 AM" measuredWidth="79" measuredHeight="29">
+    <font size="17px"/>
+  </widgets>
+  <widgets xsi:type="model:Panel" id="43" y="80" width="480" height="89" measuredWidth="480" measuredHeight="89"/>
+  <widgets xsi:type="model:SearchField" id="44" x="9" y="91" width="461" text="Search" measuredWidth="461" measuredHeight="36">
+    <font size="24px"/>
+  </widgets>
+  <widgets xsi:type="model:List" id="67" y="164" width="480" height="586" text="       TODO\n&#xA;Cozy Notes\n%(color:AAAAAA)Informatique > Cozy Cloud%&#xA;Architecture Cozy \n%(color:AAAAAA)Informatique > Cozy Cloud%&#xA;Dev sur Android\n%(color:AAAAAA)Informatique > Dev%&#xA;Materiel Escalade\n%(color:AAAAAA)Divers%&#xA;Ski Rando Février\n%(color:AAAAAA)Photos > 2012%&#xA;Liste de courses\n%(color:AAAAAA)Divers%" measuredWidth="480" measuredHeight="586" selection="" verticalScrollbar="true" rowHeight="80" horizontalLines="true" alternative="#f3f3f3">
+    <font size="24px"/>
+    <items x="0" y="2" width="463" height="80" text="       TODO\n"/>
+    <items x="0" y="82" width="463" height="80" text="Cozy Notes\n%(color:AAAAAA)Informatique > Cozy Cloud%"/>
+    <items x="0" y="162" width="463" height="80" text="Architecture Cozy \n%(color:AAAAAA)Informatique > Cozy Cloud%"/>
+    <items x="0" y="242" width="463" height="80" text="Dev sur Android\n%(color:AAAAAA)Informatique > Dev%"/>
+    <items x="0" y="322" width="463" height="80" text="Materiel Escalade\n%(color:AAAAAA)Divers%"/>
+    <items x="0" y="402" width="463" height="80" text="Ski Rando Février\n%(color:AAAAAA)Photos > 2012%"/>
+    <items x="0" y="482" width="463" height="80" text="Liste de courses\n%(color:AAAAAA)Divers%"/>
+  </widgets>
+  <widgets xsi:type="model:Icon" id="69" x="10" y="176" measuredWidth="32" measuredHeight="32" icon="pin (large)"/>
+  <widgets xsi:type="model:Rectangle" id="112" x="369" y="255" width="81" height="33" text="Stage" measuredWidth="81" measuredHeight="33" background="#cfe2f3" foreground="#0000ff" border="solid-rounded">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Rectangle" id="113" x="369" y="336" width="81" height="33" text="Stage" measuredWidth="81" measuredHeight="33" background="#cfe2f3" foreground="#0000ff" border="solid-rounded">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Rectangle" id="114" x="369" y="415" width="81" height="33" text="Stage" measuredWidth="81" measuredHeight="33" background="#cfe2f3" foreground="#0000ff" border="solid-rounded">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Rectangle" id="116" x="342" y="495" height="34" text="Montagne" measuredWidth="108" measuredHeight="34" background="#cfe2f3" foreground="#0000ff" border="solid-rounded">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Rectangle" id="118" x="282" y="414" width="81" height="34" text="Perso" measuredWidth="81" measuredHeight="34" background="#cfe2f3" foreground="#0000ff" border="solid-rounded">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Rectangle" id="119" x="368" y="575" width="81" height="34" text="Perso" measuredWidth="81" measuredHeight="34" background="#cfe2f3" foreground="#0000ff" border="solid-rounded">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Rectangle" id="120" x="254" y="575" height="34" text="Montagne" measuredWidth="108" measuredHeight="34" background="#cfe2f3" foreground="#0000ff" border="solid-rounded">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Tabs" id="27" x="2" y="749" text="                ,                 ,                 ,                   " measuredWidth="478" measuredHeight="50" selection="0">
+    <items x="1" y="0" width="116" height="50" text="                "/>
+    <items x="117" y="0" width="116" height="50" text="                "/>
+    <items x="233" y="0" width="116" height="50" text="                "/>
+    <items x="349" y="0" width="128" height="50" text="                  "/>
+    <font size="24px"/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="36" x="20" y="758" text="Notes" measuredWidth="81" measuredHeight="32" textAlignment="Center" icon="copy (large)">
+    <font size="16px"/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="38" x="133" y="758" text="Dossiers" measuredWidth="98" measuredHeight="32" textAlignment="Center" icon="open (large)">
+    <font size="16px"/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="39" x="363" y="758" text="Calendrier" measuredWidth="112" measuredHeight="32" textAlignment="Center" icon="calendar2 (large)">
+    <font size="16px"/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="41" x="243" y="758" text="Nouvelle" measuredWidth="102" measuredHeight="32" textAlignment="Center" icon="add (large)">
+    <font size="16px"/>
+  </widgets>
+  <widgets xsi:type="model:Rectangle" id="143" y="136" width="480" height="29" text="{filled-arrow-down}" measuredWidth="480" measuredHeight="29" link="RechercheDepliee.screen">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Hotspot" id="144" x="10" y="94" width="460" measuredWidth="460" measuredHeight="30" link="RechercheSimple.screen"/>
+  <hRuler>
+    <guides position="450"/>
+  </hRuler>
+  <vRuler/>
+  <font size="20px"/>
+</model:Screen>
