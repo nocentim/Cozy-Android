@@ -12,60 +12,60 @@
   <widgets xsi:type="model:Label" id="17" x="391" y="9" text="10:15 AM" measuredWidth="79" measuredHeight="29">
     <font size="17px"/>
   </widgets>
-  <widgets xsi:type="model:Panel" id="43" y="80" width="480" height="89" measuredWidth="480" measuredHeight="89"/>
-  <widgets xsi:type="model:SearchField" id="44" x="9" y="91" width="461" text="cookie" measuredWidth="461" measuredHeight="36">
-    <font size="24px"/>
-  </widgets>
-  <widgets xsi:type="model:List" id="67" y="164" width="480" height="586" text="Dev sur Android\n%(color:AAAAAA)Informatique > Dev%\n%(font:-2)...class Cookie {...%&#xA;Materiel Escalade\n%(color:AAAAAA)Divers%\n%(font:-2)...la corde Cookie3000, pour plus de securité...%&#xA;Liste de courses\n%(color:AAAAAA)Divers%\n%(font:-2)- cookies aux pepites de chocolat...%&#xA;" measuredWidth="480" measuredHeight="586" selection="" verticalScrollbar="true" rowHeight="80" horizontalLines="true" alternative="#f3f3f3">
+  <widgets xsi:type="model:List" id="67" y="129" width="480" height="583" text="Dev sur Android\n%(color:AAAAAA)Informatique > Dev%\n%(font:-2)...class Cookie {...%&#xA;Materiel Escalade\n%(color:AAAAAA)Divers%\n%(font:-2)...la corde Cookie3000, pour plus de securité...%&#xA;Liste de courses\n%(color:AAAAAA)Divers%\n%(font:-2)- cookies aux pepites de chocolat...%&#xA;" measuredWidth="480" measuredHeight="583" selection="" verticalScrollbar="true" rowHeight="80" horizontalLines="true" alternative="#f3f3f3">
     <font size="24px"/>
     <items x="0" y="2" width="463" height="91" text="Dev sur Android\n%(color:AAAAAA)Informatique > Dev%\n%(font:-2)...class Cookie {...%"/>
     <items x="0" y="93" width="463" height="91" text="Materiel Escalade\n%(color:AAAAAA)Divers%\n%(font:-2)...la corde Cookie3000, pour plus de securité...%"/>
     <items x="0" y="184" width="463" height="91" text="Liste de courses\n%(color:AAAAAA)Divers%\n%(font:-2)- cookies aux pepites de chocolat...%"/>
   </widgets>
-  <widgets xsi:type="model:Rectangle" id="114" x="369" y="176" width="81" height="33" text="Stage" measuredWidth="81" measuredHeight="33" background="#cfe2f3" foreground="#0000ff" border="solid-rounded">
+  <widgets xsi:type="model:Rectangle" id="114" x="371" y="141" width="81" height="33" text="Stage" measuredWidth="81" measuredHeight="33" background="#cfe2f3" foreground="#0000ff" border="solid-rounded">
     <font/>
   </widgets>
-  <widgets xsi:type="model:Rectangle" id="116" x="342" y="266" height="34" text="Montagne" measuredWidth="108" measuredHeight="34" background="#cfe2f3" foreground="#0000ff" border="solid-rounded">
+  <widgets xsi:type="model:Rectangle" id="116" x="344" y="231" height="34" text="Montagne" measuredWidth="108" measuredHeight="34" background="#cfe2f3" foreground="#0000ff" border="solid-rounded">
     <font/>
   </widgets>
-  <widgets xsi:type="model:Rectangle" id="118" x="282" y="175" width="81" height="34" text="Perso" measuredWidth="81" measuredHeight="34" background="#cfe2f3" foreground="#0000ff" border="solid-rounded">
+  <widgets xsi:type="model:Rectangle" id="118" x="284" y="140" width="81" height="34" text="Perso" measuredWidth="81" measuredHeight="34" background="#cfe2f3" foreground="#0000ff" border="solid-rounded">
     <font/>
   </widgets>
-  <widgets xsi:type="model:Rectangle" id="119" x="369" y="355" width="81" height="34" text="Perso" measuredWidth="81" measuredHeight="34" background="#cfe2f3" foreground="#0000ff" border="solid-rounded">
+  <widgets xsi:type="model:Rectangle" id="119" x="371" y="320" width="81" height="34" text="Perso" measuredWidth="81" measuredHeight="34" background="#cfe2f3" foreground="#0000ff" border="solid-rounded">
     <font/>
   </widgets>
-  <widgets xsi:type="model:Tabs" id="27" x="2" y="749" text="                ,                 ,                 ,                   " measuredWidth="478" measuredHeight="50" selection="0">
+  <widgets xsi:type="model:Rectangle" id="149" x="72" y="188" width="71" height="33" measuredWidth="71" measuredHeight="33" background="#ea9999" alpha="128" foreground="#ff0000" border="solid-rounded">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Rectangle" id="152" x="103" y="277" width="71" height="33" measuredWidth="71" measuredHeight="33" background="#ea9999" alpha="128" foreground="#ff0000" border="solid-rounded">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Rectangle" id="153" x="15" y="371" width="71" height="33" measuredWidth="71" measuredHeight="33" background="#ea9999" alpha="128" foreground="#ff0000" border="solid-rounded">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Tabs" id="159" x="2" y="80" text="                ,                 ,                 ,                   " measuredWidth="478" measuredHeight="50" selection="0">
     <items x="1" y="0" width="116" height="50" text="                "/>
     <items x="117" y="0" width="116" height="50" text="                "/>
     <items x="233" y="0" width="116" height="50" text="                "/>
     <items x="349" y="0" width="128" height="50" text="                  "/>
     <font size="24px"/>
   </widgets>
-  <widgets xsi:type="model:Label" id="36" x="20" y="758" text="Notes" measuredWidth="81" measuredHeight="32" textAlignment="Center" icon="copy (large)">
+  <widgets xsi:type="model:Label" id="160" x="20" y="89" text="Notes" measuredWidth="81" measuredHeight="32" textAlignment="Center" icon="copy (large)">
     <font size="16px"/>
   </widgets>
-  <widgets xsi:type="model:Label" id="38" x="133" y="758" text="Dossiers" measuredWidth="98" measuredHeight="32" textAlignment="Center" icon="open (large)">
+  <widgets xsi:type="model:Label" id="161" x="133" y="89" text="Dossiers" measuredWidth="98" measuredHeight="32" textAlignment="Center" icon="open (large)">
     <font size="16px"/>
   </widgets>
-  <widgets xsi:type="model:Label" id="39" x="363" y="758" text="Calendrier" measuredWidth="112" measuredHeight="32" textAlignment="Center" icon="calendar2 (large)">
+  <widgets xsi:type="model:Label" id="162" x="363" y="89" text="Calendrier" measuredWidth="112" measuredHeight="32" textAlignment="Center" icon="calendar2 (large)">
     <font size="16px"/>
   </widgets>
-  <widgets xsi:type="model:Label" id="41" x="243" y="758" text="Nouvelle" measuredWidth="102" measuredHeight="32" textAlignment="Center" icon="add (large)">
+  <widgets xsi:type="model:Label" id="163" x="243" y="89" text="Nouvelle" measuredWidth="102" measuredHeight="32" textAlignment="Center" icon="add (large)">
     <font size="16px"/>
   </widgets>
-  <widgets xsi:type="model:Rectangle" id="143" y="136" width="480" height="29" text="{filled-arrow-down}" measuredWidth="480" measuredHeight="29" link="RechercheSimpleDepliee.screen">
+  <widgets xsi:type="model:Panel" id="43" x="2" y="711" width="478" height="89" measuredWidth="478" measuredHeight="89"/>
+  <widgets xsi:type="model:SearchField" id="44" x="11" y="750" width="461" text="cookie" measuredWidth="461" measuredHeight="36">
+    <font size="24px"/>
+  </widgets>
+  <widgets xsi:type="model:Rectangle" id="143" x="2" y="711" width="478" height="29" text="{filled-arrow-up}" measuredWidth="478" measuredHeight="29" link="RechercheSimpleDepliee.screen">
     <font/>
   </widgets>
-  <widgets xsi:type="model:Rectangle" id="149" x="70" y="223" width="71" height="33" measuredWidth="71" measuredHeight="33" background="#ea9999" alpha="128" foreground="#ff0000" border="solid-rounded">
-    <font/>
-  </widgets>
-  <widgets xsi:type="model:Hotspot" id="150" x="13" y="91" width="452" height="36" measuredWidth="452" measuredHeight="36" link="ListeNotes.screen"/>
-  <widgets xsi:type="model:Rectangle" id="152" x="101" y="312" width="71" height="33" measuredWidth="71" measuredHeight="33" background="#ea9999" alpha="128" foreground="#ff0000" border="solid-rounded">
-    <font/>
-  </widgets>
-  <widgets xsi:type="model:Rectangle" id="153" x="13" y="406" width="71" height="33" measuredWidth="71" measuredHeight="33" background="#ea9999" alpha="128" foreground="#ff0000" border="solid-rounded">
-    <font/>
-  </widgets>
+  <widgets xsi:type="model:Hotspot" id="150" x="15" y="750" width="452" height="36" measuredWidth="452" measuredHeight="36" link="ListeNotes.screen"/>
   <hRuler/>
   <vRuler/>
   <font size="20px"/>
