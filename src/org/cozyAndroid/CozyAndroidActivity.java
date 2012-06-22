@@ -21,9 +21,9 @@ public class CozyAndroidActivity extends TabActivity {
         tabHost = getTabHost();
 		layoutTab = new int[4];
 		layoutTab[0] = R.layout.tab_notes;
-		layoutTab[1] = R.layout.tab_calendrier;
+		layoutTab[3] = R.layout.tab_calendrier;
 		layoutTab[2] = R.layout.tab_plus;
-		layoutTab[3] = R.layout.tab_dossier;
+		layoutTab[1] = R.layout.tab_dossier;
 
 		setupTab("TabListe", new Intent().setClass(this, TabListe.class),0);
 		setupTab("TabTags", new Intent().setClass(this, TabDossier.class),1);
