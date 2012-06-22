@@ -7,12 +7,22 @@
 	android:orientation="vertical"
 	android:background="@drawable/tab_bg_selector"
 	>
+	  
 	<ImageView
     	android:id="@+id/tabInfosIcone"
 		android:layout_width="fill_parent"
-		android:layout_height="30dp"
+		android:layout_height="26dp"
 		android:gravity="right" 
 		android:src="@+drawable/search">
 	</ImageView>
-	    
+	  
+	<TextView 
+	    android:id="@+id/tbTags"
+	    android:text="@string/tabTags"
+	    android:layout_width="fill_parent"
+		android:layout_height="20dp"
+		android:gravity="center"
+		android:textSize="10dp"
+		android:textColor="@drawable/tab_text_selector"
+	/>
 </LinearLayout>

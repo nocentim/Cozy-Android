@@ -13,28 +13,36 @@ public final class R {
     public static final class drawable {
         public static final int calendar=0x7f020000;
         public static final int deals=0x7f020001;
-        public static final int ic_launcher=0x7f020002;
-        public static final int news=0x7f020003;
-        public static final int plus_orange=0x7f020004;
-        public static final int search=0x7f020005;
-        public static final int settings=0x7f020006;
-        public static final int tab_bg_selected=0x7f020007;
-        public static final int tab_bg_selector=0x7f020008;
-        public static final int tab_bg_unselected=0x7f020009;
-        public static final int tab_divider=0x7f02000a;
-        public static final int tab_text_selector=0x7f02000b;
+        public static final int essai_liste=0x7f020002;
+        public static final int ic_launcher=0x7f020003;
+        public static final int list=0x7f020004;
+        public static final int liste=0x7f020005;
+        public static final int news=0x7f020006;
+        public static final int plus_orange=0x7f020007;
+        public static final int search=0x7f020008;
+        public static final int settings=0x7f020009;
+        public static final int tab_bg_selected=0x7f02000a;
+        public static final int tab_bg_selector=0x7f02000b;
+        public static final int tab_bg_unselected=0x7f02000c;
+        public static final int tab_divider=0x7f02000d;
+        public static final int tab_text_selector=0x7f02000e;
     }
     public static final class id {
-        public static final int tabBPIcone=0x7f050005;
-        public static final int tabEventIcone=0x7f050003;
-        public static final int tabInfosIcone=0x7f050009;
+        public static final int tabBPIcone=0x7f050007;
+        public static final int tabInfosIcone=0x7f05000d;
+        public static final int tabListeIcone=0x7f050004;
         public static final int tabNewsIcone=0x7f050001;
-        public static final int tabParamIcone=0x7f050007;
-        public static final int tab_bons_plans=0x7f050004;
-        public static final int tab_event=0x7f050002;
-        public static final int tab_infos=0x7f050008;
+        public static final int tabParamIcone=0x7f05000a;
+        public static final int tab_bons_plans=0x7f050006;
+        public static final int tab_event=0x7f050003;
+        public static final int tab_infos=0x7f05000c;
         public static final int tab_news=0x7f050000;
-        public static final int tab_param=0x7f050006;
+        public static final int tab_param=0x7f050009;
+        public static final int tbCalendrier=0x7f050002;
+        public static final int tbListe=0x7f050005;
+        public static final int tbPlus=0x7f050008;
+        public static final int tbRecherche=0x7f05000b;
+        public static final int tbTags=0x7f05000e;
     }
     public static final class layout {
         public static final int main=0x7f030000;
@@ -47,5 +55,10 @@ public final class R {
     public static final class string {
         public static final int app_name=0x7f040001;
         public static final int hello=0x7f040000;
+        public static final int tabCalendrier=0x7f040003;
+        public static final int tabListe=0x7f040002;
+        public static final int tabPlus=0x7f040004;
+        public static final int tabRecherche=0x7f040006;
+        public static final int tabTags=0x7f040005;
     }
 }

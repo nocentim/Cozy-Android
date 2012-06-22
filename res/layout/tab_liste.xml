@@ -8,10 +8,24 @@
 	android:background="@drawable/tab_bg_selector"
 		>
 	<ImageView
-    	android:id="@+id/tabEventIcone"
+    	android:id="@+id/tabListeIcone"
 		android:layout_width="fill_parent"
-		android:layout_height="30dp"
+		android:layout_height="26dp"
 		android:gravity="right" 
-		android:src="@+drawable/calendar">
+		android:src="@+drawable/essai_liste">
 	</ImageView>
+		
+    <TextView 
+	    android:id="@+id/tbListe"
+	    android:text="@string/tabListe"
+	    android:layout_width="fill_parent"
+		android:layout_height="20dp"
+		android:gravity="center"
+		android:textSize="10dp"
+		android:textColor="@drawable/tab_text_selector"
+	/>
+    
+	
+	
+	
 </LinearLayout>
