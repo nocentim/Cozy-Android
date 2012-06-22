@@ -6,7 +6,7 @@
     <string name="tabListe">Liste</string>
     <string name="tabCalendrier">Calendrier</string>
     <string name="tabPlus">Nouvelle</string>
-    <string name="tabTags">Tags</string>
+    <string name="tabDossier">Dossier</string>
     <string name="tabRecherche">Recherche</string>
     
 </resources>

@@ -19,18 +19,16 @@ public class CozyAndroidActivity extends TabActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         tabHost = getTabHost();
-		layoutTab = new int[5];
-		layoutTab[0] = R.layout.tab_liste;
-		layoutTab[1] = R.layout.tab_calendrier;
+		layoutTab = new int[4];
+		layoutTab[0] = R.layout.tab_notes;
+		layoutTab[3] = R.layout.tab_calendrier;
 		layoutTab[2] = R.layout.tab_plus;
-		layoutTab[3] = R.layout.tab_tags;
-		layoutTab[4] = R.layout.tab_recherche;
-		
+		layoutTab[1] = R.layout.tab_dossier;
+
 		setupTab("TabListe", new Intent().setClass(this, TabListe.class),0);
-        setupTab("TabCalendrier", new Intent().setClass(this, TabCalendrier.class),1);
-        setupTab("TabPlus", new Intent().setClass(this, TabPlus.class),2);
-		setupTab("TabTags", new Intent().setClass(this, TabTags.class),3);
-		setupTab("TabRecherche", new Intent().setClass(this, TabRecherche.class),4);
+		setupTab("TabTags", new Intent().setClass(this, TabDossier.class),1);
+		setupTab("TabPlus", new Intent().setClass(this, TabPlus.class),2);
+        setupTab("TabCalendrier", new Intent().setClass(this, TabCalendrier.class),3);
     }
     
     private void setupTab(String tag, Intent intent, int layoutTabIndex) {
