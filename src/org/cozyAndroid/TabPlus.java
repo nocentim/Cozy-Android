@@ -9,4 +9,4 @@ public class TabPlus extends Activity {
 		super.onCreate(saveInstanceState);
 		setContentView(R.layout.tab_notes);
 	}
-}
+} 
