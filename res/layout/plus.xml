@@ -1,27 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_height="fill_parent" >
 
     <EditText
-        android:id="@+id/editText1"
+        android:id="@+id/nameNewNote"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:ems="10"
-        android:text="Nom de la note" />
+        android:hint="Nom de la note"
+        android:text="@string/nameNewNote" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/bodyNewNote"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_above="@+id/button1"
+        android:layout_below="@id/nameNewNote"
         android:ems="10"
         android:gravity="top|left"
+        android:hint="allo \nsi t&apos;es là c&apos;est pour noter qqch!! \nallllllloooooo \ntu préfère aller ramasser les paquerettes?\n je ne sais pas comment faire monter les boutons clear et noter! mais c pas grave ca laisse plus de place pour voir ce qu'on ecrit"
         android:inputType="textMultiLine"
-        android:text="
-allo
-si t&apos;es là c&apos;est pour noter qqch!! 
-allllllloooooo 
-tu préfère aller ramasser les paquerettes?" />
+        android:text="@string/bodyNewNote" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="162dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Clear" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="162dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@id/button1"
+        android:text="Noter!" />
+
+</RelativeLayout>

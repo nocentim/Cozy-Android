@@ -8,5 +8,7 @@
     <string name="tabPlus">Nouvelle</string>
     <string name="tabDossier">Dossier</string>
     <string name="tabRecherche">Recherche</string>
-    
+    <string name="nameNewNote"></string>
+    <string name="bodyNewNote"></string>
+
 </resources>
