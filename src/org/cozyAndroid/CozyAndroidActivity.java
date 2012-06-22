@@ -1,10 +1,14 @@
 package org.cozyAndroid;
 
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TabHost;
@@ -13,6 +17,7 @@ public class CozyAndroidActivity extends TabActivity {
     /** Called when the activity is first created. */
 	private static TabHost tabHost;
 	private int [] layoutTab;
+	private DataBase dataBase;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,5 +46,15 @@ public class CozyAndroidActivity extends TabActivity {
 		view.refreshDrawableState();
 		//view.setBackgroundResource(R.color.Ensimag);
 		return view;
+	}
+	
+	public void onResume(){
+		super.onResume();
+		dataBase = new DataBase(this);
+		ArrayList<String> note = dataBase.getAllPref("notes","note");
+		Iterator it = note.iterator();
+		while (it.hasNext()) {
+			Log.d("essai",""+ it.next());
+		}
 	}
 }
