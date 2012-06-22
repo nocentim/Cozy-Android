@@ -7,6 +7,6 @@ public class TabCalendrier extends Activity {
 	
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState);
-		setContentView(R.layout.tab_liste);
+		setContentView(R.layout.tab_notes);
 	}
 }

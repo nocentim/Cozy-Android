@@ -28,37 +28,33 @@ public final class R {
         public static final int tab_text_selector=0x7f02000e;
     }
     public static final class id {
-        public static final int tabBPIcone=0x7f050007;
-        public static final int tabInfosIcone=0x7f05000d;
-        public static final int tabListeIcone=0x7f050004;
+        public static final int tabBPIcone=0x7f05000a;
+        public static final int tabInfosIcone=0x7f050004;
+        public static final int tabListeIcone=0x7f050007;
         public static final int tabNewsIcone=0x7f050001;
-        public static final int tabParamIcone=0x7f05000a;
-        public static final int tab_bons_plans=0x7f050006;
-        public static final int tab_event=0x7f050003;
-        public static final int tab_infos=0x7f05000c;
+        public static final int tab_bons_plans=0x7f050009;
+        public static final int tab_event=0x7f050006;
+        public static final int tab_infos=0x7f050003;
         public static final int tab_news=0x7f050000;
-        public static final int tab_param=0x7f050009;
         public static final int tbCalendrier=0x7f050002;
-        public static final int tbListe=0x7f050005;
-        public static final int tbPlus=0x7f050008;
-        public static final int tbRecherche=0x7f05000b;
-        public static final int tbTags=0x7f05000e;
+        public static final int tbDossier=0x7f050005;
+        public static final int tbListe=0x7f050008;
+        public static final int tbPlus=0x7f05000b;
     }
     public static final class layout {
         public static final int main=0x7f030000;
         public static final int tab_calendrier=0x7f030001;
-        public static final int tab_liste=0x7f030002;
-        public static final int tab_plus=0x7f030003;
-        public static final int tab_recherche=0x7f030004;
-        public static final int tab_tags=0x7f030005;
+        public static final int tab_dossier=0x7f030002;
+        public static final int tab_notes=0x7f030003;
+        public static final int tab_plus=0x7f030004;
     }
     public static final class string {
         public static final int app_name=0x7f040001;
         public static final int hello=0x7f040000;
         public static final int tabCalendrier=0x7f040003;
+        public static final int tabDossier=0x7f040005;
         public static final int tabListe=0x7f040002;
         public static final int tabPlus=0x7f040004;
         public static final int tabRecherche=0x7f040006;
-        public static final int tabTags=0x7f040005;
     }
 }
