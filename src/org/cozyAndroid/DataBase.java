@@ -1,9 +1,10 @@
 package org.cozyAndroid;
 
 
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import android.content.ContentValues;
@@ -33,7 +34,8 @@ public class DataBase extends SQLiteOpenHelper {
 		
 		db.execSQL("CREATE TABLE "+TABLE_NOTES+
 				" (id0 INTEGER PRIMARY KEY AUTOINCREMENT, note VARCHAR NOT NULL);");
-		String essai = readFile("./exemple_note");
+		File fichier = new File("exemple_note");
+		String essai = loadFile(fichier);
 		ContentValues valueNote = new ContentValues();
 		valueNote.put("note",essai);
 		db.insert(TABLE_NOTES,null,valueNote);
@@ -62,23 +64,20 @@ public class DataBase extends SQLiteOpenHelper {
 		return list;
 	}
 	
-	public static String readFile ( String theFileName ){
-        InputStreamReader flog	= null;
-	LineNumberReader llog	= null;
-	String myLine		     = null;
-        String myConcatLines     = "";
-	try{ 
-		flog = new InputStreamReader(new FileInputStream(theFileName) );
-		llog = new LineNumberReader(flog);
-		while ((myLine = llog.readLine()) != null) { 
-                      // --- Ajout de la ligne au contenu
-                      myConcatLines += myLine;
-                }
-        }catch (Exception e){
-               // --- Gestion erreur lecture du fichier (fichier non existant, illisible, etc.)
-               System.err.println("Error : "+e.getMessage());
-               return null;
-        }
-        return myConcatLines;
-}
+	public static String loadFile(File f) {
+		try { 
+			String sortie="";
+	        BufferedReader aLire= new BufferedReader(new FileReader(f));
+	        String uneLigne = aLire.readLine();
+	        do {
+	        	sortie += uneLigne;
+	        } while ((uneLigne = aLire.readLine())!=null);
+	        aLire.close();
+	        return sortie;
+	     }
+	      catch (IOException e) {  
+	         System.out.println("Une operation sur les fichiers a leve l'exception "+e);
+	         return("erreur pendant la lecture du fichier");
+	      }
+	   }
 }
