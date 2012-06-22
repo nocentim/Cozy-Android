@@ -80,7 +80,7 @@
   <widgets xsi:type="model:SearchField" id="172" x="11" y="625" width="461" text="cookie" measuredWidth="461" measuredHeight="36">
     <font size="24px"/>
   </widgets>
-  <widgets xsi:type="model:Combo" id="176" x="110" y="670" width="362" text="Div&#xA;Divers&#xA;Photo > Dimanche dernier" measuredWidth="362" measuredHeight="112">
+  <widgets xsi:type="model:Combo" id="176" x="110" y="670" width="362" text="Di&#xA;Divers&#xA;Photo > Dimanche dernier" measuredWidth="362" measuredHeight="112">
     <font size="24px" bold="false"/>
   </widgets>
   <widgets xsi:type="model:Hotspot" id="158" x="112" y="705" width="93" height="38" measuredWidth="93" measuredHeight="38" link="RechercheDossier.screen"/>
