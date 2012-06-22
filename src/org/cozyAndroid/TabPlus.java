@@ -7,6 +7,6 @@ public class TabPlus extends Activity {
 	
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState);
-		setContentView(R.layout.tab_notes);
+		setContentView(R.layout.plus);
 	}
-}
+} 
