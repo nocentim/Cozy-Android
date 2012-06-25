@@ -16,27 +16,27 @@
         android:id="@+id/bodyNewNote"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/button1"
+        android:layout_above="@+id/buttonClear"
         android:layout_below="@id/nameNewNote"
         android:ems="10"
         android:gravity="top|left"
-        android:hint="allo \nsi t&apos;es là c&apos;est pour noter qqch!! \nallllllloooooo \ntu préfère aller ramasser les paquerettes?\n je ne sais pas comment faire monter les boutons clear et noter! mais c pas grave ca laisse plus de place pour voir ce qu'on ecrit"
+        android:hint="allo \nsi t&apos;es là c&apos;est pour noter qqch!! \nallllllloooooo \ntu préfère aller ramasser les paquerettes?\n je ne sais pas comment faire monter les boutons clear et noter! mais c pas grave ca laisse plus de place pour voir ce qu&apos;on ecrit"
         android:inputType="textMultiLine"
         android:text="@string/bodyNewNote" />
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/buttonClear"
         android:layout_width="162dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:text="Clear" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/buttonValider"
         android:layout_width="162dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@id/button1"
+        android:layout_toRightOf="@id/buttonClear"
         android:text="Noter!" />
 
 </RelativeLayout>
