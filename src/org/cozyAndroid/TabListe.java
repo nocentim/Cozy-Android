@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Spanned;
 import android.widget.ListView;
 
 public class TabListe extends Activity {
@@ -23,7 +24,7 @@ public class TabListe extends Activity {
 	public void onResume() {
 		super.onResume();
 		DataBase db = DataBase.getInstance();
-		ArrayList<String> note = db.getAllNotes("notes","note");
+		ArrayList<Spanned> note = db.getAllNotes("notes","note");
 		adapter.setListe(note);
 		adapter.notifyDataSetChanged();
 	}

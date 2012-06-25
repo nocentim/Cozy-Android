@@ -7,6 +7,7 @@ import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,7 +61,7 @@ public class CozyAndroidActivity extends TabActivity {
 	public void onResume(){
 		super.onResume();
 		dataBase = DataBase.getInstance();
-		ArrayList<String> note = dataBase.getAllNotes("notes","note");
+		ArrayList<Spanned> note = dataBase.getAllNotes("notes","note");
 		Iterator it = note.iterator();
 		while (it.hasNext()) {
 			Log.d("essai",""+ it.next());
