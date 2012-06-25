@@ -13,6 +13,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class DataBase extends SQLiteOpenHelper {	
 	private static String TABLE_NOTES = "notes";
@@ -35,7 +36,13 @@ public class DataBase extends SQLiteOpenHelper {
 		
 		db.execSQL("CREATE TABLE "+TABLE_NOTES+
 				" (id0 INTEGER PRIMARY KEY AUTOINCREMENT, note VARCHAR NOT NULL);");
-		File fichier = new File("exemple_note");
+		File fichier = new File("exemple_note.txt");
+		Log.d("ok","ok");
+		Log.d("ok","Chemin absolu du fichier : " + fichier.getAbsolutePath());
+		Log.d("ok","Nom du fichier : " + fichier.getName());
+		Log.d("ok","Est-ce qu'il existe ? " + fichier.exists());
+		Log.d("ok","Est-ce un répertoire ? " + fichier.isDirectory());
+		Log.d("ok","Est-ce un fichier ? " + fichier.isFile());
 		String essai = loadFile(fichier);
 		ContentValues valueNote = new ContentValues();
 		valueNote.put("note",essai);
@@ -50,18 +57,18 @@ public class DataBase extends SQLiteOpenHelper {
 		
 	}
 	
-	public void addPref(String table, String key, String name) {
+	public void addNote(String table, String key, String note) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues value = new ContentValues();
-		value.put(key,name);
+		value.put(key,note);
 		db.insert(table,null,value);
 		db.close();
 	}
 	
-	public void addListPref(String table, String key, ArrayList<String> listName) {
+	public void addListNote(String table, String key, ArrayList<String> listNote) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues value = new ContentValues();
-		Iterator<String> it = listName.iterator();
+		Iterator<String> it = listNote.iterator();
 		while (it.hasNext()) {
 			value.put(key,it.next());
 			db.insert(table,null,value);
@@ -98,6 +105,7 @@ public class DataBase extends SQLiteOpenHelper {
 	        String uneLigne = aLire.readLine();
 	        do {
 	        	sortie += uneLigne;
+	        	
 	        } while ((uneLigne = aLire.readLine())!=null);
 	        aLire.close();
 	        return sortie;
@@ -105,6 +113,6 @@ public class DataBase extends SQLiteOpenHelper {
 	      catch (IOException e) {  
 	         System.out.println("Une operation sur les fichiers a leve l'exception "+e);
 	         return("erreur pendant la lecture du fichier");
-	      }
+	     }
 	   }
 }
