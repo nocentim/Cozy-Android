@@ -17,7 +17,7 @@ import android.util.Log;
 public class DataBase extends SQLiteOpenHelper  {	
 	private static String TABLE_NOTES = "notes";
 	
-	private DataBase() {		
+	private DataBase() {
 		super(CozyAndroidActivity.getContext(), "CozyAndroid_DB", null, 2);
 	}
 	
@@ -35,13 +35,14 @@ public class DataBase extends SQLiteOpenHelper  {
 		
 		db.execSQL("CREATE TABLE "+TABLE_NOTES+
 				" (id0 INTEGER PRIMARY KEY AUTOINCREMENT, note VARCHAR NOT NULL);");
-		File fichier = new File("exemple.txt");
+		/*File fichier = new File("src/exemple.txt");
 		Log.d("ok","Chemin absolu du fichier : " + fichier.getAbsolutePath());
 		Log.d("ok","Nom du fichier : " + fichier.getName());
 		Log.d("ok","Est-ce qu'il existe ? " + fichier.exists());
 		Log.d("ok","Est-ce un répertoire ? " + fichier.isDirectory());
-		Log.d("ok","Est-ce un fichier ? " + fichier.isFile());
-		String essai = loadFile(fichier);
+		Log.d("ok","Est-ce un fichier ? " + fichier.isFile());*/
+		//String essai = loadFile(fichier);
+		String essai = "bonjour";
 		ContentValues valueNote = new ContentValues();
 		valueNote.put("note",essai);
 		db.insert(TABLE_NOTES,null,valueNote);
@@ -52,7 +53,6 @@ public class DataBase extends SQLiteOpenHelper  {
 	public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTES);
 		onCreate(db);
-		
 	}
 	
 	public void addNote(String table, String key, String note) {
@@ -81,6 +81,14 @@ public class DataBase extends SQLiteOpenHelper  {
 		db.close();
 	}
 	
+	public void addPref(String table, String key, String name) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues value = new ContentValues();
+		value.put(key,name);
+		db.insert(table,null,value);
+		db.close();
+	}
+	
 	public ArrayList<String> getAllPref(String table, String key) {
 		ArrayList<String> list = new ArrayList<String>();
 		String query = "SELECT DISTINCT " + key + " FROM " + table;
@@ -96,7 +104,7 @@ public class DataBase extends SQLiteOpenHelper  {
 		return list;
 	}
 	
-	public static String loadFile(File f) {
+	/*public static String loadFile(File f) {
 		try { 
 			String sortie="";
 	        BufferedReader aLire= new BufferedReader(new FileReader(f));
@@ -112,5 +120,5 @@ public class DataBase extends SQLiteOpenHelper  {
 	         System.out.println("Une operation sur les fichiers a leve l'exception "+e);
 	         return("erreur pendant la lecture du fichier");
 	     }
-	   }
+	   }*/
 }

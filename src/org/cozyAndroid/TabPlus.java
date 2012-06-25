@@ -10,6 +10,7 @@ import android.widget.EditText;
 public class TabPlus extends Activity implements View.OnClickListener {
 	private EditText newText ;
 	private EditText newName ;
+	private DataBase dataBase;
 	Button clear   = null ;
 	Button valider = null ;
 
@@ -28,6 +29,7 @@ public class TabPlus extends Activity implements View.OnClickListener {
 
 
 	public void onClick(View v) {
+		dataBase = DataBase.getInstance();
 		switch(v.getId()) {
 
 		case R.id.buttonClear : 
@@ -35,7 +37,7 @@ public class TabPlus extends Activity implements View.OnClickListener {
 			break ;
 
 		case R.id.buttonValider :
-			CozyAndroidActivity.dataBase.addPref("Notes", "note", getString(R.id.nameNewNote) + ", body: " + getString(R.id.bodyNewNote)) ;
+			dataBase.addPref("Notes", "note", getString(R.id.nameNewNote) + ", body: " + getString(R.id.bodyNewNote)) ;
 			newText.setText("") ;
 			newName.setText("") ;
 			break ;
