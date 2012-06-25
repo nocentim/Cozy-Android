@@ -35,7 +35,7 @@ public class TabPlus extends Activity implements View.OnClickListener {
 			break ;
 
 		case R.id.buttonValider :
-			CozyAndroidActivity.dataBase.addPref("Notes", "note", getString(R.id.nameNewNote) + ", body: " + getString(R.id.bodyNewNote)) ;
+			DataBase.getInstance().addNote("Notes", "note", getString(R.id.nameNewNote) + ", body: " + getString(R.id.bodyNewNote)) ;
 			newText.setText("") ;
 			newName.setText("") ;
 			break ;

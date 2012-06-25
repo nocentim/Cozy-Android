@@ -22,7 +22,7 @@ public class TabListe extends Activity {
 	
 	public void onResume() {
 		super.onResume();
-		DataBase db = CozyAndroidActivity.dataBase;
+		DataBase db = DataBase.getInstance();
 		ArrayList<String> note = db.getAllPref("notes","note");
 		adapter.setListe(note);
 		adapter.notifyDataSetChanged();
