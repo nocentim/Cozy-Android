@@ -11,6 +11,7 @@ import android.widget.EditText;
 public class TabPlus extends Activity implements View.OnClickListener {
 	private EditText newText ;
 	private EditText newName ;
+	private DataBase dataBase;
 	Button clear   = null ;
 	Button valider = null ;
 
@@ -30,6 +31,7 @@ public class TabPlus extends Activity implements View.OnClickListener {
 
 	public void onClick(View v) {
 		Resources r = getResources() ;
+		dataBase = DataBase.getInstance();
 		switch(v.getId()) {
 
 		case R.id.buttonClear : 
@@ -37,7 +39,7 @@ public class TabPlus extends Activity implements View.OnClickListener {
 			break ;
 
 		case R.id.buttonValider :
-			DataBase.getInstance().addNote("Notes", "note", r.getString(R.id.nameNewNote) + ", body: " + r.getString(R.id.bodyNewNote)) ;
+			dataBase.addNote("Notes", "note", r.getString(R.id.nameNewNote) + ", body: " + r.getString(R.id.bodyNewNote)) ;
 			newText.setText("") ;
 			newName.setText("") ;
 			break ;
