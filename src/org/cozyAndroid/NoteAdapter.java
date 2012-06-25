@@ -44,8 +44,19 @@ public class NoteAdapter extends BaseAdapter {
 			convertView = inflater.inflate(R.layout.elem_list, null);
 		}
 		TextView titre = (TextView)convertView.findViewById(R.id.titre_note);
-		titre.setText((String)getItem(position));
-		return convertView;			 
+		TextView chemin = (TextView)convertView.findViewById(R.id.chemin_note);
+		String note = (String)getItem(position);
+		String contenu [] = note.split(", body: ");
+		titre.setText(contenu[0]);
+		if (contenu.length >= 2) {
+			if (contenu[1].length() > 20) {
+				chemin.setText(contenu[1].substring(0,20));
+			} else
+				chemin.setText(contenu[1]);
+		} else {
+			chemin.setText("");
+		}
+		return convertView;	
 	}
 
 }
