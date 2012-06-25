@@ -28,6 +28,8 @@ public class CozyAndroidActivity extends TabActivity {
 		layoutTab[3] = R.layout.tab_calendrier;
 		layoutTab[2] = R.layout.tab_plus;
 		layoutTab[1] = R.layout.tab_dossier;
+		
+		dataBase = new DataBase(this);
 
 		setupTab("TabListe", new Intent().setClass(this, TabListe.class),0);
 		setupTab("TabTags", new Intent().setClass(this, TabDossier.class),1);
@@ -49,7 +51,6 @@ public class CozyAndroidActivity extends TabActivity {
 	
 	public void onResume(){
 		super.onResume();
-		dataBase = new DataBase(this);
 		ArrayList<String> note = dataBase.getAllPref("notes","note");
 		Iterator it = note.iterator();
 		while (it.hasNext()) {
