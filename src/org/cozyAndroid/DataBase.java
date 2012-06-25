@@ -15,29 +15,28 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class DataBase extends SQLiteOpenHelper {	
+public class DataBase extends SQLiteOpenHelper  {	
 	private static String TABLE_NOTES = "notes";
 	
-	DataBase(Context context) {		
-		super(context, "GCM_DB", null, 2);
+	private DataBase() {		
+		super(CozyAndroidActivity.getContext(), "CozyAndroid_DB", null, 2);
 	}
 	
-	/*private static class DataBaseHolder { 
+	private static class DataBaseHolder { 
 		public static final DataBase instance = new DataBase() {
 		};
 	}
 		 
 	public static DataBase getInstance() {
 		return DataBaseHolder.instance;
-	}*/
+	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		
 		db.execSQL("CREATE TABLE "+TABLE_NOTES+
 				" (id0 INTEGER PRIMARY KEY AUTOINCREMENT, note VARCHAR NOT NULL);");
-		File fichier = new File("exemple_note.txt");
-		Log.d("ok","ok");
+		File fichier = new File("exemple.txt");
 		Log.d("ok","Chemin absolu du fichier : " + fichier.getAbsolutePath());
 		Log.d("ok","Nom du fichier : " + fichier.getName());
 		Log.d("ok","Est-ce qu'il existe ? " + fichier.exists());

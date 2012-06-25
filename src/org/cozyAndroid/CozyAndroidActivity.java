@@ -18,6 +18,16 @@ public class CozyAndroidActivity extends TabActivity {
 	private static TabHost tabHost;
 	private int [] layoutTab;
 	private DataBase dataBase;
+	private static CozyAndroidActivity instance;
+
+    public CozyAndroidActivity() {
+        instance = this;
+    }
+
+    public static Context getContext() {
+        return instance;
+    }
+
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,7 +60,7 @@ public class CozyAndroidActivity extends TabActivity {
 	
 	public void onResume(){
 		super.onResume();
-		dataBase = new DataBase(this);
+		dataBase = DataBase.getInstance();
 		ArrayList<String> note = dataBase.getAllPref("notes","note");
 		Iterator it = note.iterator();
 		while (it.hasNext()) {
