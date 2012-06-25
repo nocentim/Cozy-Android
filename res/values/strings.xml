@@ -11,6 +11,6 @@
     <string name="nameNewNote"></string>
     <string name="bodyNewNote"></string>
     <string name="titreNote">Titre</string>
-    <string name="cheminNote">Chemin</string>
+    <string name="cheminNote"></string>
 
 </resources>

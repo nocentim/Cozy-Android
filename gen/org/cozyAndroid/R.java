@@ -31,6 +31,7 @@ public final class R {
         public static final int bodyNewNote=0x7f050004;
         public static final int buttonClear=0x7f050005;
         public static final int buttonValider=0x7f050006;
+        public static final int chemin_note=0x7f050001;
         public static final int listNotes=0x7f050002;
         public static final int nameNewNote=0x7f050003;
         public static final int tabBPIcone=0x7f050011;
@@ -45,7 +46,6 @@ public final class R {
         public static final int tbDossier=0x7f05000c;
         public static final int tbListe=0x7f05000f;
         public static final int tbPlus=0x7f050012;
-        public static final int textView1=0x7f050001;
         public static final int titre_note=0x7f050000;
     }
     public static final class layout {

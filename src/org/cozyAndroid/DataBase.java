@@ -78,7 +78,7 @@ public class DataBase extends SQLiteOpenHelper  {
 		SQLiteDatabase db = this.getReadableDatabase();
 		String query = "DELETE FROM " + table + " WHERE " + key +"='"+name+"';";
 		db.execSQL(query);
-		db.close();
+		db.close(); 
 	}
 	
 	public void addPref(String table, String key, String name) {
