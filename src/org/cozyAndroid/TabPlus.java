@@ -39,7 +39,7 @@ public class TabPlus extends Activity implements View.OnClickListener {
 			break ;
 
 		case R.id.buttonValider :
-			dataBase.addNote("Notes", "note", r.getString(R.id.nameNewNote) + ", body: " + r.getString(R.id.bodyNewNote)) ;
+			dataBase.addNote("Notes", "note", newName.getText() + ", body: " + newText.getText()) ;
 			newText.setText("") ;
 			newName.setText("") ;
 			break ;

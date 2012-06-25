@@ -16,7 +16,7 @@ public class TabListe extends Activity {
 		setContentView(R.layout.liste_notes);
 		
 		listeNotes = (ListView) findViewById(R.id.listNotes);
-		adapter = new NoteAdapter(getApplicationContext());
+		adapter = new NoteAdapter(this);
 		listeNotes.setAdapter(adapter);
 		}
 	
