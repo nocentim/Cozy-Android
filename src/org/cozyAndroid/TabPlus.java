@@ -9,6 +9,7 @@ import android.widget.EditText;
 
 public class TabPlus extends Activity implements View.OnClickListener {
 	private EditText newText ;
+	private EditText newName ;
 	Button clear   = null ;
 	Button valider = null ;
 
@@ -17,26 +18,28 @@ public class TabPlus extends Activity implements View.OnClickListener {
 		setContentView(R.layout.plus );
 
 		newText = (EditText)findViewById(R.id.bodyNewNote)  ;
+		newName = (EditText)findViewById(R.id.nameNewNote)  ;
 		clear   = (Button) findViewById(R.id.buttonClear)   ;
 		valider = (Button) findViewById(R.id.buttonValider) ;
-		
+
 		clear.setOnClickListener(this)   ;
 		valider.setOnClickListener(this) ;
 	}
 
 
 	public void onClick(View v) {
-	    switch(v.getId()) {
+		switch(v.getId()) {
 
-	    case R.id.buttonClear : 
-	    	newText = (EditText)findViewById(R.id.bodyNewNote) ;
+		case R.id.buttonClear : 
 			newText.setText("") ;
-	    	break ;
-	    
-	    case R.id.buttonValider :
-	    	//enregistrer la note dans la bd locale
-	    	break ;
-	    }
+			break ;
+
+		case R.id.buttonValider :
+			CozyAndroidActivity.dataBase.addPref("Notes", "note", getString(R.id.nameNewNote) + ", body: " + getString(R.id.bodyNewNote)) ;
+			newText.setText("") ;
+			newName.setText("") ;
+			break ;
+		}
 	}
 
 
