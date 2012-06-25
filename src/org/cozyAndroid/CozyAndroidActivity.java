@@ -1,6 +1,5 @@
 package org.cozyAndroid;
 
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -17,7 +16,7 @@ public class CozyAndroidActivity extends TabActivity {
     /** Called when the activity is first created. */
 	private static TabHost tabHost;
 	private int [] layoutTab;
-	private DataBase dataBase;
+	static DataBase dataBase;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
