@@ -60,7 +60,7 @@ public class CozyAndroidActivity extends TabActivity {
 	public void onResume(){
 		super.onResume();
 		dataBase = DataBase.getInstance();
-		ArrayList<String> note = dataBase.getAllPref("notes","note");
+		ArrayList<String> note = dataBase.getAllNotes("notes","note");
 		Iterator it = note.iterator();
 		while (it.hasNext()) {
 			Log.d("essai",""+ it.next());

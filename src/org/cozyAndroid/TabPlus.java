@@ -3,6 +3,7 @@ package org.cozyAndroid;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.app.Activity;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,6 +30,7 @@ public class TabPlus extends Activity implements View.OnClickListener {
 
 
 	public void onClick(View v) {
+		Resources r = getResources() ;
 		dataBase = DataBase.getInstance();
 		switch(v.getId()) {
 
@@ -37,7 +39,7 @@ public class TabPlus extends Activity implements View.OnClickListener {
 			break ;
 
 		case R.id.buttonValider :
-			dataBase.addNote("Notes", "note", getString(R.id.nameNewNote) + ", body: " + getString(R.id.bodyNewNote)) ;
+			dataBase.addNote("Notes", "note", r.getString(R.id.nameNewNote) + ", body: " + r.getString(R.id.bodyNewNote)) ;
 			newText.setText("") ;
 			newName.setText("") ;
 			break ;

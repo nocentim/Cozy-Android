@@ -23,7 +23,7 @@ public class TabListe extends Activity {
 	public void onResume() {
 		super.onResume();
 		DataBase db = DataBase.getInstance();
-		ArrayList<String> note = db.getAllPref("notes","note");
+		ArrayList<String> note = db.getAllNotes("notes","note");
 		adapter.setListe(note);
 		adapter.notifyDataSetChanged();
 	}
