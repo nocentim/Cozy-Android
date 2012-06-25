@@ -1,5 +1,6 @@
 package org.cozyAndroid;
 
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.app.Activity;
