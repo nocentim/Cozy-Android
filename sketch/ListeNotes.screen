@@ -72,9 +72,7 @@
     <font size="16px"/>
   </widgets>
   <widgets xsi:type="model:Hotspot" id="160" x="1" y="713" width="478" height="29" measuredWidth="478" measuredHeight="29" link="RechercheDepliee.screen"/>
-  <hRuler>
-    <guides position="450"/>
-  </hRuler>
+  <hRuler/>
   <vRuler/>
   <font size="20px"/>
 </model:Screen>

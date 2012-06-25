@@ -24,8 +24,5 @@
 		android:textSize="10dp"
 		android:textColor="@drawable/tab_text_selector"
 	/>
-    
-	
-	
 	
 </LinearLayout>

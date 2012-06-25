@@ -10,5 +10,7 @@
     <string name="tabRecherche">Recherche</string>
     <string name="nameNewNote"></string>
     <string name="bodyNewNote"></string>
+    <string name="titreNote">Titre</string>
+    <string name="cheminNote">Chemin</string>
 
 </resources>
