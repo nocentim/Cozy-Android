@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -47,6 +48,32 @@ public class DataBase extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTES);
 		onCreate(db);
 		
+	}
+	
+	public void addPref(String table, String key, String name) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues value = new ContentValues();
+		value.put(key,name);
+		db.insert(table,null,value);
+		db.close();
+	}
+	
+	public void addListPref(String table, String key, ArrayList<String> listName) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues value = new ContentValues();
+		Iterator<String> it = listName.iterator();
+		while (it.hasNext()) {
+			value.put(key,it.next());
+			db.insert(table,null,value);
+		}
+		db.close();
+	}
+	
+	public void deletePref(String table, String key, String name) {
+		SQLiteDatabase db = this.getReadableDatabase();
+		String query = "DELETE FROM " + table + " WHERE " + key +"='"+name+"';";
+		db.execSQL(query);
+		db.close();
 	}
 	
 	public ArrayList<String> getAllPref(String table, String key) {
