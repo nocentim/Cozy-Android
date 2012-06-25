@@ -81,15 +81,8 @@ public class DataBase extends SQLiteOpenHelper  {
 		db.close(); 
 	}
 	
-	public void addPref(String table, String key, String name) {
-		SQLiteDatabase db = this.getWritableDatabase();
-		ContentValues value = new ContentValues();
-		value.put(key,name);
-		db.insert(table,null,value);
-		db.close();
-	}
 	
-	public ArrayList<String> getAllPref(String table, String key) {
+	public ArrayList<String> getAllNotes(String table, String key) {
 		ArrayList<String> list = new ArrayList<String>();
 		String query = "SELECT DISTINCT " + key + " FROM " + table;
 		SQLiteDatabase db = this.getReadableDatabase();
