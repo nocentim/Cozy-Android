@@ -16,11 +16,13 @@ import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
 
-public class DataBase extends SQLiteOpenHelper  {	
-	private static String TABLE_NOTES = "notes";
+public class DataBase extends SQLiteOpenHelper  {
+	public static final String CONTENT_PROVIDER_DB_NAME = "CozyAndroid_DB";
+	public static final int CONTENT_PROVIDER_DB_VERSION = 1;
+	private static final String CONTENT_PROVIDER_TABLE_NAME = "notes";
 	
 	private DataBase() {
-		super(CozyAndroidActivity.getContext(), "CozyAndroid_DB", null, 2);
+		super(CozyAndroidActivity.getContext(), DataBase.CONTENT_PROVIDER_DB_NAME, null, DataBase.CONTENT_PROVIDER_DB_VERSION);
 	}
 	
 	private static class DataBaseHolder { 
@@ -35,7 +37,7 @@ public class DataBase extends SQLiteOpenHelper  {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		
-		db.execSQL("CREATE TABLE "+TABLE_NOTES+
+		db.execSQL("CREATE TABLE "+CONTENT_PROVIDER_TABLE_NAME+
 				" (id0 INTEGER PRIMARY KEY AUTOINCREMENT, note VARCHAR NOT NULL);");
 		/*File fichier = new File("src/exemple.txt");
 		Log.d("ok","Chemin absolu du fichier : " + fichier.getAbsolutePath());
@@ -47,13 +49,13 @@ public class DataBase extends SQLiteOpenHelper  {
 		String essai = "<div id=\"CNID_1\" class=\"Th-1\"><span>Un premier titre</span><br></div><div id=\"CNID_2\" class=\"Tu-2\"><span>Un paragraphe avec juste un titre</span><br></div><div id=\"CNID_3\" class=\"Tu-2\"><span>Un second paragraphe avec un titre long, un second paragraphe avec un titre long, un second paragraphe avec un titre long, un second paragraphe avec un titre long, un second paragraphe avec un titre long, un second paragraphe avec un titre long !</span><br></div><div id=\"CNID_4\" class=\"Tu-2\"><span>Un troisième paragraphe avec une liste en dessous :</span><br></div><div id=\"CNID_5\" class=\"Tu-3\"> <span>Premier paragraphe (1 titre seul)</span><br></div><div id=\"CNID_6\" class=\"Tu-3\"><span>Second paragraphe (1 titre &amp; une ligne)</span><br></div><div id=\"CNID_7\" class=\"l-3\"><span>Ligne du Second paragraphe (1 titre &amp; une ligne), longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs.</span><br></div><div id=\"CNID_8\" class=\"Tu-3\"><span>3ième paragraphe (1 titre &amp; 2 lignes)</span><br></div><div id=\"CNID_9\" class=\"l-3\"><span>Ligne 1 du 3ième paragraphe, pas longue.</span><br></div><div id=\"CNID_10\" class=\"l-3\"><span>Ligne 2 du 3ième paragraphe (1 titre &amp; une ligne), longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs.</span> <br></div><div id=\"CNID_11\" class=\"Tu-3\"><span>Quatrième paragraphe avec une sous liste :</span><br></div><div id=\"CNID_12\" class=\"Tu-4\"><span>Premier paragraphe</span><br></div><div id=\"CNID_13\" class=\"Tu-4\"><span>Second paragraphe</span><br></div><div id=\"CNID_14\" class=\"l-4\"><span>Ligne 1 du 2nd paragraphe, pas longue.</span><br></div><div id=\"CNID_15\" class=\"Tu-4\"><span>troisième paragraphe</span><br></div><div id=\"CNID_16\" class=\"Tu-4\"><span>Quatrième paragraphe</span><br></div><div id=\"CNID_17\" class=\"Th-1\"><span>Un titre de niveau 1</span><br></div><div id=\"CNID_18\" class=\"Th-2\"><span>Un titre de niveau 2</span><br></div><div id=\"CNID_19\" class=\"Tu-3\"><span>Un paragraphe un titre et deux lignes</span><br></div><div id=\"CNID_20\" class=\"l-3\"><span>Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs.</span><br></div><div id=\"CNID_21\" class=\"l-3\"><span>Seconde ligne, pas très longue.</span><br></div><div id=\"CNID_22\" class=\"Th-2\"><span>Un titre de niveau 2</span><br></div><div id=\"CNID_23\" class=\"Tu-3\"><span>Un paragraphe avec juste un titre</span><br></div><div id=\"CNID_24\" class=\"Tu-3\"><span>Un second paragraphe avec un titre long, un second paragraphe avec un titre long, un second paragraphe avec un titre long, un second paragraphe avec un titre long, un second paragraphe avec un titre long, un second paragraphe avec un titre long !</span><br></div><div id=\"CNID_25\" class=\"Tu-3\"><span>Un troisième paragraphe avec une liste en dessous :</span><br></div><div id=\"CNID_26\" class=\"Tu-4\"><span>Premier paragraphe (1 titre seul)</span><br></div><div id=\"CNID_27\" class=\"Tu-4\"><span>Second paragraphe (1 titre &amp; une ligne)</span><br></div><div id=\"CNID_28\" class=\"l-4\"><span>Ligne du Second paragraphe (1 titre &amp; une ligne), longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs, Très longue ligne mais avec des variations de longueurs.</span><br></div><div id=\"CNID_29\" class=\"Tu-4\"><span></span><br></div><div id=\"CNID_30\" class=\"Tu-4\"><span>c'était un paragraphe vide :-)</span><br></div>";
 	ContentValues valueNote = new ContentValues();
 		valueNote.put("note",essai);
-		db.insert(TABLE_NOTES,null,valueNote);
+		db.insert(CONTENT_PROVIDER_TABLE_NAME,null,valueNote);
 	}		
 	
 
 	@Override
-	public void onUpgrade(SQLiteDatabase db, int arg1, int arg2) {
-		db.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTES);
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		db.execSQL("DROP TABLE IF EXISTS " + CONTENT_PROVIDER_TABLE_NAME);
 		onCreate(db);
 	}
 	
