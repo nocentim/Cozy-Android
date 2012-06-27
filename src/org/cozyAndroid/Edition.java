@@ -15,7 +15,7 @@ public class Edition extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.edition);
 		String id = getIntent().getExtras().getString("id");
-		String oldName = getIntent().getExtras().getString("name");
+		String oldName = getIntent().getExtras().getString("titre");
 		String oldBody= getIntent().getExtras().getString("body");
 		EditText name = (EditText) findViewById(R.id.nameEdition);
 		EditText body = (EditText) findViewById(R.id.bodyEdition);

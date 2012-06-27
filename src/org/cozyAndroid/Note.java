@@ -24,6 +24,7 @@ public class Note {
 	}
 	
 	public Spanned getSpannedBody() {
+		//TODO a faire mieux
 		return Html.fromHtml(body);
 	}
 	
