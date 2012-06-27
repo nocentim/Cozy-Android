@@ -28,17 +28,13 @@ public class TabListe extends Activity {
 	public void onResume() {
 		super.onResume();
 		ArrayList<Spanned> note = new ArrayList<Spanned>();
-		Cursor cursor = managedQuery(Notes.CONTENT_URI,
-        		null, null, null, null);
+		Cursor cursor = managedQuery(Notes.CONTENT_URI,null, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
-				Spanned markedUp = Html.fromHtml(cursor.getString(0));
-				Log.d("tablist","cursor(0) =" + cursor.getString(0));
+				Spanned markedUp = Html.fromHtml(cursor.getString(1));
 				note.add(markedUp);
 			} while (cursor.moveToNext());
 		}
-		//DataBase db = DataBase.getInstance();
-		//ArrayList<Spanned> note = db.getAllNotes("notes","note");
 
 		adapter.setListe(note);
 		adapter.notifyDataSetChanged();
