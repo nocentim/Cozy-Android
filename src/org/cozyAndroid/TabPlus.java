@@ -4,12 +4,10 @@ import org.cozyAndroid.providers.NoteSQL.Notes;
 import android.text.Editable;
 import android.util.Log;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.app.Activity;
 import android.content.ContentValues;
-import android.content.res.Resources;
-import android.net.Uri;
-import android.os.Bundle;
+import android.net.Uri; 
+import android.os.Bundle ;
 import android.widget.Button;
 import android.widget.EditText;
 
