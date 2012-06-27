@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Log;
 import android.widget.ListView;
 
 public class TabListe extends Activity {
