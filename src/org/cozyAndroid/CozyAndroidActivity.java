@@ -17,7 +17,6 @@ public class CozyAndroidActivity extends TabActivity {
     /** Called when the activity is first created. */
 	private static TabHost tabHost;
 	private int [] layoutTab;
-	private DataBase dataBase;
 	
 	private static CozyAndroidActivity instance;
 
@@ -60,11 +59,6 @@ public class CozyAndroidActivity extends TabActivity {
 	
 	public void onResume(){
 		super.onResume();
-		dataBase = DataBase.getInstance();
-		ArrayList<Spanned> note = dataBase.getAllNotes("notes","note");
-		Iterator it = note.iterator();
-		while (it.hasNext()) {
-			Log.d("essai",""+ it.next());
-		}
+		
 	}
 }
