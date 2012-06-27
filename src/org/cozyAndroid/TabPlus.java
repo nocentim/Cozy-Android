@@ -1,6 +1,6 @@
 package org.cozyAndroid;
 
-import org.cozyAndroid.Note.Notes;
+import org.cozyAndroid.providers.NoteSQL.Notes;
 
 import android.text.Editable;
 import android.util.Log;

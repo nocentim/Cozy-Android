@@ -2,7 +2,7 @@ package org.cozyAndroid.providers;
 
 import java.util.HashMap;
 
-import org.cozyAndroid.Note.Notes;
+import org.cozyAndroid.providers.NoteSQL.Notes;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -15,6 +15,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.util.Log;
 
 public class NotesProvider extends ContentProvider {
 	 
