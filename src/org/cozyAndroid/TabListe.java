@@ -26,12 +26,11 @@ public class TabListe extends Activity {
 	
 	public void onResume() {
 		super.onResume();
-		ArrayList<Spanned> note = new ArrayList<Spanned>();
+		ArrayList<Note> note = new ArrayList<Note>();
 		Cursor cursor = managedQuery(Notes.CONTENT_URI,null, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
-				Spanned markedUp = Html.fromHtml(cursor.getString(1));
-				note.add(markedUp);
+				note.add(new Note(cursor));
 			} while (cursor.moveToNext());
 		}
 

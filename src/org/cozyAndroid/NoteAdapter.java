@@ -3,7 +3,6 @@ package org.cozyAndroid;
 
 import java.util.ArrayList;
 
-import android.content.Context;
 import android.content.Intent;
 import android.text.Spanned;
 import android.view.LayoutInflater;
@@ -16,7 +15,7 @@ import android.widget.TextView;
 public class NoteAdapter extends BaseAdapter {
 	
 	private LayoutInflater inflater;
-	private ArrayList<Spanned> liste;
+	private ArrayList<Note> liste;
 	TabListe context;
 	
 	public NoteAdapter (TabListe context) {
@@ -25,7 +24,7 @@ public class NoteAdapter extends BaseAdapter {
 		
 	}
 	
-	public void setListe (ArrayList<Spanned> l) {
+	public void setListe (ArrayList<Note> l) {
 		liste = l;
 	}
 	
@@ -49,48 +48,40 @@ public class NoteAdapter extends BaseAdapter {
 		if(convertView == null) {
 			convertView = inflater.inflate(R.layout.elem_list, null);
 		}
-		TextView titre = (TextView)convertView.findViewById(R.id.titre_note);
-		TextView chemin = (TextView)convertView.findViewById(R.id.chemin_note);
-		Spanned noteSpanned = (Spanned)getItem(position);
-		String note = noteSpanned.toString();
-		//String note = (String)getItem(position);
-		String contenu [] = note.split(", body: ");
-		if (contenu[0].length() > 35) {
-			titre.setText(contenu[0].substring(0, 34));
+		TextView titreView = (TextView)convertView.findViewById(R.id.titre_note);
+		TextView bodyView = (TextView)convertView.findViewById(R.id.body_note);
+		Note n = (Note)getItem(position);
+		String titre = n.titre;
+		String body = n.getSpannedBody().toString().replace("\n", " ");
+		if (titre.length() > 35) {
+			titreView.setText(titre.substring(0, 34));
 		} else {
-			titre.setText(contenu[0]);
+			titreView.setText(titre);
 		}
-		if (contenu.length >= 2) {
-			String aux;
-			if (contenu[1].length() > 50) {
-				aux = contenu[1].substring(0,49);
-			} else {
-				aux = contenu[1];
-			}
-			chemin.setText(aux.replace("\n", " "));
-			convertView.setOnClickListener(new EditListener(contenu[0], contenu[1]));
+		if (body.length() > 50) {
+			bodyView.setText(body.substring(0, 49));
 		} else {
-			chemin.setText("");
-			convertView.setOnClickListener(new EditListener(contenu[0], ""));
+			bodyView.setText(body);
 		}
+		
+		convertView.setOnClickListener(new EditListener(n));
 		
 		return convertView;	
 	}
 	
 	private class EditListener implements OnClickListener {
 
-		String titre;
-		String texte;
+		Note note;
 		
-		public EditListener(String titre, String texte) {
-			this.titre = titre;
-			this.texte = texte;
+		public EditListener(Note note) {
+			this.note = note;
 		}
 		
 		public void onClick(View v) {
 			Intent editer = new Intent(context, Edition.class);
-			editer.putExtra("name", titre);
-			editer.putExtra("body", texte);
+			editer.putExtra("id", note.id);
+			editer.putExtra("titre", note.titre);
+			editer.putExtra("body", note.body);
 	    	context.startActivity(editer);
 		}
 		

@@ -30,6 +30,7 @@ public final class R {
     public static final class id {
         public static final int bodyEdition=0x7f050001;
         public static final int bodyNewNote=0x7f050008;
+        public static final int body_note=0x7f050005;
         public static final int buttonAnnuler=0x7f050002;
         public static final int buttonBold=0x7f050009;
         public static final int buttonClear=0x7f05000b;
@@ -37,7 +38,6 @@ public final class R {
         public static final int buttonItalic=0x7f05000c;
         public static final int buttonUnderline=0x7f05000d;
         public static final int buttonValider=0x7f05000a;
-        public static final int chemin_note=0x7f050005;
         public static final int listNotes=0x7f050006;
         public static final int nameEdition=0x7f050000;
         public static final int nameNewNote=0x7f050007;
