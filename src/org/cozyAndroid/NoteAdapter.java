@@ -88,11 +88,10 @@ public class NoteAdapter extends BaseAdapter {
 		}
 		
 		public void onClick(View v) {
-			/*Intent editer = new Intent(context, Edition.class);
+			Intent editer = new Intent(context, Edition.class);
 			editer.putExtra("name", titre);
 			editer.putExtra("body", texte);
-	    	context.startActivity(editer);*/
-			context.modeEdition(titre,texte);
+	    	context.startActivity(editer);
 		}
 		
 	}
