@@ -28,56 +28,31 @@ public final class R {
         public static final int tab_text_selector=0x7f02000e;
     }
     public static final class id {
-<<<<<<< HEAD
-        public static final int bodyEdition=0x7f050002;
-        public static final int bodyNewNote=0x7f050009;
-        public static final int button1=0x7f050000;
-        public static final int buttonAnnuler=0x7f050003;
-        public static final int buttonClear=0x7f05000a;
-        public static final int buttonEditer=0x7f050004;
-        public static final int buttonValider=0x7f05000b;
-        public static final int chemin_note=0x7f050006;
-        public static final int listNotes=0x7f050007;
+        public static final int DeleteButton=0x7f050000;
+        public static final int bodyEdition=0x7f050003;
+        public static final int bodyNewNote=0x7f05000a;
+        public static final int body_note=0x7f050007;
+        public static final int button1=0x7f050002;
+        public static final int buttonAnnuler=0x7f050004;
+        public static final int buttonClear=0x7f05000b;
+        public static final int buttonEditer=0x7f050005;
+        public static final int buttonValider=0x7f05000c;
+        public static final int listNotes=0x7f050008;
         public static final int nameEdition=0x7f050001;
-        public static final int nameNewNote=0x7f050008;
-        public static final int tabBPIcone=0x7f050016;
-        public static final int tabInfosIcone=0x7f050010;
-        public static final int tabListeIcone=0x7f050013;
-        public static final int tabNewsIcone=0x7f05000d;
-        public static final int tab_bons_plans=0x7f050015;
-        public static final int tab_event=0x7f050012;
-        public static final int tab_infos=0x7f05000f;
-        public static final int tab_news=0x7f05000c;
-        public static final int tbCalendrier=0x7f05000e;
-        public static final int tbDossier=0x7f050011;
-        public static final int tbListe=0x7f050014;
-        public static final int tbPlus=0x7f050017;
-        public static final int titre_note=0x7f050005;
-=======
-        public static final int bodyEdition=0x7f050001;
-        public static final int bodyNewNote=0x7f050008;
-        public static final int body_note=0x7f050005;
-        public static final int buttonAnnuler=0x7f050002;
-        public static final int buttonClear=0x7f050009;
-        public static final int buttonEditer=0x7f050003;
-        public static final int buttonValider=0x7f05000a;
-        public static final int listNotes=0x7f050006;
-        public static final int nameEdition=0x7f050000;
-        public static final int nameNewNote=0x7f050007;
-        public static final int tabBPIcone=0x7f050015;
-        public static final int tabInfosIcone=0x7f05000f;
-        public static final int tabListeIcone=0x7f050012;
-        public static final int tabNewsIcone=0x7f05000c;
-        public static final int tab_bons_plans=0x7f050014;
-        public static final int tab_event=0x7f050011;
-        public static final int tab_infos=0x7f05000e;
-        public static final int tab_news=0x7f05000b;
-        public static final int tbCalendrier=0x7f05000d;
-        public static final int tbDossier=0x7f050010;
-        public static final int tbListe=0x7f050013;
-        public static final int tbPlus=0x7f050016;
-        public static final int titre_note=0x7f050004;
->>>>>>> a062b58bed4d8bf266471dfcb76ec10a0d3a6c6b
+        public static final int nameNewNote=0x7f050009;
+        public static final int tabBPIcone=0x7f050017;
+        public static final int tabInfosIcone=0x7f050011;
+        public static final int tabListeIcone=0x7f050014;
+        public static final int tabNewsIcone=0x7f05000e;
+        public static final int tab_bons_plans=0x7f050016;
+        public static final int tab_event=0x7f050013;
+        public static final int tab_infos=0x7f050010;
+        public static final int tab_news=0x7f05000d;
+        public static final int tbCalendrier=0x7f05000f;
+        public static final int tbDossier=0x7f050012;
+        public static final int tbListe=0x7f050015;
+        public static final int tbPlus=0x7f050018;
+        public static final int titre_note=0x7f050006;
     }
     public static final class layout {
         public static final int edition=0x7f030000;

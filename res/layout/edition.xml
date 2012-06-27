@@ -9,7 +9,7 @@
 	    android:layout_height="28dp"
 	    android:gravity="right">
 	<Button
-        android:id="@+id/button1"
+        android:id="@+id/DeleteButton"
         android:layout_width="50dp"
         android:layout_height="28dp"
         android:textSize="8dp"
