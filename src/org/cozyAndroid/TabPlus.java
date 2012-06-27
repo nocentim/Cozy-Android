@@ -1,11 +1,14 @@
 package org.cozyAndroid;
 
+import org.cozyAndroid.providers.NoteSQL.Notes;
 import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,8 +17,6 @@ public class TabPlus extends Activity implements View.OnClickListener {
 
 	private EditText newText = null ;
 	private EditText newName = null ;
-
-	private DataBase dataBase;
 
 	private Button clear   = null ;
 	private Button valider = null ;
@@ -50,8 +51,6 @@ public class TabPlus extends Activity implements View.OnClickListener {
 
 
 	public void onClick(View v) {
-		Resources r = getResources() ;
-		dataBase = DataBase.getInstance();
 		switch(v.getId()) {
 
 		case R.id.buttonClear : 
@@ -59,7 +58,12 @@ public class TabPlus extends Activity implements View.OnClickListener {
 			break ;
 
 		case R.id.buttonValider :
-			dataBase.addNote("Notes", "note", newName.getText() + ", body: " + newText.getText()) ;
+			///dataBase.addNote("Notes", "note", newName.getText() + ", body: " + newText.getText()) ;
+			Resources r = getResources() ;
+			ContentValues values = new ContentValues();
+			values.put(Notes.TITLE, newName.getText()+ "");
+			values.put(Notes.BODY, newText.getText() + "");        
+			Uri uri = getContentResolver().insert(Notes.CONTENT_URI, values);
 			newText.setText("") ;
 			newName.setText("") ;
 			break ;
