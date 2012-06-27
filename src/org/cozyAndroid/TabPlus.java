@@ -1,5 +1,6 @@
 package org.cozyAndroid;
 
+import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,11 +11,17 @@ import android.widget.Button;
 import android.widget.EditText;
 
 public class TabPlus extends Activity implements View.OnClickListener {
-	private EditText newText ;
-	private EditText newName ;
+
+	private EditText newText = null ;
+	private EditText newName = null ;
+
 	private DataBase dataBase;
-	Button clear   = null ;
-	Button valider = null ;
+
+	private Button clear   = null ;
+	private Button valider = null ;
+	private Button bold = null;
+	private Button italic = null;
+	private Button underline = null;
 
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState) ;
@@ -25,8 +32,20 @@ public class TabPlus extends Activity implements View.OnClickListener {
 		clear   = (Button) findViewById(R.id.buttonClear)   ;
 		valider = (Button) findViewById(R.id.buttonValider) ;
 
-		clear.setOnClickListener(this)   ;
-		valider.setOnClickListener(this) ;
+		clear.setOnClickListener(this)  ;
+		valider.setOnClickListener(this);
+
+		// Pour mettre en gras
+		bold = (Button) findViewById(R.id.buttonBold) ;
+		bold.setOnClickListener(new BIUListener()) ;
+
+		// Pour mettre en italic
+		italic = (Button) findViewById(R.id.buttonItalic);
+		italic.setOnClickListener(new BIUListener());
+
+		// Pour souligner
+		underline = (Button) findViewById(R.id.buttonUnderline);
+		underline.setOnClickListener(new BIUListener());
 	}
 
 
@@ -45,7 +64,52 @@ public class TabPlus extends Activity implements View.OnClickListener {
 			newName.setText("") ;
 			break ;
 		}
+
+
+	} 
+
+	// BIU pour: bold italic underligne
+	private class BIUListener implements View.OnClickListener {
+
+		@Override
+		public void onClick(View v) {
+			// On récupère la sélection
+			int selectionStart = newText.getSelectionStart();
+			int selectionEnd = newText.getSelectionEnd();
+
+			Editable editable = newText.getText();
+
+			switch (v.getId()) {
+
+			case R.id.buttonBold :
+				if(selectionStart == selectionEnd)
+					editable.insert(selectionStart, "<b></b>");
+				else {
+					editable.insert(selectionStart, "<b>");      // On met la balise avant la sélection
+					editable.insert(selectionEnd + 3, "</b>");   // On rajoute la balise après la sélection (et les 3 caractères de la balise <b>)
+				}
+				break ;
+
+			case R.id.buttonItalic :
+				if(selectionStart == selectionEnd)
+					editable.insert(selectionStart, "<i></i>");
+				else
+				{
+					editable.insert(selectionStart, "<i>");
+					editable.insert(selectionEnd + 3, "</i>");
+				}
+				break ;
+
+			case R.id.buttonUnderline :
+				if(selectionStart == selectionEnd)
+					editable.insert(selectionStart, "<u></u>");
+				else
+				{
+					editable.insert(selectionStart, "<u>");
+					editable.insert(selectionEnd + 3, "</u>");
+				}
+				break ;
+			}
+		}
 	}
-
-
-} 
+}
