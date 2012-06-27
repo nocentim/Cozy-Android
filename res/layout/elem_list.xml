@@ -11,7 +11,7 @@
         android:text="@string/titreNote" />
 
     <TextView
-        android:id="@+id/chemin_note"
+        android:id="@+id/body_note"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textColor="@android:color/tertiary_text_light"

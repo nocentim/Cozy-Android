@@ -30,11 +30,11 @@ public final class R {
     public static final class id {
         public static final int bodyEdition=0x7f050001;
         public static final int bodyNewNote=0x7f050008;
+        public static final int body_note=0x7f050005;
         public static final int buttonAnnuler=0x7f050002;
         public static final int buttonClear=0x7f050009;
         public static final int buttonEditer=0x7f050003;
         public static final int buttonValider=0x7f05000a;
-        public static final int chemin_note=0x7f050005;
         public static final int listNotes=0x7f050006;
         public static final int nameEdition=0x7f050000;
         public static final int nameNewNote=0x7f050007;
@@ -53,16 +53,15 @@ public final class R {
         public static final int titre_note=0x7f050004;
     }
     public static final class layout {
-        public static final int arborescence=0x7f030000;
-        public static final int edition=0x7f030001;
-        public static final int elem_list=0x7f030002;
-        public static final int liste_notes=0x7f030003;
-        public static final int main=0x7f030004;
-        public static final int plus=0x7f030005;
-        public static final int tab_calendrier=0x7f030006;
-        public static final int tab_dossier=0x7f030007;
-        public static final int tab_notes=0x7f030008;
-        public static final int tab_plus=0x7f030009;
+        public static final int edition=0x7f030000;
+        public static final int elem_list=0x7f030001;
+        public static final int liste_notes=0x7f030002;
+        public static final int main=0x7f030003;
+        public static final int plus=0x7f030004;
+        public static final int tab_calendrier=0x7f030005;
+        public static final int tab_dossier=0x7f030006;
+        public static final int tab_notes=0x7f030007;
+        public static final int tab_plus=0x7f030008;
     }
     public static final class string {
         public static final int app_name=0x7f040001;

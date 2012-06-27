@@ -45,8 +45,8 @@ public class TabPlus extends Activity implements View.OnClickListener {
 			///dataBase.addNote("Notes", "note", newName.getText() + ", body: " + newText.getText()) ;
 			Resources r = getResources() ;
 			ContentValues values = new ContentValues();
-			values.put(Notes.TITLE, newName.getText()+ "");
-			values.put(Notes.BODY, newText.getText() + "");        
+			values.put(Notes.BODY, newText.getText() + ""); 
+			values.put(Notes.TITLE, newName.getText()+ "");       
 			Uri uri = getContentResolver().insert(Notes.CONTENT_URI, values);
 			newText.setText("") ;
 			newName.setText("") ;
