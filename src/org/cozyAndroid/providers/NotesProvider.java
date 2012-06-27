@@ -2,6 +2,7 @@ package org.cozyAndroid.providers;
 
 import java.util.HashMap;
 
+import org.cozyAndroid.Note;
 import org.cozyAndroid.providers.NoteSQL.Notes;
 
 import android.content.ContentProvider;

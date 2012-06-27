@@ -7,8 +7,7 @@ import org.cozyAndroid.providers.NoteSQL.Notes;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.text.Html;
-import android.text.Spanned;
+import android.util.Log;
 import android.widget.ListView;
 
 public class TabListe extends Activity {
@@ -26,12 +25,12 @@ public class TabListe extends Activity {
 	
 	public void onResume() {
 		super.onResume();
-		ArrayList<Spanned> note = new ArrayList<Spanned>();
-		Cursor cursor = managedQuery(Notes.CONTENT_URI,null, null, null, null);
+		ArrayList<Note> note = new ArrayList<Note>();
+		String projection[] = {Notes.NOTE_ID,Notes.TITLE,Notes.BODY};
+		Cursor cursor = managedQuery(Notes.CONTENT_URI, projection, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
-				Spanned markedUp = Html.fromHtml(cursor.getString(1));
-				note.add(markedUp);
+				note.add(new Note(cursor));
 			} while (cursor.moveToNext());
 		}
 
