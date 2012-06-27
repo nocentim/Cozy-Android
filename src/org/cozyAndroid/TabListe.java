@@ -3,7 +3,7 @@ package org.cozyAndroid;
 import java.util.ArrayList;
 
 import org.cozyAndroid.Note.Notes;
-import org.cozyAndroid.NotesProvider.DataBase;
+import org.cozyAndroid.providers.NotesProvider.DataBase;
 
 import android.app.Activity;
 import android.database.Cursor;

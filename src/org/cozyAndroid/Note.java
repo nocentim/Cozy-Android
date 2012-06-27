@@ -1,5 +1,7 @@
 package org.cozyAndroid;
 
+import org.cozyAndroid.providers.NotesProvider;
+
 import android.net.Uri;
 import android.provider.BaseColumns;
 
