@@ -2,7 +2,10 @@ package org.cozyAndroid;
 
 import org.cozyAndroid.providers.NoteSQL.Notes;
 
-import android.R.string;
+import android.app.Activity;
+import android.content.ContentValues;
+import android.net.Uri;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Spanned;
@@ -11,10 +14,6 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.app.Activity;
-import android.content.ContentValues;
-import android.net.Uri; 
-import android.os.Bundle ;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -59,6 +58,10 @@ public class TabPlus extends Activity implements View.OnClickListener {
 		newText.addTextChangedListener(new TextListener());
 	}
 
+	public void onResume() {
+		super.onResume();
+		newText.setSelection(newText.getText().length(), newText.getText().length());
+	}
 
 	public void onClick(View v) {
 		switch(v.getId()) {
@@ -88,7 +91,6 @@ public class TabPlus extends Activity implements View.OnClickListener {
 	 */
 	private class BIUListener implements View.OnClickListener {
 
-		@Override
 		public void onClick(View v) {
 			int selectionStart = newText.getSelectionStart();  // On récupère la sélection
 			int selectionEnd   = newText.getSelectionEnd();
@@ -125,9 +127,9 @@ public class TabPlus extends Activity implements View.OnClickListener {
 
 	private class EnterListener implements View.OnKeyListener {
 
-		@Override
 		public boolean onKey(View v, int keyCode, KeyEvent event) {
 			// On récupère la position du début de la sélection dans le texte
+			Log.d("hello","je bug la");
 			int cursorIndex = newText.getSelectionStart();
 			// Ne réagir qu'à l'appui sur une touche (et pas le relâchement)
 			if(event.getAction() == 0)
@@ -142,21 +144,21 @@ public class TabPlus extends Activity implements View.OnClickListener {
 
 	private class TextListener implements TextWatcher {
 
-		@Override
 		public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-		@Override
-		public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-		@Override
-		public void afterTextChanged(Editable s) {
+		
+		public void onTextChanged(CharSequence s, int start, int before, int count) {
 			newText.removeTextChangedListener(this) ;
+			newText.setSelection(newText.getText().length(), newText.getText().length());
 			//			// Le Textview interprète le texte dans l'éditeur en une certaine couleur
 			Editable edit = newText.getText() ;
 			String sr = edit.toString() ;
 			Spanned sp = Html.fromHtml(sr) ;
-			newText.setText("");
 			//			newText.setText(Html.fromHtml("<font color=\"" + currentColor + "\">" + newText.getText().toString() + "</font>", null , null));
 			newText.addTextChangedListener(this) ;
+			
+		}
+
+		public void afterTextChanged(Editable s) {	
 		}
 
 	}
