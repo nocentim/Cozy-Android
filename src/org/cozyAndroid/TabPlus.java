@@ -1,6 +1,8 @@
 package org.cozyAndroid;
 
 import org.cozyAndroid.providers.NoteSQL.Notes;
+
+import android.R.string;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Spanned;
@@ -82,7 +84,7 @@ public class TabPlus extends Activity implements View.OnClickListener {
 	/**
 	 *  BIU pour: bold italic underligne
 	 * @author bissou
-	 *
+	 * 
 	 */
 	private class BIUListener implements View.OnClickListener {
 
@@ -90,6 +92,9 @@ public class TabPlus extends Activity implements View.OnClickListener {
 		public void onClick(View v) {
 			int selectionStart = newText.getSelectionStart();  // On récupère la sélection
 			int selectionEnd   = newText.getSelectionEnd();
+			if (selectionStart == -1) selectionStart = 0 ;
+			if (selectionEnd == -1) selectionEnd = 0 ;
+
 
 			Editable editable = newText.getText() ;
 			CharSequence baliseOuvrante = "", baliseFermante = "" ;
@@ -114,6 +119,7 @@ public class TabPlus extends Activity implements View.OnClickListener {
 
 			editable.insert(selectionStart, baliseOuvrante) ;    // On met la balise avant la sélection
 			editable.insert(selectionEnd + 3 , baliseFermante) ; // On rajoute la balise après la sélection (et les 3 caractères de la balise <b>)
+			//TODO il faut revoir cette double insertion car cela modifie deux fois le texte donc appel deux fois le listener
 		}
 	}
 
@@ -137,16 +143,21 @@ public class TabPlus extends Activity implements View.OnClickListener {
 	private class TextListener implements TextWatcher {
 
 		@Override
-		public void afterTextChanged(Editable s) {
-			// Le Textview interprète le texte dans l'éditeur en une certaine couleur
-			newText.setText(Html.fromHtml(newText.getText().toString()));
-//			newText.setText(Html.fromHtml("<font color=\"" + currentColor + "\">" + newText.getText().toString() + "</font>", null , null));
-		}
-
-		@Override
 		public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+		@Override
+		public void afterTextChanged(Editable s) {
+			newText.removeTextChangedListener(this) ;
+			//			// Le Textview interprète le texte dans l'éditeur en une certaine couleur
+			Editable edit = newText.getText() ;
+			String sr = edit.toString() ;
+			Spanned sp = Html.fromHtml(sr) ;
+			//			newText.setText("a");
+			//			newText.setText(Html.fromHtml("<font color=\"" + currentColor + "\">" + newText.getText().toString() + "</font>", null , null));
+			newText.addTextChangedListener(this) ;
+		}
 
 	}
 }
