@@ -34,13 +34,12 @@
   <widgets xsi:type="model:Label" id="70" x="112" y="133" width="362" text="[Navigateur] > [Photos] > [2012] \n> [Vacances Fevrier] > Ski" measuredWidth="362" measuredHeight="54">
     <font size="20px"/>
   </widgets>
-  <widgets xsi:type="model:List" id="71" x="1" y="241" width="478" height="559" text="|%(color:555555)Notes%&#xA;{new} Les Arcs&#xA;{new} Arèches&#xA;{new} Val Thorens&#xA;{new} Rando&#xA;" measuredWidth="478" measuredHeight="559" rowHeight="50" alternative="#f3f3f3">
+  <widgets xsi:type="model:List" id="71" x="1" y="241" width="478" height="559" text="{new} Les Arcs&#xA;{new} Arèches&#xA;{new} Val Thorens&#xA;{new} Rando&#xA;" measuredWidth="478" measuredHeight="559" rowHeight="50" alternative="#f3f3f3">
     <font size="24px"/>
-    <items x="0" y="2" width="478" height="50" text="|%(color:555555)Notes%"/>
-    <items x="0" y="52" width="478" height="50" text="{new} Les Arcs"/>
-    <items x="0" y="102" width="478" height="50" text="{new} Arèches"/>
-    <items x="0" y="152" width="478" height="50" text="{new} Val Thorens"/>
-    <items x="0" y="202" width="478" height="50" text="{new} Rando"/>
+    <items x="0" y="2" width="478" height="50" text="{new} Les Arcs"/>
+    <items x="0" y="52" width="478" height="50" text="{new} Arèches"/>
+    <items x="0" y="102" width="478" height="50" text="{new} Val Thorens"/>
+    <items x="0" y="152" width="478" height="50" text="{new} Rando"/>
   </widgets>
   <widgets xsi:type="model:Button" id="72" x="59" y="141" width="41" height="38" measuredWidth="41" measuredHeight="38" state="disabled" icon="arrow-right (medium)">
     <font/>

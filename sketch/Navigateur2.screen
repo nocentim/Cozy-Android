@@ -15,13 +15,12 @@
   <widgets xsi:type="model:Label" id="68" x="112" y="133" width="362" text="[Navigateur] > [Photos] > 2012" measuredWidth="362" measuredHeight="31">
     <font size="20px"/>
   </widgets>
-  <widgets xsi:type="model:List" id="69" x="1" y="241" width="478" height="559" text="|%(color:555555)Dossiers%&#xA;{closed} En vrac&#xA;{closed} Soirées ENSIMAG&#xA;{closed} Vacances Fevrier&#xA;{closed} Vacances Pâques" measuredWidth="478" measuredHeight="559" rowHeight="50" alternative="#f3f3f3">
+  <widgets xsi:type="model:List" id="69" x="1" y="241" width="478" height="559" text="{closed} En vrac&#xA;{closed} Soirées ENSIMAG&#xA;{closed} Vacances Fevrier&#xA;{closed} Vacances Pâques" measuredWidth="478" measuredHeight="559" rowHeight="50" alternative="#f3f3f3">
     <font size="24px"/>
-    <items x="0" y="2" width="478" height="50" text="|%(color:555555)Dossiers%"/>
-    <items x="0" y="52" width="478" height="50" text="{closed} En vrac"/>
-    <items x="0" y="102" width="478" height="50" text="{closed} Soirées ENSIMAG"/>
-    <items link="Navigateur.screen" x="0" y="152" width="478" height="50" text="{closed} Vacances Fevrier"/>
-    <items x="0" y="202" width="478" height="50" text="{closed} Vacances Pâques"/>
+    <items x="0" y="2" width="478" height="50" text="{closed} En vrac"/>
+    <items x="0" y="52" width="478" height="50" text="{closed} Soirées ENSIMAG"/>
+    <items link="Navigateur.screen" x="0" y="102" width="478" height="50" text="{closed} Vacances Fevrier"/>
+    <items x="0" y="152" width="478" height="50" text="{closed} Vacances Pâques"/>
   </widgets>
   <widgets xsi:type="model:Button" id="70" x="59" y="141" width="41" height="38" measuredWidth="41" measuredHeight="38" state="disabled" icon="arrow-right (medium)">
     <font/>

@@ -88,7 +88,6 @@ public class TabPlus extends Activity implements View.OnClickListener {
 	 */
 	private class BIUListener implements View.OnClickListener {
 
-		@Override
 		public void onClick(View v) {
 			int selectionStart = newText.getSelectionStart();  // On récupère la sélection
 			int selectionEnd   = newText.getSelectionEnd();
@@ -125,7 +124,6 @@ public class TabPlus extends Activity implements View.OnClickListener {
 
 	private class EnterListener implements View.OnKeyListener {
 
-		@Override
 		public boolean onKey(View v, int keyCode, KeyEvent event) {
 			// On récupère la position du début de la sélection dans le texte
 			int cursorIndex = newText.getSelectionStart();
@@ -142,12 +140,11 @@ public class TabPlus extends Activity implements View.OnClickListener {
 
 	private class TextListener implements TextWatcher {
 
-		@Override
+		
 		public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-		@Override
+		
 		public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
-		@Override
 		public void afterTextChanged(Editable s) {
 			newText.removeTextChangedListener(this) ;
 			//			// Le Textview interprète le texte dans l'éditeur en une certaine couleur
