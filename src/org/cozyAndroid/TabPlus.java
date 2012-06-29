@@ -154,7 +154,7 @@ public class TabPlus extends Activity implements View.OnClickListener {
 			Editable edit = newText.getText() ;
 			String sr = edit.toString() ;
 			Spanned sp = Html.fromHtml(sr) ;
-			//			newText.setText("a");
+			newText.setText("");
 			//			newText.setText(Html.fromHtml("<font color=\"" + currentColor + "\">" + newText.getText().toString() + "</font>", null , null));
 			newText.addTextChangedListener(this) ;
 		}
