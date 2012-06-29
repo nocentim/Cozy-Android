@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:Panel" id="57" width="480" height="800" measuredWidth="480" measuredHeight="800"/>
+  <widgets xsi:type="model:TextArea" id="58" y="39" width="480" height="42" text=" Cozy Android" measuredWidth="480" measuredHeight="42" background="#999999">
+    <font size="20px" bold="true"/>
+  </widgets>
+  <widgets xsi:type="model:Icon" id="59" x="312" y="8" measuredWidth="32" measuredHeight="32" icon="signal (large)"/>
+  <widgets xsi:type="model:Icon" id="60" x="352" y="8" measuredWidth="32" measuredHeight="32" icon="battery (large)"/>
+  <widgets xsi:type="model:TextField" id="61" x="272" y="9" text="3G" measuredWidth="32" measuredHeight="29">
+    <font size="17px"/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="62" x="391" y="9" text="10:15 AM" measuredWidth="79" measuredHeight="29">
+    <font size="17px"/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="68" x="112" y="133" width="362" text="[Navigateur] > [Photos] > 2012" measuredWidth="362" measuredHeight="31">
+    <font size="20px"/>
+  </widgets>
+  <widgets xsi:type="model:List" id="69" x="1" y="241" width="478" height="559" text="|%(color:555555)Dossiers%&#xA;{closed} En vrac&#xA;{closed} Soirées ENSIMAG&#xA;{closed} Vacances Fevrier&#xA;{closed} Vacances Pâques" measuredWidth="478" measuredHeight="559" rowHeight="50" alternative="#f3f3f3">
+    <font size="24px"/>
+    <items x="0" y="2" width="478" height="50" text="|%(color:555555)Dossiers%"/>
+    <items x="0" y="52" width="478" height="50" text="{closed} En vrac"/>
+    <items x="0" y="102" width="478" height="50" text="{closed} Soirées ENSIMAG"/>
+    <items link="Navigateur.screen" x="0" y="152" width="478" height="50" text="{closed} Vacances Fevrier"/>
+    <items x="0" y="202" width="478" height="50" text="{closed} Vacances Pâques"/>
+  </widgets>
+  <widgets xsi:type="model:Button" id="70" x="59" y="141" width="41" height="38" measuredWidth="41" measuredHeight="38" state="disabled" icon="arrow-right (medium)">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Button" id="71" x="11" y="140" width="41" height="39" measuredWidth="41" measuredHeight="39" icon="arrow-left (medium)" link="Navigateur.screen">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Panel" id="72" x="1" y="186" width="478" height="56" measuredWidth="478" measuredHeight="56"/>
+  <widgets xsi:type="model:SearchField" id="73" x="11" y="196" width="461" text="Rechercher un dossier" measuredWidth="461" measuredHeight="36">
+    <font size="24px"/>
+  </widgets>
+  <widgets xsi:type="model:Hotspot" id="74" x="108" y="135" width="108" height="28" measuredWidth="108" measuredHeight="28" link="NavigateurTout.screen"/>
+  <widgets xsi:type="model:Tabs" id="75" x="1" y="79" text="   _         ,                   ,                 ,                   " measuredWidth="478" measuredHeight="50" selection="1">
+    <items x="1" y="0" width="104" height="50" text="   _         "/>
+    <items x="105" y="0" width="128" height="50" text="                  "/>
+    <items x="233" y="0" width="116" height="50" text="                "/>
+    <items x="349" y="0" width="128" height="50" text="                  "/>
+    <font size="24px"/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="76" x="12" y="88" text="Notes" measuredWidth="81" measuredHeight="32" textAlignment="Center" icon="copy (large)">
+    <font size="16px"/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="77" x="113" y="88" text="Navigateur" measuredWidth="117" measuredHeight="32" textAlignment="Center" icon="open (large)">
+    <font size="16px"/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="78" x="362" y="88" text="Calendrier" measuredWidth="112" measuredHeight="32" textAlignment="Center" icon="calendar2 (large)">
+    <font size="16px"/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="79" x="241" y="88" text="Nouvelle" measuredWidth="102" measuredHeight="32" textAlignment="Center" icon="add (large)">
+    <font size="16px"/>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font size="12px"/>
+</model:Screen>
