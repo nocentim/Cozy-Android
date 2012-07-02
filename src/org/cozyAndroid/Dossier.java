@@ -50,6 +50,10 @@ public class Dossier {
 		return res;
 	}
 	
+	public void supprimerDossier(Dossier d) {
+		sousDossiers.remove(d);
+	}
+	
 	public void addNote(Note n) {
 		notes.add(n);
 	}
@@ -78,6 +82,32 @@ public class Dossier {
 			res = parent.getParents();			
 		}
 		res.add(this);
+		return res;
+	}
+	
+	/**
+	 * @return une string indiquant le nombre de notes et de sous-dossiers
+	 */
+	public String getInfos() {
+		int n = notes.size();
+		int d = sousDossiers.size();
+		if (n == 0 && d == 0) {
+			return "Vide";
+		}
+		String res = "";
+		if (n == 1) {
+			res = "1 note";
+		} else if (n > 1) {
+			res = n + " notes";
+		}
+		if (n != 0 && d != 0) {
+			res += ", ";
+		}
+		if (d == 1) {
+			res += "1 sous-dossier";
+		} else if (d > 1) {
+			res += d + " sous-dossiers";
+		}
 		return res;
 	}
 }
