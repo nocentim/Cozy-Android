@@ -2,6 +2,11 @@ package org.cozyAndroid;
 
 import java.util.ArrayList;
 
+import android.text.Spannable;
+import android.text.Spanned;
+import android.text.SpannedString;
+import android.text.TextUtils;
+
 /**
  * Classe des dossiers
  * Fonctionnement particulier :
@@ -61,10 +66,18 @@ public class Dossier {
 		return sousDossiers.size() + notes.size();
 	}
 	
-	public String getPath () {
+	/**
+	 * @return un tableau avec le nom de ses parents ainsi que le sien.
+	 * Le tableau possède au moins 1 element (son propre nom)
+	 */
+	public ArrayList<Dossier> getParents () {
+		ArrayList<Dossier> res;
 		if (parent == null) {
-			return nom;
+			res = new ArrayList<Dossier>();
+		} else {
+			res = parent.getParents();			
 		}
-		return parent.getPath() + " > " + nom;
+		res.add(this);
+		return res;
 	}
 }
