@@ -148,6 +148,7 @@ public class TabPlus extends Activity implements View.OnClickListener {
 	//TODO transformer cette classe en une variable d'instance
 	private class TextListener implements TextWatcher {
 
+
 		public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 		public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
