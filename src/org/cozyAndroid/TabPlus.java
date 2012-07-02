@@ -141,7 +141,6 @@ public class TabPlus extends Activity implements View.OnClickListener {
 
 	private class TextListener implements TextWatcher {
 
-
 	    private EditText mEditText;
 
 		public TextListener(EditText e) {

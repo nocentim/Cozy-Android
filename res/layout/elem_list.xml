@@ -1,20 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_height="40dp"
+    android:orientation="horizontal" >
 
-    <TextView
-        android:id="@+id/titre_note"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/titreNote" />
+    <ImageView
+        android:id="@+id/icone"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:src="@drawable/note" />
 
-    <TextView
-        android:id="@+id/body_note"
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/tertiary_text_light"
-        android:text="@string/cheminNote" />
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+        
+        <TextView
+	        android:id="@+id/titre_note"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:text="@string/titreNote" />
+
+   		<TextView
+	        android:id="@+id/body_note"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:textColor="@android:color/tertiary_text_light"
+	        android:text="@string/sousTitreNote" />
+        
+    </LinearLayout>
 
 </LinearLayout>
