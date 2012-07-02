@@ -15,5 +15,6 @@
     <string name="path">Navigateur</string>
     <string name="search_label_dossier">AAA</string>
     <string name="search_hint_dossier">Rechercher un dossier</string>
+    <string name="dossier_vide">Ce dossier est vide.</string>
 
 </resources>

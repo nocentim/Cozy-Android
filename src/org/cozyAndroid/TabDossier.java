@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 public class TabDossier extends Activity implements View.OnClickListener {
 	
-	private Dossier racine = Dossier.racine;
+	private final Dossier racine = Dossier.racine;
 	private ArrayList<Dossier> historique;
 	private int position;
 	
@@ -38,6 +38,7 @@ public class TabDossier extends Activity implements View.OnClickListener {
 		navigateur = (ListView) findViewById(R.id.liste_navigateur);
 		adapter = new DossierAdapter(this,racine);
 		navigateur.setAdapter(adapter);
+		navigateur.setEmptyView(findViewById(R.layout.dossier_vide));
 		
 		path = (TextView) findViewById(R.id.navigateur_path);
 		setPathWithLinks(racine);
