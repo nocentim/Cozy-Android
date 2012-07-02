@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Html;
+import android.text.Selection;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
@@ -51,17 +52,13 @@ public class TabPlus extends Activity implements View.OnClickListener {
 		underline = (Button) findViewById(R.id.buttonUnderline);
 		underline.setOnClickListener(new BIUListener());
 
-		newText.setMovementMethod (new ScrollingMovementMethod()) ;
+		newText.setMovementMethod (new ScrollingMovementMethod());
 		// On ajouter un Listener sur l'appui de touches
 		newText.setOnKeyListener(new EnterListener());
 		// On ajoute un autre Listener sur le changement dans le texte cette fois
-		newText.addTextChangedListener(new TextListener());
+		newText.addTextChangedListener(new TextListener(newText));
 	}
 
-	public void onResume() {
-		super.onResume();
-		newText.setSelection(newText.getText().length(), newText.getText().length());
-	}
 
 	public void onClick(View v) {
 		switch(v.getId()) {
@@ -144,21 +141,32 @@ public class TabPlus extends Activity implements View.OnClickListener {
 
 	private class TextListener implements TextWatcher {
 
+
+	    private EditText mEditText;
+
+		public TextListener(EditText e) {
+	        mEditText = e;
+	    }
+
 		public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 		
 		public void onTextChanged(CharSequence s, int start, int before, int count) {
+	
+		}
+
+		public void afterTextChanged(Editable s) {
 			newText.removeTextChangedListener(this) ;
-			newText.setSelection(newText.getText().length(), newText.getText().length());
+			
 			//			// Le Textview interprète le texte dans l'éditeur en une certaine couleur
 			Editable edit = newText.getText() ;
 			String sr = edit.toString() ;
-			Spanned sp = Html.fromHtml(sr) ;
+			Spanned sp = Html.fromHtml(sr);
+			//s.clear();
+			//s.append(sp);
+			newText.setText(sr);
 			//			newText.setText(Html.fromHtml("<font color=\"" + currentColor + "\">" + newText.getText().toString() + "</font>", null , null));
+	
 			newText.addTextChangedListener(this) ;
-			
-		}
-
-		public void afterTextChanged(Editable s) {	
 		}
 
 	}
