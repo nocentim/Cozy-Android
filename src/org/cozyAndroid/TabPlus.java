@@ -26,25 +26,26 @@ public class TabPlus extends Activity implements View.OnClickListener {
 	private Button italic = null;
 	private Button underline = null;
 
+	private Spanned body ;
+
 	/**
 	 *  BIU pour: bold italic underligne, ecoute les boutons correspondants
 	 * @author bissou
 	 */
 	private View.OnClickListener BIUListener = new View.OnClickListener() {
 		public void onClick(View v) {
-			newText.removeTextChangedListener(TextListener) ;
 			int selectionStart = newText.getSelectionStart();  // On récupère la sélection
 			int selectionEnd   = newText.getSelectionEnd();
 			if (selectionStart == -1) selectionStart = 0 ;
 			if (selectionEnd == -1) selectionEnd = 0 ;
-			Editable editable = newText.getText() ;
+			//TODO verifier les effets de bord de la selection
 			CharSequence baliseOuvrante = "", baliseFermante = "" ;
 
 			switch (v.getId()) {
 			case R.id.buttonBold :
 				baliseOuvrante = "<b>" ;
 				baliseFermante = "</b>" ;
-				break ;
+				break ; 
 			case R.id.buttonItalic :
 				baliseOuvrante = "<i>" ;
 				baliseFermante = "</i>" ;
@@ -55,12 +56,9 @@ public class TabPlus extends Activity implements View.OnClickListener {
 				break ;
 			}
 
-			editable.insert(selectionStart, baliseOuvrante) ;    // On met la balise avant la sélection
-			newText.addTextChangedListener(TextListener) ;	
-			editable.insert(selectionEnd + 3 , baliseFermante) ; // On rajoute la balise après la sélection (et les 3 caractères de la balise <b>)
-			//TODO il faut revoir cette double insertion car cela modifie deux fois le texte donc appel deux fois le listener
-			Log.d("allo", "onclicklistener") ;
-			Log.d("allo", newText.getText().toString()) ;
+			((Editable) body).insert(selectionStart, baliseOuvrante) ;    // On met la balise avant la sélection
+			((Editable) body).insert(selectionEnd + 3 , baliseFermante) ; // On rajoute la balise après la sélection (et les 3 caractères de la balise <b>)
+			afficheText() ;
 		}
 	} ;
 
@@ -69,32 +67,26 @@ public class TabPlus extends Activity implements View.OnClickListener {
 	 * a la ligne dans ca note
 	 */
 	private View.OnKeyListener EnterListener = new View.OnKeyListener() {
-
 		public boolean onKey(View v, int keyCode, KeyEvent event) {
-			// On récupère la position du début de la sélection dans le texte
-			int cursorIndex = newText.getSelectionStart();
-			// Ne réagir qu'à l'appui sur une touche (et pas le relâchement)
-			if(event.getAction() == 0)
-				// S'il s'agit d'un appui sur la touche « entrée »
-				if(keyCode == 66)
-					// On insère une balise de retour à la ligne
-					newText.getText().insert(cursorIndex, "<br />");
+			int cursorIndex = newText.getSelectionStart(); // On récupère la position du début de la sélection dans le texte
+			if(event.getAction() == 0)                     // Ne réagir qu'à l'appui sur une touche (et pas le relâchement)
+				if(keyCode == 66)                          // Pour la touche « entrée »
+					((Editable) body).insert(cursorIndex, "<br />"); // On insère une balise de retour à la ligne
+			afficheText() ;
 			return true;
 		}
 	} ;
 
-	/**
+	/** 
 	 * Ecoute les changements du texte
 	 */
 	private TextWatcher TextListener = new TextWatcher() {
 		public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-		public void onTextChanged(CharSequence s, int start, int before, int count) {}
+		public void onTextChanged(CharSequence s, int start, int before, int count) {
+			((Editable) body).replace (start, start + before, s, start, start + count) ;
+		}
 		public void afterTextChanged(Editable s) {	
-			newText.removeTextChangedListener(this) ;
-			// Le Textview interprète le texte dans l'éditeur en une certaine couleur
-			newText.setText(Html.fromHtml(newText.getText().toString()));
-			//			newText.setText(Html.fromHtml("<font color=\"" + currentColor + "\">" + newText.getText().toString() + "</font>", null , null));
-			newText.addTextChangedListener(this) ;	
+			afficheText() ;
 		}
 	} ;
 
@@ -125,8 +117,11 @@ public class TabPlus extends Activity implements View.OnClickListener {
 		newText.setOnKeyListener(EnterListener);
 		// On ajoute un autre Listener sur le changement dans le texte cette fois
 		newText.addTextChangedListener(TextListener);
+
+		body = Html.fromHtml("") ;
 	}
 
+	//TODO verifier le bon fonctionnement de cette methode suite a la nouvelle implementation
 	public void onClick(View v) {
 		switch(v.getId()) {
 		case R.id.buttonClear : 
@@ -143,4 +138,12 @@ public class TabPlus extends Activity implements View.OnClickListener {
 			break ;
 		}
 	} 
+
+	public void afficheText() {
+		// Le Textview interprète le texte dans l'éditeur en une certaine couleur
+		//			newText.setText(Html.fromHtml("<font color=\"" + currentColor + "\">" + newText.getText().toString() + "</font>", null , null));
+		newText.removeTextChangedListener(TextListener) ;
+		newText.setText (Html.fromHtml (body.toString())) ;
+		newText.addTextChangedListener(TextListener) ;	
+	}
 }
