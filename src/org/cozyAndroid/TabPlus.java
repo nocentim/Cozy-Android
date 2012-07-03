@@ -1,6 +1,14 @@
 package org.cozyAndroid;
 
+import java.io.IOException;
+
 import org.cozyAndroid.providers.NoteSQL.Notes;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder ;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -143,6 +151,20 @@ public class TabPlus extends Activity implements View.OnClickListener {
 		// Le Textview interprète le texte dans l'éditeur en une certaine couleur
 		//			newText.setText(Html.fromHtml("<font color=\"" + currentColor + "\">" + newText.getText().toString() + "</font>", null , null));
 		newText.removeTextChangedListener(TextListener) ;
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance() ;
+		try {
+			DocumentBuilder bui = factory.newDocumentBuilder();
+			Document d = bui.parse(body.toString()) ;
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 		newText.setText (Html.fromHtml (body.toString())) ;
 		newText.addTextChangedListener(TextListener) ;	
 	}
