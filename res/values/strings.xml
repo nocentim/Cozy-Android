@@ -15,5 +15,10 @@
     <string name="path">Navigateur</string>
     <string name="search_label_dossier">AAA</string>
     <string name="search_hint_dossier">Rechercher un dossier</string>
+    <string name="dossier_vide">Ce dossier est vide.</string>
+    <string name="suppr_dossier">Supprimer ce dossier</string>
+    <string name="creer_dossier">Creer un dossier</string>
+    <string name="hint_creer">Nom du nouveau dossier</string>
+    <string name="confirm_creer">Creer</string>
 
 </resources>
