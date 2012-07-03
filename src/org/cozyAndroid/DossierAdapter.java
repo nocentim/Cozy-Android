@@ -4,8 +4,8 @@ package org.cozyAndroid;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -53,14 +53,16 @@ public class DossierAdapter extends BaseAdapter {
 		TextView bodyView = (TextView)convertView.findViewById(R.id.body_note);
 		ImageView icone = (ImageView)convertView.findViewById(R.id.icone);
 		if (position < courant.nbDossiers()) {
-			//C'est un dossier
+			// C'est un dossier :
+			// on affiche son nom et ce qu'il y a dedans
 			Dossier d = (Dossier) getItem(position);
 			titreView.setText(d.nom);
-			bodyView.setText(d.nbNotes() + " notes, " + d.nbDossiers() + " sous-dossiers");
+			bodyView.setText(d.getInfos());
 			icone.setImageResource(R.drawable.folder);
 			convertView.setOnClickListener(new DossierListener(d));
 		} else {
-			//C'est une note
+			// C'est une note :
+			// on affiche son titre et ses premiers mots
 			Note n = (Note) getItem(position);
 			String titre = n.titre;
 			String body = n.getSpannedBody().toString().replace("\n", " ");

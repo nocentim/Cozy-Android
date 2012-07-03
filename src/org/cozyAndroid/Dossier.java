@@ -2,6 +2,11 @@ package org.cozyAndroid;
 
 import java.util.ArrayList;
 
+import android.text.Spannable;
+import android.text.Spanned;
+import android.text.SpannedString;
+import android.text.TextUtils;
+
 /**
  * Classe des dossiers
  * Fonctionnement particulier :
@@ -45,6 +50,10 @@ public class Dossier {
 		return res;
 	}
 	
+	public void supprimerDossier(Dossier d) {
+		sousDossiers.remove(d);
+	}
+	
 	public void addNote(Note n) {
 		notes.add(n);
 	}
@@ -61,10 +70,44 @@ public class Dossier {
 		return sousDossiers.size() + notes.size();
 	}
 	
-	public String getPath () {
+	/**
+	 * @return un tableau avec le nom de ses parents ainsi que le sien.
+	 * Le tableau possède au moins 1 element (son propre nom)
+	 */
+	public ArrayList<Dossier> getParents () {
+		ArrayList<Dossier> res;
 		if (parent == null) {
-			return nom;
+			res = new ArrayList<Dossier>();
+		} else {
+			res = parent.getParents();			
 		}
-		return parent.getPath() + " > " + nom;
+		res.add(this);
+		return res;
+	}
+	
+	/**
+	 * @return une string indiquant le nombre de notes et de sous-dossiers
+	 */
+	public String getInfos() {
+		int n = notes.size();
+		int d = sousDossiers.size();
+		if (n == 0 && d == 0) {
+			return "Vide";
+		}
+		String res = "";
+		if (n == 1) {
+			res = "1 note";
+		} else if (n > 1) {
+			res = n + " notes";
+		}
+		if (n != 0 && d != 0) {
+			res += ", ";
+		}
+		if (d == 1) {
+			res += "1 sous-dossier";
+		} else if (d > 1) {
+			res += d + " sous-dossiers";
+		}
+		return res;
 	}
 }
