@@ -1,14 +1,17 @@
 package org.cozyAndroid;
 
 import java.io.IOException;
+import java.io.StringWriter;
 
 import org.cozyAndroid.providers.NoteSQL.Notes;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder ;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.* ; 
+import javax.xml.transform.*;
+import javax.xml.transform.dom.* ;
+import javax.xml.transform.stream.*;
+
+import org.w3c.dom.*; 
+import org.xml.sax.*; 
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -32,16 +35,22 @@ public class TabPlus extends Activity implements View.OnClickListener {
 	private Button valider = null ;
 	private Button bold = null;
 	private Button italic = null;
-	private Button underline = null;
+	private Button underline = null ;
 
+	//TODO attention le type de body a ete modifie mais ce changement n'a pas ete 
+	//repercute sur les methode deja implemente au moment du changement
+	private Document bodyDoc ;
 	private Spanned body ;
 
 	/**
 	 *  BIU pour: bold italic underligne, ecoute les boutons correspondants
 	 * @author bissou
 	 */
+	//TODO peut etre fusionne avec l'autre on click methode, le listener devient this, 
+	//on met un if pour differencier les initialisations avnt les switch
 	private View.OnClickListener BIUListener = new View.OnClickListener() {
 		public void onClick(View v) {
+			//TODO cette methode doit modifier l'arbre, mais avant il faut savoir ou l'on est dans l'arbre
 			int selectionStart = newText.getSelectionStart();  // On récupère la sélection
 			int selectionEnd   = newText.getSelectionEnd();
 			if (selectionStart == -1) selectionStart = 0 ;
@@ -126,10 +135,10 @@ public class TabPlus extends Activity implements View.OnClickListener {
 		// On ajoute un autre Listener sur le changement dans le texte cette fois
 		newText.addTextChangedListener(TextListener);
 
-		body = Html.fromHtml("") ;
+		bodyDoc = creationDOM() ;
 	}
 
-	//TODO verifier le bon fonctionnement de cette methode suite a la nouvelle implementation
+	//TODO verifier le bon fonctionnement de cette methode suite a toutes les modifications
 	public void onClick(View v) {
 		switch(v.getId()) {
 		case R.id.buttonClear : 
@@ -141,31 +150,82 @@ public class TabPlus extends Activity implements View.OnClickListener {
 			values.put(Notes.TITLE, newName.getText()+ "");
 			values.put(Notes.BODY, newText.getText() + "");        
 			Uri uri = getContentResolver().insert(Notes.CONTENT_URI, values);
-			newText.setText("") ;
+			newText.setText("") ; // Pour ces deux lignes il faudra surement faire plus
 			newName.setText("") ;
 			break ;
 		}
 	} 
 
+	/**
+	 * transform le DOM en html pour qu'il soit interprete par la classe Html puis affiche dans l'edit text
+	 */
 	public void afficheText() {
-		// Le Textview interprète le texte dans l'éditeur en une certaine couleur
-		//			newText.setText(Html.fromHtml("<font color=\"" + currentColor + "\">" + newText.getText().toString() + "</font>", null , null));
+		//TODO voir la methode notify pour savoir s'il est possible de se passer de cette methode (pour factoriser le code)
 		newText.removeTextChangedListener(TextListener) ;
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance() ;
+
 		try {
-			DocumentBuilder bui = factory.newDocumentBuilder();
-			Document d = bui.parse(body.toString()) ;
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
+			DocumentBuilderFactory fabrique = DocumentBuilderFactory.newInstance();
+			DocumentBuilder constructeur;
+			try {
+				constructeur = fabrique.newDocumentBuilder();
+				Document document = constructeur.parse (body.toString()) ;
+	
+			} catch (ParserConfigurationException e) {
+				Log.e("tabplus", "probleme lors de la creation du DOM") ;
+				e.printStackTrace();
+			} catch (SAXException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		DOMSource domSource = new DOMSource(bodyDoc) ;
+			StringWriter writer = new StringWriter() ;
+			StreamResult result = new StreamResult(writer) ;
+			TransformerFactory tf = TransformerFactory.newInstance() ;
+			Transformer transformer = tf.newTransformer() ;
+			transformer.transform(domSource, result) ;
+			String stringResult = writer.toString() ; 
+			newText.setText (Html.fromHtml (stringResult)) ;
+		} catch (TransformerConfigurationException e) {
+			Log.e("tabplus", "probleme lors de la creation du transformer pour l'interpretation du DOM") ;
 			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
+		} catch (TransformerException e) {
+			Log.e("tabplus", "probleme lors de la transformation du DOM") ; 
 			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-		newText.setText (Html.fromHtml (body.toString())) ;
+		}
+
 		newText.addTextChangedListener(TextListener) ;	
 	}
+
+	/**
+	 * cree un DOM, pour l'instant son contenu est en dur
+	 * @return le DOM nouvellement cree
+	 */
+	private Document creationDOM() {
+		// Création d'un nouveau DOM
+//		DocumentBuilderFactory fabrique = DocumentBuilderFactory.newInstance();
+//		DocumentBuilder constructeur;
+//		try {
+//			constructeur = fabrique.newDocumentBuilder();
+//			Document document = constructeur.parse (body.toString()) ;
+//
+//			return document ;
+//		} catch (ParserConfigurationException e) {
+//			Log.e("tabplus", "probleme lors de la creation du DOM") ;
+//			e.printStackTrace();
+//		} catch (SAXException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		return null ;
+	}
+
 }
+
+// Pour mettre en couleur un texte en html:
+//		newText.setText(Html.fromHtml("<font color=\"" + currentColor + "\">" + newText.getText().toString() + "</font>", null , null));
