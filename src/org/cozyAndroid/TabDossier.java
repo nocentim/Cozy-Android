@@ -307,7 +307,7 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		final ArrayList<Dossier> parents = d.getParents();
 		String pathString = parents.get(0).nom;
 		for (int i = 1; i < parents.size(); i++) {
-			pathString += " > " + parents.get(i).nom;
+			pathString += " / " + parents.get(i).nom;
 		}
 		path.setText(pathString);
 		for (int i = 0; i < parents.size() - 1; i++) {

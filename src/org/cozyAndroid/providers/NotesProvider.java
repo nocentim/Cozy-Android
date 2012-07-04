@@ -3,7 +3,8 @@ package org.cozyAndroid.providers;
 import java.util.HashMap;
 
 import org.cozyAndroid.Note;
-import org.cozyAndroid.providers.NoteSQL.Notes;
+import org.cozyAndroid.providers.TablesSQL.Dossiers;
+import org.cozyAndroid.providers.TablesSQL.Notes;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -28,15 +29,21 @@ public class NotesProvider extends ContentProvider {
 	 
     private static final int CONTENT_PROVIDER_DB_VERSION = 1;
 	    
-	private static final String CONTENT_PROVIDER_TABLE_NAME = "notes";
+	private static final String NOTES_TABLE_NAME = "notes";
+	
+	private static final String DOSSIERS_TABLE_NAME = "dossiers";
 	 
     public static final String AUTHORITY = "org.cozyAndroid.providers.NotesProvider";
 	 
     private static HashMap<String, String> notesProjectionMap;
     
+    private static HashMap<String, String> dossiersProjectionMap;
+    
     private static final UriMatcher sUriMatcher;
 	 
     private static final int NOTES = 1;
+    
+    private static final int DOSSIERS = 2;
     
 	// classe implémentant la base de données
     public static class DataBase extends SQLiteOpenHelper  {
@@ -62,8 +69,10 @@ public class NotesProvider extends ContentProvider {
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			
-			db.execSQL("CREATE TABLE "+CONTENT_PROVIDER_TABLE_NAME+
-					" (_id INTEGER PRIMARY KEY AUTOINCREMENT, "+ Notes.TITLE + " VARCHAR NOT NULL, " + Notes.BODY + " VARCHAR NOT NULL);");
+			db.execSQL("CREATE TABLE "+NOTES_TABLE_NAME+
+					" (_id INTEGER PRIMARY KEY AUTOINCREMENT, "+ Notes.TITLE + " VARCHAR NOT NULL, " + Notes.BODY + " VARCHAR NOT NULL, " + Notes.DOSSIER +" VARCHAR);");
+			db.execSQL("CREATE TABLE "+DOSSIERS_TABLE_NAME+
+					" (_id INTEGER PRIMARY KEY AUTOINCREMENT, "+ Dossiers.NAME + " VARCHAR NOT NULL, " + Dossiers.PARENT + " VARCHAR);");
 			/*File fichier = new File("src/exemple.txt");
 			Log.d("ok","Chemin absolu du fichier : " + fichier.getAbsolutePath());
 			Log.d("ok","Nom du fichier : " + fichier.getName());
@@ -80,7 +89,8 @@ public class NotesProvider extends ContentProvider {
 	
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			db.execSQL("DROP TABLE IF EXISTS " + CONTENT_PROVIDER_TABLE_NAME);
+			db.execSQL("DROP TABLE IF EXISTS " + NOTES_TABLE_NAME);
+			db.execSQL("DROP TABLE IF EXISTS " + DOSSIERS_TABLE_NAME);
 			onCreate(db);
 		}
     }
@@ -161,11 +171,13 @@ public class NotesProvider extends ContentProvider {
 		int count = 0;
 		switch (sUriMatcher.match(uri)) {
 			case NOTES:
-				count = notesDB.delete(CONTENT_PROVIDER_TABLE_NAME, where, whereArgs);
+				count = notesDB.delete(NOTES_TABLE_NAME, where, whereArgs);
 		        break;
-			 
-		        default:
-		        	throw new IllegalArgumentException("Unknown URI " + uri);
+			case DOSSIERS:
+				count = notesDB.delete(DOSSIERS_TABLE_NAME, where, whereArgs);
+				break;
+	        default:
+	        	throw new IllegalArgumentException("Unknown URI " + uri);
 		}
 			 
 		getContext().getContentResolver().notifyChange(uri, null);
@@ -177,7 +189,8 @@ public class NotesProvider extends ContentProvider {
 		switch (sUriMatcher.match(uri)) {
 			case NOTES:
 				return Notes.CONTENT_TYPE;
-			 
+			case DOSSIERS:
+				return Dossiers.CONTENT_TYPE;
 		    default:
 		    	throw new IllegalArgumentException("Unknown URI " + uri);
 		}
@@ -186,19 +199,33 @@ public class NotesProvider extends ContentProvider {
 
 	@Override
 	public Uri insert(Uri uri, ContentValues initialValues) {
-		if (sUriMatcher.match(uri) != NOTES) { 
-			throw new IllegalArgumentException("Unknown URI " + uri); 
-		}
 		ContentValues values;
 		if (initialValues != null) {
 			values = new ContentValues(initialValues);
 		} else {
 			values = new ContentValues();
 		}
-		// SQLiteDatabase db = dbHelper.getWritableDatabase();  // A remettre à la place de notesDB en dessous??
-		long rowId = notesDB.insert(CONTENT_PROVIDER_TABLE_NAME, Notes.BODY, values);
+		String table;
+		String nullCollumn;
+		Uri contentUri;
+		switch (sUriMatcher.match(uri)) {
+			case NOTES :
+				table = NOTES_TABLE_NAME;
+				nullCollumn = Notes.BODY;
+				contentUri = Notes.CONTENT_URI;
+				break;
+			case DOSSIERS :
+				table = DOSSIERS_TABLE_NAME;
+				nullCollumn = Dossiers.PARENT;
+				contentUri = Dossiers.CONTENT_URI;
+				break;
+			default:
+				throw new IllegalArgumentException("Unknown URI " + uri);
+		}
+		long rowId = notesDB.insert(table, nullCollumn, values);
 		if (rowId > 0) {
-		  	Uri noteUri = ContentUris.withAppendedId(Notes.CONTENT_URI, rowId);
+			// SQLiteDatabase db = dbHelper.getWritableDatabase();  // A remettre à la place de notesDB en dessous??
+			Uri noteUri = ContentUris.withAppendedId(contentUri, rowId);
 		    getContext().getContentResolver().notifyChange(noteUri, null);
 		    return noteUri;
 		}
@@ -211,9 +238,12 @@ public class NotesProvider extends ContentProvider {
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 		switch (sUriMatcher.match(uri)) {
 			case NOTES:
-				qb.setTables(CONTENT_PROVIDER_TABLE_NAME);
+				qb.setTables(NOTES_TABLE_NAME);
 		        qb.setProjectionMap(notesProjectionMap);
 		        break;
+			case DOSSIERS:
+				qb.setTables(DOSSIERS_TABLE_NAME);
+				qb.setProjectionMap(dossiersProjectionMap);
 			default:
 				throw new IllegalArgumentException("Unknown URI " + uri);
 		}
@@ -229,9 +259,10 @@ public class NotesProvider extends ContentProvider {
 		int count=0;
 		switch (sUriMatcher.match(uri)) {
 			case NOTES:
-				count = notesDB.update(CONTENT_PROVIDER_TABLE_NAME, values, where, whereArgs);
+				count = notesDB.update(NOTES_TABLE_NAME, values, where, whereArgs);
 		        break;
-		
+			case DOSSIERS:
+				count = notesDB.update(DOSSIERS_TABLE_NAME, values, where, whereArgs);
 		    default:
 		    	throw new IllegalArgumentException("Unknown URI " + uri);
 		}
@@ -242,11 +273,18 @@ public class NotesProvider extends ContentProvider {
 	
 	static {
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-		sUriMatcher.addURI(AUTHORITY, CONTENT_PROVIDER_TABLE_NAME, NOTES);
+		sUriMatcher.addURI(AUTHORITY, NOTES_TABLE_NAME, NOTES);
+		sUriMatcher.addURI(AUTHORITY, DOSSIERS_TABLE_NAME, DOSSIERS);
 			 
+		dossiersProjectionMap = new HashMap<String, String>();
+		dossiersProjectionMap.put(Dossiers.DOSSIER_ID, Dossiers.DOSSIER_ID);
+		dossiersProjectionMap.put(Dossiers.NAME, Dossiers.NAME);
+		dossiersProjectionMap.put(Dossiers.PARENT, Dossiers.PARENT);
+			
 		notesProjectionMap = new HashMap<String, String>();
 		notesProjectionMap.put(Notes.NOTE_ID, Notes.NOTE_ID);
 		notesProjectionMap.put(Notes.TITLE, Notes.TITLE);
 		notesProjectionMap.put(Notes.BODY, Notes.BODY);
+		notesProjectionMap.put(Notes.DOSSIER, Notes.DOSSIER);
 	}
 }

@@ -1,6 +1,6 @@
 package org.cozyAndroid;
 
-import org.cozyAndroid.providers.NoteSQL.Notes;
+import org.cozyAndroid.providers.TablesSQL.Notes;
 
 import android.app.Activity;
 import android.content.ContentValues;
