@@ -25,11 +25,12 @@ public class Dossier {
 	
 	public static final Dossier racine = new Dossier("Navigateur",null);
 	
+	
 	private Dossier (String nom, Dossier parent) {
 		this.nom = nom;
 		this.parent = parent;
 	}
-
+	
 	public ArrayList<Dossier> getDossiers () {
 		return sousDossiers;
 	}
@@ -40,14 +41,29 @@ public class Dossier {
 	
 	/**
 	 * Cree et ajoute un sous-dossier.
-	 * Le chainage entre les dossiers
-	 * @param nom le nom du sous dossier
-	 * @return le dossier créé
+	 * Assure le bon chainage entre les dossiers.
+	 * @param nom Le nom du sous dossier
+	 * @return Le dossier créé, et null si un dossier de ce nom existait deja
 	 */
 	public Dossier addDossier(String nom) {
+		if (existe(nom)) {
+			return null;
+		}
 		Dossier res = new Dossier(nom, this);
 		sousDossiers.add(res);
 		return res;
+	}
+	
+	/**
+	 * Verifie si un sous-dossier possède deja ce nom
+	 */
+	private boolean existe(String nom) {
+		for (int i = 0; i < sousDossiers.size();i++) {
+			if (nom.equals(sousDossiers.get(i).nom)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public void supprimerDossier(Dossier d) {
@@ -110,4 +126,77 @@ public class Dossier {
 		}
 		return res;
 	}
+	
+	/**
+	 * Retourne le chemin du dossier
+	 * (sans son propre nom)
+	 */
+	private String getPath() {
+		if (parent == null || parent == racine) {
+			return "";
+		}
+		return parent.getPath() + parent.nom + "/";
+	}
+	
+	@Override
+	/**
+	 * Utilisée pour le filtrage des suggestions de recherche
+	 */
+	public String toString() {
+		if (parent == null || parent == racine) {
+			return nom;
+		}
+		return nom + " (" + getPath() +")";
+	}
+	
+	
+	/**
+	 * Retourne tous les dossiers de l'arborescence
+	 */
+	public static ArrayList<Dossier> getTous() {
+		ArrayList<Dossier> tous = racine.getTousLesFils();
+		tous.add(racine);
+		return tous;
+	}
+	
+	/**
+	 * Retourne tous les dossiers de l'arborescence.
+	 * Les sous-dossiers de this sont placés en tete de liste.
+	 */
+	public ArrayList<Dossier> getTousAvecPriorite() {
+		if (parent == null) {
+			//this est la racine
+			return getTous();
+		}
+		//On ajoute les sous-dossiers
+		ArrayList<Dossier> tous = getTousLesFils();
+		tous.add(this);
+		//Puis on ajoute le reste
+		tous.addAll(racine.getTousSauf(this));
+		tous.add(racine);
+		return tous;
+	}
+	
+	protected ArrayList<Dossier> getTousLesFils() {
+		ArrayList<Dossier> tous = new ArrayList<Dossier>();
+		for (int i = 0; i < sousDossiers.size();i++) {
+			Dossier fils = sousDossiers.get(i); 
+			tous.add(fils);
+			tous.addAll(fils.getTousLesFils());
+		}
+		return tous;
+	}
+	
+	protected ArrayList<Dossier> getTousSauf(Dossier lui) {
+		ArrayList<Dossier> tous = new ArrayList<Dossier>();
+		for (int i = 0; i < sousDossiers.size();i++) {
+			Dossier fils = sousDossiers.get(i);
+			if(!fils.equals(lui)) {
+				tous.add(fils);
+				tous.addAll(fils.getTousSauf(lui));
+			}
+		}
+		return tous;
+	}
+	
 }

@@ -40,8 +40,14 @@
         <activity 
             android:name=".TabDossier"
             android:screenOrientation="portrait"
-            android:configChanges="keyboardHidden|orientation" >
-        </activity>
+            android:configChanges="keyboardHidden|orientation"
+            android:launchMode="singleTop" >
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                   android:resource="@xml/searchable"/>
+            </activity>
         <activity 
             android:name=".TabRecherche"
             android:screenOrientation="portrait"
