@@ -2,7 +2,7 @@ package org.cozyAndroid;
 
 import java.util.ArrayList;
 
-import org.cozyAndroid.providers.NoteSQL.Notes;
+import org.cozyAndroid.providers.TablesSQL.Notes;
 
 import android.app.Activity;
 import android.database.Cursor;
@@ -26,7 +26,7 @@ public class TabListe extends Activity {
 	public void onResume() {
 		super.onResume();
 		ArrayList<Note> note = new ArrayList<Note>();
-		String projection[] = {Notes.NOTE_ID,Notes.TITLE,Notes.BODY};
+		String projection[] = {Notes.NOTE_ID,Notes.TITLE,Notes.BODY,Notes.DOSSIER};
 		Cursor cursor = managedQuery(Notes.CONTENT_URI, projection, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {

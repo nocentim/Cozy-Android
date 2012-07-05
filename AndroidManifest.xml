@@ -40,8 +40,9 @@
         <activity 
             android:name=".TabDossier"
             android:screenOrientation="portrait"
-            android:configChanges="keyboardHidden|orientation" >
-        </activity>
+            android:configChanges="keyboardHidden|orientation"
+            android:launchMode="singleTop" >
+            </activity>
         <activity 
             android:name=".TabRecherche"
             android:screenOrientation="portrait"
