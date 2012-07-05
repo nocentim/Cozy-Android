@@ -3,12 +3,12 @@ package org.cozyAndroid;
 import java.io.IOException;
 import java.io.StringWriter;
 
-import org.cozyAndroid.providers.NoteSQL.Notes;
+import org.cozyAndroid.providers.TablesSQL.Notes;
 
 import javax.xml.parsers.* ; 
 import javax.xml.transform.*;
 import javax.xml.transform.dom.* ;
-import javax.xml.transform.stream.*;
+import javax.xml.transform.stream.* ;
 
 import org.w3c.dom.*; 
 import org.xml.sax.*; 
@@ -71,7 +71,7 @@ public class TabPlus extends Activity implements View.OnClickListener {
 
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState) ;
-		setContentView(R.layout.plus );
+		setContentView(R.layout.plus ) ;
 
 		newText = (EditText)findViewById(R.id.bodyNewNote)  ;
 		newName = (EditText)findViewById(R.id.nameNewNote)  ;
