@@ -13,12 +13,12 @@ import android.widget.EditText;
 public class Edition extends Activity {
 	private EditText name;
 	private EditText body;
-	private String id;
+	private int id;
 	
 	public void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.edition);
-		id = getIntent().getExtras().getString("id");
+		id = getIntent().getExtras().getInt("id");
 		String oldName = getIntent().getExtras().getString("titre");
 		String oldBody= getIntent().getExtras().getString("body");
 		name = (EditText) findViewById(R.id.nameEdition);
