@@ -6,7 +6,7 @@ import java.io.StringWriter;
 import org.cozyAndroid.providers.TablesSQL.Notes;
 
 import javax.xml.parsers.* ; 
-import javax.xml.transform.*;
+import javax.xml.transform.* ;
 import javax.xml.transform.dom.* ;
 import javax.xml.transform.stream.* ;
 
@@ -97,7 +97,7 @@ public class TabPlus extends Activity implements View.OnClickListener {
 		// On ajoute un autre Listener sur le changement dans le texte cette fois
 		newText.addTextChangedListener(TextListener);
 
-		bodyDoc = creationDOM() ;
+		bodyDoc = Dom.creationDOM() ;
 	}
 
 	/**
@@ -156,69 +156,8 @@ public class TabPlus extends Activity implements View.OnClickListener {
 	public void afficheText() {
 		//TODO voir la methode notify pour savoir s'il est possible de se passer de cette methode (pour factoriser le code)
 		newText.removeTextChangedListener(TextListener) ;
-		try {
-			DOMSource domSource = new DOMSource(bodyDoc) ;
-			StringWriter writer = new StringWriter() ;
-			StreamResult result = new StreamResult(writer) ;
-			TransformerFactory tf = TransformerFactory.newInstance() ;
-			Transformer transformer = tf.newTransformer();
-			transformer.transform(domSource, result) ;
-			String stringResult = writer.toString() ; 
-			newText.setText (Html.fromHtml (stringResult)) ;
-		} catch (TransformerConfigurationException e) {
-			Log.e("tabplus", "erreur mors de ma creation de la transformation") ;
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			Log.e("tabplus", "erreur lors de la transformation du DOM") ;
-			e.printStackTrace();
-		}
+		newText.setText(Dom.afficheDom (bodyDoc)) ;
 		newText.addTextChangedListener(TextListener) ;	
-	}
-
-	/**
-	 * cree un DOM, pour l'instant son contenu est en dur
-	 * @return le DOM nouvellement cree
-	 */
-	private Document creationDOM() {
-		//Création d'un nouveau DOM
-		DocumentBuilderFactory fabrique = DocumentBuilderFactory.newInstance();
-		DocumentBuilder constructeur;
-		try {
-			constructeur = fabrique.newDocumentBuilder();
-			Document document = constructeur.newDocument();
-
-			// Propriétés du DOM
-			document.setXmlVersion("1.0");
-			document.setXmlStandalone(true);
-
-			// Création de l'arborescence du DOM
-			Element racine = document.createElement("annuaire");
-			racine.appendChild(document.createComment("Commentaire sous la racine"));
-
-			Element personne = document.createElement("personne");
-			personne.setAttribute("id","0");
-			racine.appendChild(personne);
-
-			Element nom = document.createElement("nom");
-			nom.setTextContent("un nom");
-			personne.appendChild(nom);
-
-			Element prenom = document.createElement("prenom");
-			prenom.setTextContent("un prénom");
-			personne.appendChild(prenom);
-
-			Element adresse = document.createElement("adresse");
-			adresse.setTextContent("une adresse");
-			personne.appendChild(adresse);
-
-			document.appendChild(racine);
-			return document ;
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return null ;
 	}
 
 }
