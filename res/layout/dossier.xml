@@ -10,6 +10,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:maxLines="1"
         android:hint="@string/search_hint_dossier" />
 
     <LinearLayout
