@@ -244,6 +244,7 @@ public class NotesProvider extends ContentProvider {
 			case DOSSIERS:
 				qb.setTables(DOSSIERS_TABLE_NAME);
 				qb.setProjectionMap(dossiersProjectionMap);
+				break;
 			default:
 				throw new IllegalArgumentException("Unknown URI " + uri);
 		}
@@ -263,6 +264,7 @@ public class NotesProvider extends ContentProvider {
 		        break;
 			case DOSSIERS:
 				count = notesDB.update(DOSSIERS_TABLE_NAME, values, where, whereArgs);
+				break;
 		    default:
 		    	throw new IllegalArgumentException("Unknown URI " + uri);
 		}

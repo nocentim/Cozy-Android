@@ -34,7 +34,7 @@ public class DossierAdapter extends BaseAdapter {
 	public Object getItem(int position) {
 		int nbDossiers = courant.nbDossiers();
 		if (position < nbDossiers) {
-			return courant.getDossiers().get(position);
+			return courant.getSousDossiers().get(position);
 		} else {
 			return courant.getNotes().get(position - nbDossiers);
 		}

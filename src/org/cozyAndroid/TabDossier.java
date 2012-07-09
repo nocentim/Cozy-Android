@@ -5,6 +5,9 @@ import java.util.ArrayList;
 
 import android.app.Dialog;
 import android.app.ListActivity;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
@@ -15,24 +18,34 @@ import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
+import android.widget.SimpleCursorAdapter.CursorToStringConverter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.FilterQueryProvider;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.cozyAndroid.providers.TablesSQL.Dossiers;
+
 public class TabDossier extends ListActivity implements View.OnClickListener {
 	
-	//Historique des dossiers parcourus
-	//Le dossier courant est accessible avec historique.get(position)
-	private ArrayList<Dossier> historique;
+	/**
+	 * Historique des dossiers parcourus (par id)
+	 * Le dossier courant est accessible avec getDossierCourant()
+	 * On peut acceder a d'autres dossiers de l'historique avec
+	 * getHistorique(int pos)
+	 */
+	private ArrayList<Integer> historique;
 	private int position;
 	
+	//Cursor servant a dialoguer avec le content provider
+	private Cursor cursor;
+	
 	//Widget de l'interface par ordre de lecture
-	private AutoCompleteTextView search;
-	private ArrayAdapter<Dossier> searchAdapter;
+	private DossierAutoCompleteTextView search;
 	
 	private ImageButton precedent;
 	private ImageButton suivant;
@@ -48,14 +61,9 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dossier);
 		
-		//a enlever
-		if (Dossier.racine.size() == 0) {
-			AjouteDossiers();
-		}
-		
 		//Initialisation des champs
-		historique = new ArrayList<Dossier>();
-		historique.add(Dossier.racine);
+		historique = new ArrayList<Integer>();
+		historique.add(Dossier.racine.getId());
 		position = 0;
 		navigateur = (ListView) findViewById(android.R.id.list);
 		dossierAdapter = new DossierAdapter(this,Dossier.racine);
@@ -64,8 +72,9 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		path = (TextView) findViewById(R.id.navigateur_path);
 		setPathWithLinks(Dossier.racine);
 	    
-		search = (AutoCompleteTextView) findViewById(R.id.search_dossier);
-		initSearch();
+		//Initialisation de la barre de recherche de dossiers
+		search = (DossierAutoCompleteTextView) findViewById(R.id.search_dossier);
+		search.init(this);
 		
 		//Boutons
 		precedent = (ImageButton) findViewById(R.id.precedent);
@@ -74,7 +83,6 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		suivant.setOnClickListener(this);
 		precedent.setEnabled(false);
 		suivant.setEnabled(false);
-		
 		supprimer = (Button) findViewById(R.id.suppr_button);
 		creer = (Button) findViewById(R.id.add_button);
 		supprimer.setOnClickListener(this);
@@ -85,46 +93,18 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 	@Override
 	public void onResume() {
 		super.onResume();
+		String projection[] = {Dossiers.DOSSIER_ID,Dossiers.NAME,Dossiers.PARENT};
+		cursor = managedQuery(Dossiers.CONTENT_URI, projection, null, null, null);
+		Dossier.newArborescence(cursor);
 		dossierAdapter.notifyDataSetChanged();
 	}
 	
-	/**
-	 * Initialise le champ de recherche
-	 */
-	private void initSearch() {
-		//Creation de l'adapteur
-		ArrayList<Dossier> dossiers = Dossier.getTous();
-		for (int i = 0; i < dossiers.size(); i++) {
-			Log.d("TabDossier",""+dossiers.get(i));
-		}
-		searchAdapter = new ArrayAdapter<Dossier>(
-				this, android.R.layout.simple_dropdown_item_1line, dossiers);
-		search.setAdapter(searchAdapter);
-		//Action a effectuer quand on clique sur un element de la liste
-		search.setOnItemClickListener(new OnItemClickListener() {
-
-			public void onItemClick(AdapterView<?> parent, View view, int position,
-					long id) {
-				ouvreDossier(searchAdapter.getItem(position));
-				search.setText("");
-			}
-		});
-		
+	public Dossier getDossierCourant() {
+		return Dossier.getDossierParId(historique.get(position));
 	}
 	
-	//TODO : a enlever, c'est juste un test
-	private void AjouteDossiers() {
-		
-		Dossier photos = Dossier.racine.addDossier("Photos");
-		Dossier info = Dossier.racine.addDossier("Informatique");
-		Dossier divers = Dossier.racine.addDossier("Divers");
-		
-		Dossier.racine.addNote(new Note("0","TODO","   -Sortir le chien\n   -Appeler Bob\n   -Conquerir le monde"));
-		photos.addNote(new Note("0","Vacances", "Super vacances trop ouf, lol\n [photo 1] \n [photo 2] \n ..."));
-		divers.addNote(new Note("0","Mots de passes","Compte bancaire : 9681681616468418694523\n Mot de passe: 426831\n\nCompte amazon: Lalala@gmail.com\nmot de passe : hunter2"));
-		Dossier _2012 = photos.addDossier("2012");
-		Dossier vacs = _2012.addDossier("Montagne");
-		vacs.addDossier("Mont Blanc");
+	public Dossier getHistorique(int pos) {
+		return Dossier.getDossierParId(historique.get(pos));
 	}
 	
 	public void onClick(View v) {
@@ -154,7 +134,7 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 			historique.remove(i);
 		}
 		
-		historique.add(d);
+		historique.add(d.getId());
 		position++;
 		
 		majInterface();
@@ -177,14 +157,23 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 	 * l'historique ainsi que l'interface
 	 */
 	private void supprimerCourant() {
-		Dossier supprimeMoi = historique.get(position);
+		Dossier supprimeMoi = getDossierCourant();
+		int id = supprimeMoi.getId();
+		int count = getContentResolver().delete(Dossiers.CONTENT_URI, Dossiers.DOSSIER_ID + "= " + id, null);
+		if (count < 1) {
+			Toast t = Toast.makeText(TabDossier.this, "Echec de la suppression", Toast.LENGTH_SHORT);
+			t.show();
+			return;
+		}
+		Toast t = Toast.makeText(TabDossier.this, "Dossier " +supprimeMoi.nom + " supprimé", Toast.LENGTH_SHORT);
+		t.show();
 		//position != 0 car la racine ne peut pas etre supprimee
 		position--; 
 		//Mise a jour de l'historique : on enleve toutes les occurences de courant.
 		//Ca marche car courant n'a pas de sous-dossiers :
 		//on ne supprime que des dossiers vides (TODO : est-ce vrai?)
 		for (int i = 1; i < historique.size();) {
-			if (historique.get(i).equals(supprimeMoi)) {
+			if (getHistorique(i).equals(supprimeMoi)) {
 				historique.remove(i);
 				if (i <= position) {
 					position--;
@@ -196,8 +185,8 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		//Il se peut maintenant qu'un dossier soit present 2 fois de suite dans l'historique
 		//On enleve donc les doublons
 		for (int i = 0; i < historique.size() - 1;) {
-			Dossier courant = historique.get(i);
-			Dossier suivant = historique.get(i+1);
+			Dossier courant = getHistorique(i);
+			Dossier suivant = getHistorique(i+1);
 			if (courant.equals(suivant)) {
 				historique.remove(i+1);
 				if (i < position) {
@@ -231,18 +220,25 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 				return false;
 			}
 		});
-		confirm.setOnClickListener(new OnClickListener() {
+		
+		OnClickListener confirmer = new OnClickListener() {
 			
 			public void onClick(View v) {
-				String nom = text.getText().toString();
+				String nom = text.getText().toString().trim();
+				text.setText(nom);
 				if (!nom.equals("")) {
-					Dossier courant = historique.get(position);
-					Dossier nouveau = courant.addDossier(nom);
-					if (nouveau == null) {
+					Dossier courant = getDossierCourant();
+					if (courant.contient(nom)) {
 						Toast t = Toast.makeText(TabDossier.this,
 								"Un dossier de ce nom existe déjà", Toast.LENGTH_SHORT);
 						t.show();
 					} else {
+						ContentValues values = new ContentValues();
+						values.put(Dossiers.NAME, nom);
+						values.put(Dossiers.PARENT, courant.getId());        
+						Uri uri = getContentResolver().insert(Dossiers.CONTENT_URI, values);
+						int id = Integer.parseInt(uri.getLastPathSegment());
+						courant.addDossier(id, nom);
 						dialog.cancel();
 						majInterface();
 					}
@@ -251,7 +247,8 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 					t.show();
 				}
 			}
-		});
+		};
+		confirm.setOnClickListener(confirmer);
 		
 		dialog.show();
 	}
@@ -262,7 +259,7 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 	 * sur le nouveau dossier.
 	 */
 	private void majInterface() {
-		Dossier courant = historique.get(position);
+		Dossier courant = getDossierCourant();
 		
 		enableButtons();
 		setPathWithLinks(courant);
@@ -272,13 +269,6 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 	    }
 		dossierAdapter.setDossier(courant);
 		dossierAdapter.notifyDataSetChanged();
-		
-		searchAdapter.clear();
-		ArrayList<Dossier> dossiers = courant.getTousAvecPriorite();
-		for (int i = 0; i < dossiers.size(); i++) {
-			searchAdapter.add(dossiers.get(i));
-		}
-		
 	}
 	
 	/**
@@ -295,7 +285,7 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		} else {
 			suivant.setEnabled(true);
 		}
-		Dossier courant = historique.get(position);
+		Dossier courant = getDossierCourant();
 		if (courant.size() == 0 && !courant.equals(Dossier.racine)) {
 			supprimer.setVisibility(View.VISIBLE);
 		} else {
