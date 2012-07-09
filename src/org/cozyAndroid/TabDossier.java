@@ -16,19 +16,14 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.SimpleCursorAdapter.CursorToStringConverter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.FilterQueryProvider;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.cozyAndroid.providers.TablesSQL.Dossiers;
+import org.cozyAndroid.providers.TablesSQL.Notes;
 
 public class TabDossier extends ListActivity implements View.OnClickListener {
 	
@@ -45,7 +40,7 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 	private Cursor cursor;
 	
 	//Widget de l'interface par ordre de lecture
-	private DossierAutoCompleteTextView search;
+	private RechercheDossier search;
 	
 	private ImageButton precedent;
 	private ImageButton suivant;
@@ -55,7 +50,9 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 	private DossierAdapter dossierAdapter;
 	
 	private Button supprimer;
-	private Button creer;
+	
+	private Button creer_note;
+	private Button creer_dossier;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -73,7 +70,7 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		setPathWithLinks(Dossier.racine);
 	    
 		//Initialisation de la barre de recherche de dossiers
-		search = (DossierAutoCompleteTextView) findViewById(R.id.search_dossier);
+		search = (RechercheDossier) findViewById(R.id.search_dossier);
 		search.init(this);
 		
 		//Boutons
@@ -84,9 +81,11 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		precedent.setEnabled(false);
 		suivant.setEnabled(false);
 		supprimer = (Button) findViewById(R.id.suppr_button);
-		creer = (Button) findViewById(R.id.add_button);
+		creer_dossier = (Button) findViewById(R.id.add_button);
+		creer_note = (Button) findViewById(R.id.add_note_button);
 		supprimer.setOnClickListener(this);
-		creer.setOnClickListener(this);
+		creer_dossier.setOnClickListener(this);
+		creer_note.setOnClickListener(this);
 		
 	}
 	
@@ -96,6 +95,10 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		String projection[] = {Dossiers.DOSSIER_ID,Dossiers.NAME,Dossiers.PARENT};
 		cursor = managedQuery(Dossiers.CONTENT_URI, projection, null, null, null);
 		Dossier.newArborescence(cursor);
+		String notesProjection []= {Notes.NOTE_ID,Notes.TITLE,Notes.BODY,Notes.DOSSIER};
+		Cursor notesCursor = managedQuery(Notes.CONTENT_URI, notesProjection, null, null, null);
+		Dossier.addNotes(notesCursor);
+		dossierAdapter.setDossier(getDossierCourant());
 		dossierAdapter.notifyDataSetChanged();
 	}
 	
@@ -124,6 +127,8 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		case R.id.add_button :
 			fenetreCreer();
 			break;
+		case R.id.add_note_button :
+			creerNote();
 		default :
 			break;
 		}
@@ -251,6 +256,20 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		confirm.setOnClickListener(confirmer);
 		
 		dialog.show();
+	}
+	
+	//TODO faire appel a l'editeur une fois qu'il sera fait
+	private void creerNote() {
+		Dossier courant = getDossierCourant();
+		ContentValues values = new ContentValues();
+		values.put(Notes.TITLE, "Nouvelle Note");
+		values.put(Notes.BODY, "");
+		values.put(Notes.DOSSIER, courant.getId());  
+		Uri uri = getContentResolver().insert(Notes.CONTENT_URI, values);
+		int id = Integer.parseInt(uri.getLastPathSegment());
+		Note n = new Note(id, "Nouvelle Note", "", courant.getId());
+		courant.addNote(n);
+		majInterface();
 	}
 	
 	/**
