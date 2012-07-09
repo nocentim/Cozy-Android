@@ -1,24 +1,14 @@
 package org.cozyAndroid;
 
-import java.io.IOException;
-import java.io.StringWriter;
-
 import org.cozyAndroid.providers.TablesSQL.Notes;
 
-import javax.xml.parsers.* ; 
-import javax.xml.transform.* ;
-import javax.xml.transform.dom.* ;
-import javax.xml.transform.stream.* ;
-
 import org.w3c.dom.*; 
-import org.xml.sax.*; 
 
 import android.app.Activity;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.* ;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -27,18 +17,33 @@ import android.widget.EditText;
 
 public class TabPlus extends Activity implements View.OnClickListener {
 
-	private Document bodyDoc ;
+	private Document bodyDoc = null ;
 
 	private EditText newText = null ;
 	private EditText newName = null ;
-	private String currentColor = "#000000";  // Couleur actuelle du texte
 
 	private Button clear   = null ;
 	private Button valider = null ;
-	private Button bold = null;
-	private Button italic = null;
+	private Button bold    = null ;
+	private Button italic  = null ;
 	private Button underline = null ;
 
+	/** 
+	 * Ecoute les changements du texte
+	 */
+	private TextWatcher TextListener = new TextWatcher() {
+		public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+		public void onTextChanged(CharSequence s, int start, int before, int count) {
+			newText.removeTextChangedListener(TextListener) ;
+				
+			//				((Editable) body).replace (start, start + before, s, start, start + count) ;
+			newText.addTextChangedListener(TextListener) ;	
+		}
+		public void afterTextChanged(Editable s) {	
+			afficheText() ;
+		}
+	} ;
+	
 	/**
 	 * Ecoute le bouton enter pour permettre a l'utilisateur de revenir
 	 * a la ligne dans ca note
@@ -54,47 +59,27 @@ public class TabPlus extends Activity implements View.OnClickListener {
 		}
 	} ;
 
-	/** 
-	 * Ecoute les changements du texte
-	 */
-	private TextWatcher TextListener = new TextWatcher() {
-		public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-		public void onTextChanged(CharSequence s, int start, int before, int count) {
-			newText.removeTextChangedListener(TextListener) ;
-			//				((Editable) body).replace (start, start + before, s, start, start + count) ;
-			newText.addTextChangedListener(TextListener) ;	
-		}
-		public void afterTextChanged(Editable s) {	
-			afficheText() ;
-		}
-	} ;
 
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState) ;
 		setContentView(R.layout.plus ) ;
 
-		newText = (EditText)findViewById(R.id.bodyNewNote)  ;
-		newName = (EditText)findViewById(R.id.nameNewNote)  ;
-		clear   = (Button) findViewById(R.id.buttonClear)   ;
-		valider = (Button) findViewById(R.id.buttonValider) ;
+		newText   = (EditText)findViewById(R.id.bodyNewNote)   ;
+		newName   = (EditText)findViewById(R.id.nameNewNote)   ;
+		clear     = (Button) findViewById(R.id.buttonClear)    ; 
+		valider   = (Button) findViewById(R.id.buttonValider)  ;
+		bold      = (Button) findViewById(R.id.buttonBold)     ; // Pour mettre en gras
+		italic    = (Button) findViewById(R.id.buttonItalic)   ; // Pour mettre en italic
+		underline = (Button) findViewById(R.id.buttonUnderline); // Pour souligner
 
-		clear.setOnClickListener(this)  ;
-		valider.setOnClickListener(this);
-
-		// Pour mettre en gras
-		bold = (Button) findViewById(R.id.buttonBold) ;
-		bold.setOnClickListener(this) ;
-		// Pour mettre en italic
-		italic = (Button) findViewById(R.id.buttonItalic);
-		italic.setOnClickListener(this);
-		// Pour souligner
-		underline = (Button) findViewById(R.id.buttonUnderline);
+		clear.setOnClickListener(this)    ;
+		valider.setOnClickListener(this)  ;
+		bold.setOnClickListener(this)     ;
+		italic.setOnClickListener(this)   ;
 		underline.setOnClickListener(this);
 
-		//		newText.setMovementMethod (new ScrollingMovementMethod()) ;
-		// On ajouter un Listener sur l'appui de touches
+		// Listener appui de touches et changement dans le text
 		newText.setOnKeyListener(EnterListener);
-		// On ajoute un autre Listener sur le changement dans le texte cette fois
 		newText.addTextChangedListener(TextListener);
 
 		bodyDoc = Dom.creationDOM() ;
@@ -149,18 +134,20 @@ public class TabPlus extends Activity implements View.OnClickListener {
 		}
 	}
 
-
 	/**
 	 * transform le DOM en html pour qu'il soit interprete par la classe Html puis affiche dans l'edit text(plus maintenant)
 	 */
 	public void afficheText() {
 		//TODO voir la methode notify pour savoir s'il est possible de se passer de cette methode (pour factoriser le code)
 		newText.removeTextChangedListener(TextListener) ;
-		newText.setText(Dom.afficheDom (bodyDoc)) ;
+		newText.setText(Dom.afficheDom (bodyDoc, this)) ;
 		newText.addTextChangedListener(TextListener) ;	
 	}
 
 }
+
+
+
 
 // Pour mettre en couleur un texte en html:
 //		newText.setText(Html.fromHtml("<font color=\"" + currentColor + "\">" + newText.getText().toString() + "</font>", null , null));
