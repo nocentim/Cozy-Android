@@ -4,13 +4,13 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <AutoCompleteTextView
+    <org.cozyAndroid.DossierAutoCompleteTextView
         android:id="@+id/search_dossier"
         android:inputType="textPersonName"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Rechercher un dossier" />
+        android:hint="@string/search_hint_dossier" />
 
     <LinearLayout
         android:layout_width="fill_parent"
