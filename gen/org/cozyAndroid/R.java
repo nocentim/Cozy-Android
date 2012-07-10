@@ -32,21 +32,6 @@ public final class R {
         public static final int tab_text_selector=0x7f020012;
     }
     public static final class id {
-<<<<<<< HEAD
-        public static final int DeleteButton=0x7f050008;
-        public static final int add_button=0x7f050007;
-        public static final int bodyEdition=0x7f05000b;
-        public static final int bodyNewNote=0x7f050013;
-        public static final int body_note=0x7f050010;
-        public static final int button1=0x7f05000a;
-        public static final int buttonAnnuler=0x7f05000c;
-        public static final int buttonBold=0x7f050014;
-        public static final int buttonClear=0x7f050018;
-        public static final int buttonEditer=0x7f05000d;
-        public static final int buttonItalic=0x7f050015;
-        public static final int buttonUnderline=0x7f050016;
-        public static final int buttonValider=0x7f050017;
-=======
         public static final int DeleteButton=0x7f050009;
         public static final int add_button=0x7f050008;
         public static final int add_note_button=0x7f050007;
@@ -56,12 +41,11 @@ public final class R {
         public static final int button1=0x7f05000b;
         public static final int buttonAnnuler=0x7f05000d;
         public static final int buttonBold=0x7f050015;
-        public static final int buttonClear=0x7f050017;
+        public static final int buttonClear=0x7f050019;
         public static final int buttonEditer=0x7f05000e;
-        public static final int buttonItalic=0x7f050018;
-        public static final int buttonUnderline=0x7f050019;
-        public static final int buttonValider=0x7f050016;
->>>>>>> 6f30bd7be9b81cd273e88e40d4488621d9e74e86
+        public static final int buttonItalic=0x7f050016;
+        public static final int buttonUnderline=0x7f050017;
+        public static final int buttonValider=0x7f050018;
         public static final int button_confirm=0x7f050001;
         public static final int icone=0x7f05000f;
         public static final int listNotes=0x7f050012;
