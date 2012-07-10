@@ -1,18 +1,26 @@
 package org.cozyAndroid;
 
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.io.IOException;
 
+import org.ektorp.CouchDbInstance;
+import org.ektorp.http.HttpClient;
+import org.ektorp.impl.StdCouchDbInstance;
+
+import android.annotation.SuppressLint;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TabHost;
 
+import com.couchbase.touchdb.TDServer;
+import com.couchbase.touchdb.ektorp.TouchDBHttpClient;
+import com.couchbase.touchdb.router.TDURLStreamHandlerFactory;
+
+@SuppressLint({ "ParserError", "ParserError" })
 public class CozyAndroidActivity extends TabActivity {
     /** Called when the activity is first created. */
 	private static TabHost tabHost;
@@ -43,6 +51,15 @@ public class CozyAndroidActivity extends TabActivity {
 		setupTab("TabTags", new Intent().setClass(this, TabDossier.class),1);
 		setupTab("TabPlus", new Intent().setClass(this, TabPlus.class),2);
         setupTab("TabCalendrier", new Intent().setClass(this, TabCalendrier.class),3);
+        TDServer server = null;
+        String filesDir = getFilesDir().getAbsolutePath();
+        try {
+            server = new TDServer(filesDir);
+        } catch (IOException e) {
+            Log.e("TAG", "Error starting TDServer", e);
+        }
+        HttpClient httpClient = new TouchDBHttpClient(server);
+        CouchDbInstance dbInstance = new StdCouchDbInstance(httpClient);
     }
     
     private void setupTab(String tag, Intent intent, int layoutTabIndex) {
@@ -60,5 +77,9 @@ public class CozyAndroidActivity extends TabActivity {
 	public void onResume(){
 		super.onResume();
 		
+	}	
+	
+	static {
+		TDURLStreamHandlerFactory.registerSelfIgnoreError();
 	}
 }
