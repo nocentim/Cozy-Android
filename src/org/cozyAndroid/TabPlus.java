@@ -35,12 +35,13 @@ public class TabPlus extends Activity implements View.OnClickListener {
 		public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 		public void onTextChanged(CharSequence s, int start, int before, int count) {
 			newText.removeTextChangedListener(TextListener) ;
-				
+			bodyDoc.getDocumentElement().setTextContent ((String)s) ;
+			afficheText() ;
+			
 			//				((Editable) body).replace (start, start + before, s, start, start + count) ;
 			newText.addTextChangedListener(TextListener) ;	
 		}
 		public void afterTextChanged(Editable s) {	
-			afficheText() ;
 		}
 	} ;
 	
@@ -55,7 +56,7 @@ public class TabPlus extends Activity implements View.OnClickListener {
 				if(keyCode == 66)                          // Pour la touche « entrée »
 					//						((Editable) body).insert(cursorIndex, "<br />"); // On insère une balise de retour à la ligne
 					afficheText() ;
-			return true;
+			return true ;
 		}
 	} ;
 
