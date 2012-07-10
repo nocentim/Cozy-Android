@@ -20,7 +20,7 @@ import android.widget.SimpleCursorAdapter.CursorToStringConverter;
 import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.TextView;
 
-public class DossierAutoCompleteTextView extends AutoCompleteTextView {
+public class RechercheDossier extends AutoCompleteTextView {
 
 	private TabDossier context;
 	
@@ -102,15 +102,15 @@ public class DossierAutoCompleteTextView extends AutoCompleteTextView {
 		}
 	};
 	
-	public DossierAutoCompleteTextView(Context context) {
+	public RechercheDossier(Context context) {
 		super(context);
 	}
 	
-	public DossierAutoCompleteTextView(Context context, AttributeSet attrs) {
+	public RechercheDossier(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
 	
-	public DossierAutoCompleteTextView(Context context, AttributeSet attrs,
+	public RechercheDossier(Context context, AttributeSet attrs,
 			int defStyle) {
 		super(context, attrs, defStyle);
 	}

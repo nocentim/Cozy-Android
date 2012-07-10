@@ -30,6 +30,10 @@ public class DossierAdapter extends BaseAdapter {
 	public int getCount() {
 		return courant.size();
 	}
+	
+	public boolean isDossier(int position) {
+		return (position < courant.nbDossiers());
+	}
 
 	public Object getItem(int position) {
 		int nbDossiers = courant.nbDossiers();
@@ -59,7 +63,6 @@ public class DossierAdapter extends BaseAdapter {
 			titreView.setText(d.nom);
 			bodyView.setText(d.getInfos());
 			icone.setImageResource(R.drawable.folder);
-			convertView.setOnClickListener(new DossierListener(d));
 		} else {
 			// C'est une note :
 			// on affiche son titre et ses premiers mots
@@ -77,42 +80,9 @@ public class DossierAdapter extends BaseAdapter {
 				bodyView.setText(body);
 			}
 			icone.setImageResource(R.drawable.note);
-			convertView.setOnClickListener(new EditListener(n));
 		}
 		
 		return convertView;	
-	}
-	
-	private class EditListener implements OnClickListener {
-
-		Note note;
-		
-		public EditListener(Note note) {
-			this.note = note;
-		}
-		
-		public void onClick(View v) {
-			Intent editer = new Intent(context, Edition.class);
-			editer.putExtra("id", note.id);
-			editer.putExtra("titre", note.titre);
-			editer.putExtra("body", note.body);
-	    	context.startActivity(editer);
-		}
-		
-	}
-	
-	private class DossierListener implements OnClickListener {
-
-		Dossier d;
-		
-		public DossierListener(Dossier d) {
-			this.d = d;
-		}
-		
-		public void onClick(View v) {
-			context.ouvreDossier(d);
-		}
-		
 	}
 
 }

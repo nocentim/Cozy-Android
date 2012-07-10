@@ -30,6 +30,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_alignParentLeft="true"
 	        android:layout_below="@+id/button1"
+	        android:inputType="textPersonName"
 	        android:ems="10"
 	        android:hint="Nom de la note"
 	        android:text="@string/nameNewNote" >

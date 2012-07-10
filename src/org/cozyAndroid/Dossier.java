@@ -56,9 +56,12 @@ public class Dossier {
 	 */
 	public static void newArborescence(Cursor c) {
 		idToDossier.clear();
+		racine.sousDossiers.clear();
+		racine.notes.clear();
 		idToDossier.put(0,racine);
 		if (c.moveToFirst()) {
 			do {
+				
 				newDossier(c.getInt(0),c.getString(1),c.getInt(2));
 			} while (c.moveToNext());
 		}
@@ -101,16 +104,19 @@ public class Dossier {
 	}
 	
 	/**
-	 * Crée et ajoute une note au bon dossier
-	 * @param c Dans l'ordre : id de la note, titre, body, id du dossier 
+	 * Crée et ajoute des note aux bons dossiers
+	 * @param c Un cursor representant plusieurs notes avec,
+	 * dans l'ordre : id de la note, titre, body, id du dossier 
 	 * @return la note créée
 	 */
 	public static void addNotes(Cursor c) {
 		if (c.moveToFirst()) {
 			do {
-				Dossier d = idToDossier.get(c.getInt(3));
-				Note n = new Note(c);
-				d.addNote(n);
+				if (c.getColumnCount() >= 4) {
+					Dossier d = idToDossier.get(c.getInt(3));
+					Note n = new Note(c);
+					d.addNote(n);
+				}
 			} while (c.moveToNext());
 		}
 	}
@@ -261,56 +267,6 @@ public class Dossier {
 			return nom;
 		}
 		return nom + " (" + getPath() +")";
-	}
-	
-	
-	/**
-	 * Retourne tous les dossiers de l'arborescence
-	 */
-	public static ArrayList<Dossier> getTous() {
-		ArrayList<Dossier> tous = racine.getTousLesFils();
-		tous.add(racine);
-		return tous;
-	}
-	
-	/**
-	 * Retourne tous les dossiers de l'arborescence.
-	 * Les sous-dossiers de this sont placés en tete de liste.
-	 */
-	public ArrayList<Dossier> getTousAvecPriorite() {
-		if (parent == null) {
-			//this est la racine
-			return getTous();
-		}
-		//On ajoute les sous-dossiers
-		ArrayList<Dossier> tous = getTousLesFils();
-		tous.add(this);
-		//Puis on ajoute le reste
-		tous.addAll(racine.getTousSauf(this));
-		tous.add(racine);
-		return tous;
-	}
-	
-	protected ArrayList<Dossier> getTousLesFils() {
-		ArrayList<Dossier> tous = new ArrayList<Dossier>();
-		for (int i = 0; i < sousDossiers.size();i++) {
-			Dossier fils = sousDossiers.get(i); 
-			tous.add(fils);
-			tous.addAll(fils.getTousLesFils());
-		}
-		return tous;
-	}
-	
-	protected ArrayList<Dossier> getTousSauf(Dossier lui) {
-		ArrayList<Dossier> tous = new ArrayList<Dossier>();
-		for (int i = 0; i < sousDossiers.size();i++) {
-			Dossier fils = sousDossiers.get(i);
-			if(!fils.equals(lui)) {
-				tous.add(fils);
-				tous.addAll(fils.getTousSauf(lui));
-			}
-		}
-		return tous;
 	}
 	
 }
