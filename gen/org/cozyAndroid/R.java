@@ -32,6 +32,7 @@ public final class R {
         public static final int tab_text_selector=0x7f020012;
     }
     public static final class id {
+<<<<<<< HEAD
         public static final int DeleteButton=0x7f050008;
         public static final int add_button=0x7f050007;
         public static final int bodyEdition=0x7f05000b;
@@ -45,30 +46,46 @@ public final class R {
         public static final int buttonItalic=0x7f050015;
         public static final int buttonUnderline=0x7f050016;
         public static final int buttonValider=0x7f050017;
+=======
+        public static final int DeleteButton=0x7f050009;
+        public static final int add_button=0x7f050008;
+        public static final int add_note_button=0x7f050007;
+        public static final int bodyEdition=0x7f05000c;
+        public static final int bodyNewNote=0x7f050014;
+        public static final int body_note=0x7f050011;
+        public static final int button1=0x7f05000b;
+        public static final int buttonAnnuler=0x7f05000d;
+        public static final int buttonBold=0x7f050015;
+        public static final int buttonClear=0x7f050017;
+        public static final int buttonEditer=0x7f05000e;
+        public static final int buttonItalic=0x7f050018;
+        public static final int buttonUnderline=0x7f050019;
+        public static final int buttonValider=0x7f050016;
+>>>>>>> 6f30bd7be9b81cd273e88e40d4488621d9e74e86
         public static final int button_confirm=0x7f050001;
-        public static final int icone=0x7f05000e;
-        public static final int listNotes=0x7f050011;
-        public static final int nameEdition=0x7f050009;
-        public static final int nameNewNote=0x7f050012;
+        public static final int icone=0x7f05000f;
+        public static final int listNotes=0x7f050012;
+        public static final int nameEdition=0x7f05000a;
+        public static final int nameNewNote=0x7f050013;
         public static final int navigateur_path=0x7f050005;
         public static final int precedent=0x7f050003;
         public static final int search_dossier=0x7f050002;
         public static final int suivant=0x7f050004;
         public static final int suppr_button=0x7f050006;
-        public static final int tabBPIcone=0x7f050023;
-        public static final int tabInfosIcone=0x7f05001d;
-        public static final int tabListeIcone=0x7f050020;
-        public static final int tabNewsIcone=0x7f05001a;
-        public static final int tab_bons_plans=0x7f050022;
-        public static final int tab_event=0x7f05001f;
-        public static final int tab_infos=0x7f05001c;
-        public static final int tab_news=0x7f050019;
-        public static final int tbCalendrier=0x7f05001b;
-        public static final int tbDossier=0x7f05001e;
-        public static final int tbListe=0x7f050021;
-        public static final int tbPlus=0x7f050024;
+        public static final int tabBPIcone=0x7f050024;
+        public static final int tabInfosIcone=0x7f05001e;
+        public static final int tabListeIcone=0x7f050021;
+        public static final int tabNewsIcone=0x7f05001b;
+        public static final int tab_bons_plans=0x7f050023;
+        public static final int tab_event=0x7f050020;
+        public static final int tab_infos=0x7f05001d;
+        public static final int tab_news=0x7f05001a;
+        public static final int tbCalendrier=0x7f05001c;
+        public static final int tbDossier=0x7f05001f;
+        public static final int tbListe=0x7f050022;
+        public static final int tbPlus=0x7f050025;
         public static final int text_creer=0x7f050000;
-        public static final int titre_note=0x7f05000f;
+        public static final int titre_note=0x7f050010;
     }
     public static final class layout {
         public static final int creer_dossier=0x7f030000;
@@ -86,11 +103,12 @@ public final class R {
     public static final class string {
         public static final int app_name=0x7f040001;
         public static final int bodyNewNote=0x7f040008;
-        public static final int confirm_creer=0x7f040012;
+        public static final int confirm_creer=0x7f040013;
         public static final int creer_dossier=0x7f040010;
+        public static final int creer_note=0x7f040011;
         public static final int dossier_vide=0x7f04000e;
         public static final int hello=0x7f040000;
-        public static final int hint_creer=0x7f040011;
+        public static final int hint_creer=0x7f040012;
         public static final int nameNewNote=0x7f040007;
         public static final int path=0x7f04000b;
         public static final int search_hint_dossier=0x7f04000d;
