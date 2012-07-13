@@ -21,6 +21,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -42,7 +43,7 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 	private Cursor cursor;
 	
 	//Widget de l'interface par ordre de lecture
-	private RechercheDossier search;
+	private AutoCompleteTextView search;
 	
 	private ImageButton precedent;
 	private ImageButton suivant;
@@ -67,14 +68,15 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		navigateur = (ListView) findViewById(android.R.id.list);
 		dossierAdapter = new DossierAdapter(this,Dossier.racine);
 		navigateur.setAdapter(dossierAdapter);
-		navigateur.setOnItemClickListener(new ItemDossierListener());
+		navigateur.setOnItemClickListener(dossierClick);
 		
 		path = (TextView) findViewById(R.id.navigateur_path);
 		setPathWithLinks(Dossier.racine);
 	    
 		//Initialisation de la barre de recherche de dossiers
 		search = (RechercheDossier) findViewById(R.id.search_dossier);
-		search.init(this);
+		search.setOnItemClickListener(suggestionClick);
+		//search.init(this);
 		
 		//Boutons
 		precedent = (ImageButton) findViewById(R.id.precedent);
@@ -89,20 +91,20 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		supprimer.setOnClickListener(this);
 		creer_dossier.setOnClickListener(this);
 		creer_note.setOnClickListener(this);
-		
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
 		String projection[] = {Dossiers.DOSSIER_ID,Dossiers.NAME,Dossiers.PARENT};
-		cursor = managedQuery(Dossiers.CONTENT_URI, projection, null, null, Dossiers.NAME);
+		cursor = managedQuery(Dossiers.CONTENT_URI, projection, null, null, Dossiers.NAME + " COLLATE NOCASE");
 		Dossier.newArborescence(cursor);
 		String notesProjection []= {Notes.NOTE_ID,Notes.TITLE,Notes.BODY,Notes.DOSSIER};
-		Cursor notesCursor = managedQuery(Notes.CONTENT_URI, notesProjection, null, null, Notes.TITLE);
+		Cursor notesCursor = managedQuery(Notes.CONTENT_URI, notesProjection, null, null, Notes.TITLE + " COLLATE NOCASE");
 		Dossier.addNotes(notesCursor);
 		dossierAdapter.setDossier(getDossierCourant());
 		dossierAdapter.notifyDataSetChanged();
+		enableButtons();
 	}
 	
 	public Dossier getDossierCourant() {
@@ -342,7 +344,7 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		}
 	}
 	
-	private class ItemDossierListener implements OnItemClickListener {
+	private OnItemClickListener dossierClick = new OnItemClickListener() {
 		
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
@@ -356,5 +358,13 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 				editer(n);
 			}
 		}
-	}
+	};
+	
+	private OnItemClickListener suggestionClick = new OnItemClickListener() {
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			Cursor c = (Cursor)search.getAdapter().getItem(position);
+			ouvreDossier(Dossier.getDossierParId(c.getInt(0)));
+		}
+	};
 }

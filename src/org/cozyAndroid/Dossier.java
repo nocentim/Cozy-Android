@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.database.Cursor;
+import android.util.Log;
 
 /**
  * Classe des dossiers
@@ -174,6 +175,38 @@ public class Dossier {
 	}
 	
 	/**
+	 * Retourne le dossier associé au chemin en paramètre.
+	 * Il vaut mieux utiliser getDossierParId si l'id est connue, c'est beaucoup plus performant
+	 * @param chemin le chemin du dossier recherché
+	 * @return le dossier associé au chemin, ou null
+	 */
+	public static Dossier getDossierParChemin (String chemin) {
+		return racine.suisChemin(chemin);
+	}
+	
+	private Dossier suisChemin (String chemin) {
+		if (chemin.equals("")) {
+			return this;
+		}
+		String newChemin;
+		int end = chemin.indexOf('/');
+		if (end == -1) {
+			end = chemin.length();
+			newChemin = "";
+		} else {
+			newChemin = chemin.substring(end + 1);
+		}
+		String next = chemin.substring(0, end);
+		for (int i=0; i < sousDossiers.size(); i++) {
+			Dossier d = sousDossiers.get(i);
+			if (d.nom.equals(next)) {
+				return d.suisChemin(newChemin);
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * Verifie si un sous-dossier possède deja ce nom
 	 */
 	public boolean contient(String nom) {
@@ -247,26 +280,15 @@ public class Dossier {
 	 * Retourne le chemin du dossier
 	 * (sans son propre nom)
 	 */
-	public String getPath() {
+	public String getChemin() {
 		if (parent == null || parent == racine) {
 			return "";
 		}
-		return parent.getPath() + parent.nom + "/";
+		return parent.getChemin() + parent.nom + "/";
 	}
 	
-	public String getPathComplet() {
-		return getPath() + nom + "/";
-	}
-	
-	@Override
-	/**
-	 * Utilisée pour le filtrage des suggestions de recherche
-	 */
-	public String toString() {
-		if (parent == null || parent == racine) {
-			return nom;
-		}
-		return nom + " (" + getPath() +")";
+	public String getCheminComplet() {
+		return getChemin() + nom + "/";
 	}
 	
 }
