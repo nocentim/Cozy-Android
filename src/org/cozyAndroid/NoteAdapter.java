@@ -16,11 +16,9 @@ public class NoteAdapter extends BaseAdapter {
 	
 	private LayoutInflater inflater;
 	private ArrayList<Note> liste;
-	TabListe context;
 	
 	public NoteAdapter (TabListe context) {
 		inflater = LayoutInflater.from(context);
-		this.context = context;
 		
 	}
 	
@@ -53,38 +51,13 @@ public class NoteAdapter extends BaseAdapter {
 		Note n = (Note)getItem(position);
 		String titre = n.titre;
 		String body = n.getSpannedBody().toString().replace("\n", " ");
-		if (titre.length() > 35) {
-			titreView.setText(titre.substring(0, 34));
-		} else {
-			titreView.setText(titre);
-		}
-		if (body.length() > 50) {
-			bodyView.setText(body.substring(0, 49));
+		titreView.setText(titre);
+		if (body.length() > 150) {
+			bodyView.setText(body.substring(0, 150));
 		} else {
 			bodyView.setText(body);
 		}
-		
-		convertView.setOnClickListener(new EditListener(n));
-		
 		return convertView;	
-	}
-	
-	private class EditListener implements OnClickListener {
-
-		Note note;
-		
-		public EditListener(Note note) {
-			this.note = note;
-		}
-		
-		public void onClick(View v) {
-			Intent editer = new Intent(context, Edition.class);
-			editer.putExtra("id", note.id);
-			editer.putExtra("titre", note.titre);
-			editer.putExtra("body", note.body);
-	    	context.startActivity(editer);
-		}
-		
 	}
 
 }

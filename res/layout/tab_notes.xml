@@ -12,7 +12,7 @@
 		android:layout_width="fill_parent"
 		android:layout_height="26dp"
 		android:gravity="right" 
-		android:src="@+drawable/essai_liste">
+		android:src="@+drawable/search">
 	</ImageView>
 		
     <TextView 

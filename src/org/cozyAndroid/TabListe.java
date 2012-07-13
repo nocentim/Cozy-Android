@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import org.cozyAndroid.providers.TablesSQL.Notes;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 public class TabListe extends Activity {
@@ -19,6 +22,7 @@ public class TabListe extends Activity {
 		super.onCreate(saveInstanceState);
 		setContentView(R.layout.liste_notes);
 		listeNotes = (ListView) findViewById(R.id.listNotes);
+		listeNotes.setOnItemClickListener(new EditListener());
 		adapter = new NoteAdapter(this);
 		listeNotes.setAdapter(adapter) ;
 	}
@@ -36,5 +40,20 @@ public class TabListe extends Activity {
 
 		adapter.setListe(note);
 		adapter.notifyDataSetChanged();
+	}
+	
+	private class EditListener implements OnItemClickListener {
+
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+
+			Note note = (Note) adapter.getItem(position);
+			Intent editer = new Intent(TabListe.this, Edition.class);
+			editer.putExtra("id", note.id);
+			editer.putExtra("titre", note.titre);
+			editer.putExtra("body", note.body);
+	    	startActivity(editer);
+		}
+		
 	}
 }
