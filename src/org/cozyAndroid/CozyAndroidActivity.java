@@ -35,7 +35,8 @@ import com.couchbase.touchdb.TDViewMapEmitBlock;
 import com.couchbase.touchdb.ektorp.TouchDBHttpClient;
 import com.couchbase.touchdb.router.TDURLStreamHandlerFactory;
 
-@SuppressLint({ "ParserError", "ParserError" })
+
+
 public class CozyAndroidActivity extends TabActivity  implements OnItemClickListener, OnItemLongClickListener, OnKeyListener{
     /** Called when the activity is first created. */
 	private static TabHost tabHost;
@@ -57,7 +58,7 @@ public class CozyAndroidActivity extends TabActivity  implements OnItemClickList
 	public static final String byDateViewName = "byDate";
 	
 	protected CouchDbInstance dbInstance;
-	protected CouchDbConnector couchDbConnector;
+	protected static CouchDbConnector couchDbConnector;
 	protected ReplicationCommand pushReplicationCommand;
 	protected ReplicationCommand pullReplicationCommand;
 	
@@ -71,6 +72,10 @@ public class CozyAndroidActivity extends TabActivity  implements OnItemClickList
 
     public static Context getContext() {
         return instance;
+    }
+    
+    public static CouchDbConnector returnCouchDbConnector() {
+    	return couchDbConnector;
     }
 
     @Override
@@ -88,7 +93,6 @@ public class CozyAndroidActivity extends TabActivity  implements OnItemClickList
 		setupTab("TabTags", new Intent().setClass(this, TabDossier.class),1);
 		setupTab("TabPlus", new Intent().setClass(this, TabPlus.class),2);
         setupTab("TabCalendrier", new Intent().setClass(this, TabCalendrier.class),3);
-        TDServer server = null;
     }
     
     protected void startTouchDB() {
