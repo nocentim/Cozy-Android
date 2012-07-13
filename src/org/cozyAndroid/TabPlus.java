@@ -1,6 +1,10 @@
 package org.cozyAndroid;
 
+
+
+import org.codehaus.jackson.JsonNode;
 import org.cozyAndroid.providers.TablesSQL.Notes;
+import org.ektorp.UpdateConflictException;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -8,7 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import android.text.* ;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -26,6 +29,36 @@ public class TabPlus extends Activity implements View.OnClickListener {
 	private Button bold = null;
 	private Button italic = null;
 	private Button underline = null;
+
+	
+	public void onCreate(Bundle saveInstanceState) {
+		super.onCreate(saveInstanceState) ;
+		setContentView(R.layout.plus );
+
+		newText = (EditText)findViewById(R.id.bodyNewNote)  ;
+		newName = (EditText)findViewById(R.id.nameNewNote)  ;
+		clear   = (Button) findViewById(R.id.buttonClear)   ;
+		valider = (Button) findViewById(R.id.buttonValider) ;
+
+		clear.setOnClickListener(this)  ;
+		valider.setOnClickListener(this);
+
+		// Pour mettre en gras
+		bold = (Button) findViewById(R.id.buttonBold) ;
+		bold.setOnClickListener(BIUListener) ;
+		// Pour mettre en italic
+		italic = (Button) findViewById(R.id.buttonItalic);
+		italic.setOnClickListener(BIUListener);
+		// Pour souligner
+		underline = (Button) findViewById(R.id.buttonUnderline);
+		underline.setOnClickListener(BIUListener);
+
+		//		newText.setMovementMethod (new ScrollingMovementMethod()) ;
+		// On ajouter un Listener sur l'appui de touches
+		newText.setOnKeyListener(EnterListener);
+		// On ajoute un autre Listener sur le changement dans le texte cette fois
+		newText.addTextChangedListener(TextListener);
+	}
 
 	
 	/**
@@ -101,34 +134,6 @@ public class TabPlus extends Activity implements View.OnClickListener {
 		}
 	} ;
 
-	public void onCreate(Bundle saveInstanceState) {
-		super.onCreate(saveInstanceState) ;
-		setContentView(R.layout.plus );
-
-		newText = (EditText)findViewById(R.id.bodyNewNote)  ;
-		newName = (EditText)findViewById(R.id.nameNewNote)  ;
-		clear   = (Button) findViewById(R.id.buttonClear)   ;
-		valider = (Button) findViewById(R.id.buttonValider) ;
-
-		clear.setOnClickListener(this)  ;
-		valider.setOnClickListener(this);
-
-		// Pour mettre en gras
-		bold = (Button) findViewById(R.id.buttonBold) ;
-		bold.setOnClickListener(BIUListener) ;
-		// Pour mettre en italic
-		italic = (Button) findViewById(R.id.buttonItalic);
-		italic.setOnClickListener(BIUListener);
-		// Pour souligner
-		underline = (Button) findViewById(R.id.buttonUnderline);
-		underline.setOnClickListener(BIUListener);
-
-		//		newText.setMovementMethod (new ScrollingMovementMethod()) ;
-		// On ajouter un Listener sur l'appui de touches
-		newText.setOnKeyListener(EnterListener);
-		// On ajoute un autre Listener sur le changement dans le texte cette fois
-		newText.addTextChangedListener(TextListener);
-	}
 
 	public void onClick(View v) {
 		switch(v.getId()) {
@@ -146,4 +151,29 @@ public class TabPlus extends Activity implements View.OnClickListener {
 			break ;
 		}
 	} 
+	
+	public void createCozyyItem(String name) {
+        final JsonNode item = CozyItemUtils.createWithText(name);
+        CozySyncEktorpAsyncTask createItemTask = new CozySyncEktorpAsyncTask() {
+
+			@Override
+			protected void doInBackground() {
+				CozyAndroidActivity.returnCouchDbConnector().create(item);
+			}
+
+			@Override
+			protected void onSuccess() {
+				Log.d(CozyAndroidActivity.TAG, "Document created successfully");
+			}
+
+			@Override
+			protected void onUpdateConflict(
+					UpdateConflictException updateConflictException) {
+				Log.d(CozyAndroidActivity.TAG, "Got an update conflict for: " + item.toString());
+			}
+		};
+	    createItemTask.execute();
+    }
+	
+	
 }
