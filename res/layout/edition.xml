@@ -45,7 +45,7 @@
 	        android:gravity="top|left"
 	        android:hint=""
 	        android:inputType="textMultiLine"
-	        android:text="@string/bodyNewNote" />
+	        android:text="" />
 		<LinearLayout 
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"

@@ -1,65 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
     <EditText
         android:id="@+id/nameNewNote"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:hint="Nom de la note"
         android:text="@string/nameNewNote" />
 
-    <EditText
-        android:id="@+id/bodyNewNote"
+    <WebView
+        android:id="@+id/webView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/buttonBold"
-        android:layout_below="@id/nameNewNote"
-        android:gravity="top|left"
-        android:hint="allo \nsi t&apos;es là c&apos;est pour noter qqch!! \nallllllloooooo \ntu préfère aller ramasser les paquerettes?\n je ne sais pas comment faire monter les boutons clear et noter! mais c pas grave ca laisse plus de place pour voir ce qu&apos;on ecrit"
-        android:inputType="textMultiLine"
-        android:text="@string/bodyNewNote" />
+        android:layout_weight="2" />
 
-    <Button
-        android:id="@+id/buttonValider"
-        android:layout_width="162dp"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:text="Noter!" />
+        android:orientation="horizontal" >
 
-    <Button
-        android:id="@+id/buttonClear"
-        android:layout_width="162dp"
+        <Button
+            android:id="@+id/buttonBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Bold" />
+
+        <Button
+            android:id="@+id/buttonItalic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Italic" />
+
+        <Button
+            android:id="@+id/buttonUnderline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Underline" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:text="Clear" />
+        android:orientation="horizontal" >
 
-    <Button
-        android:id="@+id/buttonBold"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/buttonItalic"
-        android:layout_alignParentLeft="true"
-        android:text="Bold" />
+        <Button
+            android:id="@+id/buttonValider"
+            android:layout_width="162dp"
+            android:layout_height="wrap_content"
+            android:text="Noter!" />
 
-    <Button
-        android:id="@+id/buttonItalic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/buttonClear"
-        android:layout_toRightOf="@id/buttonBold"
-        android:text="Italic" />
+        <Button
+            android:id="@+id/buttonClear"
+            android:layout_width="162dp"
+            android:layout_height="wrap_content"
+            android:text="Clear" />
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/buttonUnderline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/buttonItalic"
-        android:layout_toRightOf="@id/buttonItalic"
-        android:text="Underline" />
-
-</RelativeLayout>
+</LinearLayout>

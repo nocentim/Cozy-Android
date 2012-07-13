@@ -36,16 +36,15 @@ public final class R {
         public static final int add_button=0x7f050008;
         public static final int add_note_button=0x7f050007;
         public static final int bodyEdition=0x7f05000c;
-        public static final int bodyNewNote=0x7f050014;
         public static final int body_note=0x7f050011;
         public static final int button1=0x7f05000b;
         public static final int buttonAnnuler=0x7f05000d;
-        public static final int buttonBold=0x7f050015;
-        public static final int buttonClear=0x7f050017;
+        public static final int buttonBold=0x7f050017;
+        public static final int buttonClear=0x7f050016;
         public static final int buttonEditer=0x7f05000e;
         public static final int buttonItalic=0x7f050018;
         public static final int buttonUnderline=0x7f050019;
-        public static final int buttonValider=0x7f050016;
+        public static final int buttonValider=0x7f050015;
         public static final int button_confirm=0x7f050001;
         public static final int icone=0x7f05000f;
         public static final int listNotes=0x7f050012;
@@ -70,6 +69,7 @@ public final class R {
         public static final int tbPlus=0x7f050025;
         public static final int text_creer=0x7f050000;
         public static final int titre_note=0x7f050010;
+        public static final int webView=0x7f050014;
     }
     public static final class layout {
         public static final int creer_dossier=0x7f030000;
@@ -86,24 +86,23 @@ public final class R {
     }
     public static final class string {
         public static final int app_name=0x7f040001;
-        public static final int bodyNewNote=0x7f040008;
-        public static final int confirm_creer=0x7f040013;
-        public static final int creer_dossier=0x7f040010;
-        public static final int creer_note=0x7f040011;
-        public static final int dossier_vide=0x7f04000e;
+        public static final int confirm_creer=0x7f040012;
+        public static final int creer_dossier=0x7f04000f;
+        public static final int creer_note=0x7f040010;
+        public static final int dossier_vide=0x7f04000d;
         public static final int hello=0x7f040000;
-        public static final int hint_creer=0x7f040012;
+        public static final int hint_creer=0x7f040011;
         public static final int nameNewNote=0x7f040007;
-        public static final int path=0x7f04000b;
-        public static final int search_hint_dossier=0x7f04000d;
-        public static final int search_label_dossier=0x7f04000c;
-        public static final int sousTitreNote=0x7f04000a;
-        public static final int suppr_dossier=0x7f04000f;
+        public static final int path=0x7f04000a;
+        public static final int search_hint_dossier=0x7f04000c;
+        public static final int search_label_dossier=0x7f04000b;
+        public static final int sousTitreNote=0x7f040009;
+        public static final int suppr_dossier=0x7f04000e;
         public static final int tabCalendrier=0x7f040003;
         public static final int tabDossier=0x7f040005;
         public static final int tabListe=0x7f040002;
         public static final int tabPlus=0x7f040004;
         public static final int tabRecherche=0x7f040006;
-        public static final int titreNote=0x7f040009;
+        public static final int titreNote=0x7f040008;
     }
 }
