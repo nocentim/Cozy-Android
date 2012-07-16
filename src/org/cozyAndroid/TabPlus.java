@@ -4,25 +4,14 @@ import org.codehaus.jackson.JsonNode;
 import org.cozyAndroid.providers.TablesSQL.Notes;
 import org.ektorp.UpdateConflictException;
 
-import org.w3c.dom.*; 
-
 import android.app.Activity;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Bundle;
-
-import android.text.* ;
+import android.content.* ;
+import android.os.* ;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.View;
-import android.webkit.JsResult;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.view.* ;
+import android.webkit.* ;
+import android.widget.* ;
+
 
 public class TabPlus extends Activity implements View.OnClickListener {
 
@@ -30,21 +19,28 @@ public class TabPlus extends Activity implements View.OnClickListener {
 
 	private Button clear   = null ;
 	private Button valider = null ;
-	private Button bold    = null ;
-	private Button italic  = null ;
-	private Button underline = null ;
+	private Button bold = null;
+	private Button italic = null;
+	private Button underline = null;
+	
+	// attributs coconut
+	public static final String TAG = "CoconutActivity";
+	private WebView webView;
+    static Handler myHandler;
+    long long_starttime = 0;
 
-	private WebView webView ;
-
+    
 	/*
 	 * TODO voir avec benjamin pour les fonctions javascript qui permettent de mettre en gras, en italique et 
 	 * de souligner. Il y a aussi la fonction pour remettre a zero la note
 	 */
 
+	
+
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState) ;
-		setContentView(R.layout.plus ) ;
-
+		
+		setContentView(R.layout.plus );	    
 		newName   = (EditText)findViewById(R.id.nameNewNote)    ;
 		clear     = (Button)  findViewById(R.id.buttonClear)    ; 
 		valider   = (Button)  findViewById(R.id.buttonValider)  ;
@@ -65,7 +61,7 @@ public class TabPlus extends Activity implements View.OnClickListener {
 		webView.addJavascriptInterface(new JavaScriptInterface(this), "Android");
 	}
 
-	/**
+	/*
 	 *  BIU pour: bold italic underligne, ecoute les boutons correspondants
 	 */
 	//TODO verifier le bon fonctionnement de cette methode suite a toutes les modifications

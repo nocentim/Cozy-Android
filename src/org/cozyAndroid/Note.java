@@ -33,4 +33,8 @@ public class Note {
 		return Html.fromHtml(body);
 	}
 	
+	@Override
+	public String toString() {
+		return titre;
+	}
 }

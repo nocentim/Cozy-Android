@@ -11,6 +11,7 @@ import org.ektorp.http.HttpClient;
 import org.ektorp.impl.StdCouchDbInstance;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -48,8 +49,7 @@ public class CozyAndroidActivity extends TabActivity  implements OnItemClickList
 	protected static TDServer server;
 	protected static HttpClient httpClient;
 
-
-	public static String TAG = "GrocerySync";
+	public static String TAG = "CozyAndroid";
 
 	//constants
 	public static final String DATABASE_NAME = "cozy-sync";

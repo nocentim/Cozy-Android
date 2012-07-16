@@ -162,6 +162,20 @@ public class Dossier {
 		return sousDossiers;
 	}
 	
+	/**
+	 * Retourne un la liste des id des tous les fils
+	 * (directs ou pas) de ca dossier
+	 * @return
+	 */
+	public ArrayList<Integer> getTousLesFils () {
+		ArrayList<Integer> res = new ArrayList<Integer>();
+		res.add(getId());
+		for (int i = 0; i < sousDossiers.size(); i++) {
+			res.addAll(sousDossiers.get(i).getTousLesFils());
+		}
+		return res;
+	}
+	
 	public ArrayList<Note> getNotes() {
 		return notes;
 	}
