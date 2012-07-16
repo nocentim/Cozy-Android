@@ -30,7 +30,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import com.couchbase.touchdb.TDDatabase;
 import com.couchbase.touchdb.TDServer;
 import com.couchbase.touchdb.TDView;
-import com.couchbase.touchdb.TDViewMapBlock;
+import com.couchbase.touchdb.TDViewMapBlock ;
 import com.couchbase.touchdb.TDViewMapEmitBlock;
 import com.couchbase.touchdb.ektorp.TouchDBHttpClient;
 import com.couchbase.touchdb.router.TDURLStreamHandlerFactory;

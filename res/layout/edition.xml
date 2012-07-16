@@ -1,62 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout 
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
-	<LinearLayout
-	    android:layout_width="fill_parent"
-	    android:layout_height="28dp"
-	    android:gravity="right">
-	<Button
-        android:id="@+id/DeleteButton"
-        android:layout_width="50dp"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="28dp"
-        android:textSize="8dp"
-        android:gravity="center_horizontal"
-        android:text="Suppr" />
-	</LinearLayout>
-	<LinearLayout 
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-	    android:orientation="vertical">
-	    <EditText
+        android:gravity="right" >
+
+        <Button
+            android:id="@+id/DeleteButton"
+            android:layout_width="50dp"
+            android:layout_height="28dp"
+            android:gravity="center_horizontal"
+            android:text="Suppr"
+            android:textSize="8dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <EditText
             android:id="@+id/nameEdition"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:inputType="textPersonName"
-	        android:ems="10"
-	        android:hint="Nom de la note"
-	        android:text="@string/nameNewNote" />
-	    <EditText
-	        android:id="@+id/bodyEdition"
-	        android:layout_width="fill_parent"
-	        android:layout_height="0dp"
-	        android:layout_weight="0.5"
-	        android:ems="10"
-	        android:hint=""
-	        android:gravity="top|left"
-	        android:inputType="textMultiLine"
-	        android:text="@string/bodyNewNote" >
-	        <requestFocus />
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Nom de la note"
+            android:inputType="textPersonName"
+            android:text="@string/nameNewNote" />
+
+        <EditText
+            android:id="@+id/bodyEdition"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:ems="10"
+            android:gravity="top|left"
+            android:hint=""
+            android:inputType="textMultiLine"
+            android:text="" />
+
+        <requestFocus />
+
+        <EditText>
         </EditText>
-		<LinearLayout 
-		    android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
-		    android:orientation="horizontal">
-		    <Button
-		        android:id="@+id/buttonAnnuler"
-		        android:layout_width="0dp"
-		        android:layout_height="wrap_content"
-		        android:layout_weight="0.5"
-		        android:text="Annuler" />
-		
-		    <Button
-		        android:id="@+id/buttonEditer"
-		        android:layout_width="0dp"
-		        android:layout_height="wrap_content"
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/buttonAnnuler"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-		        android:text="Editer" />
-	   </LinearLayout>
-	</LinearLayout>
+                android:text="Annuler" />
+
+            <Button
+                android:id="@+id/buttonEditer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="Editer" />
+        </LinearLayout>
+    </LinearLayout>
+
 </LinearLayout>

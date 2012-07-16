@@ -1,70 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout 
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-	<LinearLayout 
-	    android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	android:orientation="horizontal">
-	    <EditText
-	        android:id="@+id/nameNewNote"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:hint="Nom de la note"
-	        android:text="@string/nameNewNote" />
-	</LinearLayout>
-    
-    <LinearLayout 
-	    android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	android:orientation="horizontal">
-	    <EditText
-	        android:id="@+id/bodyNewNote"
-	        android:layout_width="fill_parent"
-	        android:layout_height="292dp"
-	        android:gravity="top|left"
-	        android:hint="allo \nsi t&apos;es là c&apos;est pour noter qqch!! \nallllllloooooo \ntu préfère aller ramasser les paquerettes?\n je ne sais pas comment faire monter les boutons clear et noter! mais c pas grave ca laisse plus de place pour voir ce qu&apos;on ecrit"
-	        android:inputType="textMultiLine"
-	        android:text="@string/bodyNewNote" />
-	 </LinearLayout>
-	<LinearLayout 
-	    android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	android:orientation="horizontal">
-	    <Button
-	        android:id="@+id/buttonBold"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="Bold" />
 
-	    <Button
-	        android:id="@+id/buttonItalic"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="Italic" />
-	
-	    <Button
-	        android:id="@+id/buttonUnderline"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="Underline" />
+    <EditText
+        android:id="@+id/nameNewNote"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nom de la note"
+        android:text="@string/nameNewNote" />
+
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="2" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/buttonBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Bold" />
+
+        <Button
+            android:id="@+id/buttonItalic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Italic" />
+
+        <Button
+            android:id="@+id/buttonUnderline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Underline" />
     </LinearLayout>
-    <LinearLayout 
-       android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	android:orientation="horizontal"> 
-    <Button
-	        android:id="@+id/buttonValider"
-	        android:layout_width="162dp"
-	        android:layout_height="wrap_content"
-	        android:text="Noter!" />
-	
-	    <Button
-	        android:id="@+id/buttonClear"
-	        android:layout_width="162dp"
-	        android:layout_height="wrap_content"
-	        android:text="Clear" />
-	  </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/buttonValider"
+            android:layout_width="162dp"
+            android:layout_height="wrap_content"
+            android:text="Noter!" />
+
+        <Button
+            android:id="@+id/buttonClear"
+            android:layout_width="162dp"
+            android:layout_height="wrap_content"
+            android:text="Clear" />
+    </LinearLayout>
+
 </LinearLayout>
