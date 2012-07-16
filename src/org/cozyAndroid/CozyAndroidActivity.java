@@ -11,6 +11,7 @@ import org.ektorp.http.HttpClient;
 import org.ektorp.impl.StdCouchDbInstance;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -192,7 +193,8 @@ public class CozyAndroidActivity extends TabActivity  implements OnItemClickList
 	public void stopEktorp() {
 	}
     
-    private void setupTab(String tag, Intent intent, int layoutTabIndex) {
+
+	private void setupTab(String tag, Intent intent, int layoutTabIndex) {
 		tabHost.addTab(tabHost.newTabSpec(tag).setIndicator( createTabView(tabHost.getContext(), layoutTabIndex)).setContent(intent));
 	}
 	 

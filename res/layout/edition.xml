@@ -45,8 +45,7 @@
 
         <requestFocus />
 
-        <EditText>
-        </EditText>
+       
 
         <LinearLayout
             android:layout_width="fill_parent"
