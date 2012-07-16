@@ -95,9 +95,10 @@ public class CozyAndroidActivity extends TabActivity  implements OnItemClickList
         setupTab("TabCalendrier", new Intent().setClass(this, TabCalendrier.class),3);
     }
     
-    protected void startTouchDB() {
+    //  A VOIR!!!!
+   /* protected void startTouchDB() {
     	server = null;
-	    String filesDir = getFilesDir().getAbsolutePath();
+	    String filesDir = getFilesDir().getAbsolutePath();    // getContext().getFilesDir().getAbsolutePath(); ??
 	    try {
             server = new TDServer(filesDir);
         } catch (IOException e) {
@@ -118,7 +119,7 @@ public class CozyAndroidActivity extends TabActivity  implements OnItemClickList
 
             }
         }, null, "1.0");
-	}
+	}*/
     
     protected void startEktorp() {
 		Log.v(TAG, "starting ektorp");
