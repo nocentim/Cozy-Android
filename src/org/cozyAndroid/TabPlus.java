@@ -32,6 +32,10 @@ public class TabPlus extends Activity implements View.OnClickListener {
 
 	private WebView webView ;
 
+	/*
+	 * TODO voir avec benjamin pour les fonctions javascript qui permettent de mettre en gras, en italique et 
+	 * de souligner. Il y a aussi la fonction pour remettre a zero la note
+	 */
 
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState) ;
@@ -68,14 +72,12 @@ public class TabPlus extends Activity implements View.OnClickListener {
 			Toast.makeText (TabPlus.this, "appui sur le bouton clear, pas implémenté", Toast.LENGTH_LONG).show();
 			break ;
 		case R.id.buttonValider :
-			//			///dataBase.addNote("Notes", "note", newName.getText() + ", body: " + newText.getText()) ;
-			//			ContentValues values = new ContentValues();
-			//			values.put(Notes.TITLE, newName.getText()+ "");
-			//			values.put(Notes.BODY, newText.getText() + "");        
-			//			Uri uri = getContentResolver().insert(Notes.CONTENT_URI, values);
-			//			newText.setText("") ; // Pour ces deux lignes il faudra surement faire plus
-			//			newName.setText("") ;
-			Toast.makeText (TabPlus.this, "appui sur le bouton, pas implémenté", Toast.LENGTH_LONG).show();
+			ContentValues values = new ContentValues();
+			values.put(Notes.TITLE, newName.getText()+ "");
+			values.put(Notes.BODY, "texte de la nouvelle note");        
+			getContentResolver().insert(Notes.CONTENT_URI, values);
+			//TODO il faut remettre le titre et le corps à zero
+			Toast.makeText (TabPlus.this, "Note saved", Toast.LENGTH_LONG).show();
 
 			break ;
 		case R.id.buttonBold :
@@ -98,12 +100,10 @@ public class TabPlus extends Activity implements View.OnClickListener {
 			protected void doInBackground() {
 				CozyAndroidActivity.returnCouchDbConnector().create(item);
 			}
-
 			@Override
 			protected void onSuccess() {
 				Log.d(CozyAndroidActivity.TAG, "Document created successfully");
 			}
-
 			@Override
 			protected void onUpdateConflict(
 					UpdateConflictException updateConflictException) {
