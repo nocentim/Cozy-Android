@@ -3,16 +3,18 @@
 
     <string name="hello">Hello World, CozyAndroidActivity!</string>
     <string name="app_name">Cozy-Android</string>
-    <string name="tabListe">Liste</string>
-    <string name="tabCalendrier">Calendrier</string>
+    <string name="tabListe">Recherche</string>
+    <string name="tabCalendrier">Historique</string>
     <string name="tabPlus">Nouvelle</string>
-    <string name="tabDossier">Dossier</string>
+    <string name="tabDossier">Navigateur</string>
     <string name="tabRecherche">Recherche</string>
     <string name="nameNewNote"></string>
     <string name="titreNote">Titre</string>
     <string name="sousTitreNote"></string>
     <string name="path">Navigateur</string>
     <string name="search_label_dossier">AAA</string>
+    <string name="search_hint">Rechercher des notes</string>
+    <string name="tri">Tri : Pertinence | Chemin | Date modification</string>
     <string name="search_hint_dossier">Rechercher un dossier</string>
     <string name="dossier_vide">Ce dossier est vide.</string>
     <string name="suppr_dossier">Supprimer ce dossier</string>

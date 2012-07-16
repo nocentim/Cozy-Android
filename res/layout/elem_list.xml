@@ -17,12 +17,14 @@
         
         <TextView
 	        android:id="@+id/titre_note"
+	        android:maxLines="1"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:text="@string/titreNote" />
 
    		<TextView
 	        android:id="@+id/body_note"
+	        android:maxLines="2"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
 	        android:textColor="@android:color/tertiary_text_light"

@@ -7,23 +7,23 @@ import android.content.Context;
 import android.database.Cursor;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.TextUtils.TruncateAt;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.FilterQueryProvider;
 import android.widget.ListView;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.SimpleCursorAdapter.CursorToStringConverter;
 import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.TextView;
 
-public class RechercheDossier extends AutoCompleteTextView {
+public class RechercheNote extends MultiAutoCompleteTextView {
 
-	
 	private Activity context;
 	
 	private Cursor searchCursor = null;
@@ -32,17 +32,17 @@ public class RechercheDossier extends AutoCompleteTextView {
 	
 	private String filterPattern = "";
 	
-	public RechercheDossier(Context context) {
+	public RechercheNote(Context context) {
 		super(context);
 		init((Activity) context);
 	}
 	
-	public RechercheDossier(Context context, AttributeSet attrs) {
+	public RechercheNote(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		init((Activity) context);
 	}
 	
-	public RechercheDossier(Context context, AttributeSet attrs,
+	public RechercheNote(Context context, AttributeSet attrs,
 			int defStyle) {
 		super(context, attrs, defStyle);
 		init((Activity) context);
@@ -118,8 +118,7 @@ public class RechercheDossier extends AutoCompleteTextView {
 	
 	/**
 	 * Initialise l'adapter, les listeners et tout ce qu'il faut pour les suggestions
-	 * Il faut impérativement l'appeler avec d'utiliser la recherche
-	 * @param context L'onglet de gestion des dossiers
+	 * @param context L'activite
 	 */
 	private void init(Activity context) {
 		this.context = context;
@@ -132,8 +131,8 @@ public class RechercheDossier extends AutoCompleteTextView {
 		searchAdapter.setFilterQueryProvider(filterQuery);
 		searchAdapter.setCursorToStringConverter(converter);
 		searchAdapter.setViewBinder(viewBinder);
-		setValidator(new DossierValidator());
-		
+		Tokenizer space = new SpaceTokenizer();
+		setTokenizer(space);
 	}
 	
 	@Override
@@ -146,19 +145,52 @@ public class RechercheDossier extends AutoCompleteTextView {
 		return super.onKeyDown(keyCode, event);
 	}
 	
-	private class DossierValidator implements Validator {
-
-		public CharSequence fixText(CharSequence invalidText) {
-			// TODO Auto-generated method stub
-			Log.w("DossierValidator","Appel a fixText (ne fait rien)");
-			return invalidText;
-		}
-
-		public boolean isValid(CharSequence text) {
-			Dossier d = Dossier.getDossierParChemin(text.toString().trim());
-			return d != null;
-		}
-		
-	}
 	
+	/**
+     * Ce Tokenizer est utilisé pour les listes avec des
+     * elements séparés par des espaces
+     */
+    public static class SpaceTokenizer implements Tokenizer {
+        public int findTokenStart(CharSequence text, int cursor) {
+            int i = cursor;
+
+            while (i > 0 && text.charAt(i - 1) != ' ') {
+                i--;
+            }
+
+            return i;
+        }
+
+        public int findTokenEnd(CharSequence text, int cursor) {
+            int i = cursor;
+            int len = text.length();
+
+            while (i < len) {
+                if (text.charAt(i) == ' ') {
+                    return i;
+                } else {
+                    i++;
+                }
+            }
+
+            return len;
+        }
+
+        public CharSequence terminateToken(CharSequence text) {
+            int i = text.length();
+
+            if (i > 0 && text.charAt(i - 1) == ' ') {
+                return text;
+            } else {
+                if (text instanceof Spanned) {
+                    SpannableString sp = new SpannableString(text + " ");
+                    TextUtils.copySpansFrom((Spanned) text, 0, text.length(),
+                                            Object.class, sp, 0);
+                    return sp;
+                } else {
+                    return text + " ";
+                }
+            }
+        }
+    }
 }

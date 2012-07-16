@@ -1,10 +1,8 @@
 package org.cozyAndroid;
 
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -69,13 +67,9 @@ public class DossierAdapter extends BaseAdapter {
 			Note n = (Note) getItem(position);
 			String titre = n.titre;
 			String body = n.getSpannedBody().toString().replace("\n", " ");
-			if (titre.length() > 35) {
-				titreView.setText(titre.substring(0, 34));
-			} else {
-				titreView.setText(titre);
-			}
-			if (body.length() > 50) {
-				bodyView.setText(body.substring(0, 49));
+			titreView.setText(titre);
+			if (body.length() > 150) {
+				bodyView.setText(body.substring(0, 149));
 			} else {
 				bodyView.setText(body);
 			}
