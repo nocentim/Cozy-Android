@@ -14,27 +14,28 @@ public final class R {
     public static final class attr {
     }
     public static final class drawable {
-        public static final int arrow_left=0x7f020000;
-        public static final int arrow_right=0x7f020001;
-        public static final int calendar=0x7f020002;
-        public static final int deals=0x7f020003;
-        public static final int essai_liste=0x7f020004;
-        public static final int folder=0x7f020005;
-        public static final int ic_launcher=0x7f020006;
-        public static final int list=0x7f020007;
-        public static final int list_area___checkbox___checked=0x7f020008;
-        public static final int list_area___checkbox___unchecked=0x7f020009;
-        public static final int liste=0x7f02000a;
-        public static final int news=0x7f02000b;
-        public static final int note=0x7f02000c;
-        public static final int plus_orange=0x7f02000d;
-        public static final int search=0x7f02000e;
-        public static final int settings=0x7f02000f;
-        public static final int tab_bg_selected=0x7f020010;
-        public static final int tab_bg_selector=0x7f020011;
-        public static final int tab_bg_unselected=0x7f020012;
-        public static final int tab_divider=0x7f020013;
-        public static final int tab_text_selector=0x7f020014;
+        public static final int android=0x7f020000;
+        public static final int arrow_left=0x7f020001;
+        public static final int arrow_right=0x7f020002;
+        public static final int calendar=0x7f020003;
+        public static final int deals=0x7f020004;
+        public static final int essai_liste=0x7f020005;
+        public static final int folder=0x7f020006;
+        public static final int ic_launcher=0x7f020007;
+        public static final int list=0x7f020008;
+        public static final int list_area___checkbox___checked=0x7f020009;
+        public static final int list_area___checkbox___unchecked=0x7f02000a;
+        public static final int liste=0x7f02000b;
+        public static final int news=0x7f02000c;
+        public static final int note=0x7f02000d;
+        public static final int plus_orange=0x7f02000e;
+        public static final int search=0x7f02000f;
+        public static final int settings=0x7f020010;
+        public static final int tab_bg_selected=0x7f020011;
+        public static final int tab_bg_selector=0x7f020012;
+        public static final int tab_bg_unselected=0x7f020013;
+        public static final int tab_divider=0x7f020014;
+        public static final int tab_text_selector=0x7f020015;
     }
     public static final class id {
         public static final int DeleteButton=0x7f060009;
@@ -50,13 +51,44 @@ public final class R {
         public static final int buttonUnderline=0x7f06001a;
         public static final int buttonValider=0x7f06001b;
         public static final int button_confirm=0x7f060001;
+<<<<<<< HEAD
+        public static final int editText1=0x7f060013;
+        public static final int icone=0x7f06000e;
+        public static final int image=0x7f06002a;
+        public static final int listNotes=0x7f060015;
+        public static final int multiAutoCompleteTextView1=0x7f060011;
+=======
         public static final int dans_dossier=0x7f060013;
         public static final int icone=0x7f06000e;
         public static final int listNotes=0x7f060015;
+>>>>>>> d0a2c4cef3fdbcf54c2c5f8b5a8e1e2dacff58d4
         public static final int nameEdition=0x7f06000a;
         public static final int nameNewNote=0x7f060016;
         public static final int navigateur_path=0x7f060005;
         public static final int precedent=0x7f060003;
+<<<<<<< HEAD
+        public static final int search_dossier=0x7f060002;
+        public static final int suivant=0x7f060004;
+        public static final int suppr_button=0x7f060006;
+        public static final int tabBPIcone=0x7f060027;
+        public static final int tabInfosIcone=0x7f060021;
+        public static final int tabListeIcone=0x7f060024;
+        public static final int tabNewsIcone=0x7f06001e;
+        public static final int tab_bons_plans=0x7f060026;
+        public static final int tab_event=0x7f060023;
+        public static final int tab_infos=0x7f060020;
+        public static final int tab_news=0x7f06001d;
+        public static final int tbCalendrier=0x7f06001f;
+        public static final int tbDossier=0x7f060022;
+        public static final int tbListe=0x7f060025;
+        public static final int tbPlus=0x7f060028;
+        public static final int text=0x7f06002b;
+        public static final int textView1=0x7f060014;
+        public static final int textView2=0x7f060012;
+        public static final int text_creer=0x7f060000;
+        public static final int titre_note=0x7f06000f;
+        public static final int toast_layout_large=0x7f060029;
+=======
         public static final int recherche_note=0x7f060011;
         public static final int search_dossier=0x7f060002;
         public static final int suivant=0x7f060004;
@@ -78,6 +110,7 @@ public final class R {
         public static final int textView2=0x7f060012;
         public static final int text_creer=0x7f060000;
         public static final int titre_note=0x7f06000f;
+>>>>>>> d0a2c4cef3fdbcf54c2c5f8b5a8e1e2dacff58d4
         public static final int webView=0x7f060017;
     }
     public static final class layout {
@@ -88,6 +121,40 @@ public final class R {
         public static final int liste_notes=0x7f030004;
         public static final int main=0x7f030005;
         public static final int plus=0x7f030006;
+<<<<<<< HEAD
+        public static final int tab_calendrier=0x7f030007;
+        public static final int tab_dossier=0x7f030008;
+        public static final int tab_notes=0x7f030009;
+        public static final int tab_plus=0x7f03000a;
+        public static final int toast_layout_large=0x7f03000b;
+        public static final int toast_layout_medium=0x7f03000c;
+    }
+    public static final class raw {
+        public static final int cozyandroid=0x7f040000;
+    }
+    public static final class string {
+        public static final int app_name=0x7f050001;
+        public static final int confirm_creer=0x7f050014;
+        public static final int creer_dossier=0x7f050011;
+        public static final int creer_note=0x7f050012;
+        public static final int dossier_vide=0x7f05000f;
+        public static final int hello=0x7f050000;
+        public static final int hint_creer=0x7f050013;
+        public static final int nameNewNote=0x7f050007;
+        public static final int path=0x7f05000a;
+        public static final int search_hint=0x7f05000c;
+        public static final int search_hint_dossier=0x7f05000e;
+        public static final int search_label_dossier=0x7f05000b;
+        public static final int sousTitreNote=0x7f050009;
+        public static final int suppr_dossier=0x7f050010;
+        public static final int tabCalendrier=0x7f050003;
+        public static final int tabDossier=0x7f050005;
+        public static final int tabListe=0x7f050002;
+        public static final int tabPlus=0x7f050004;
+        public static final int tabRecherche=0x7f050006;
+        public static final int titreNote=0x7f050008;
+        public static final int tri=0x7f05000d;
+=======
         public static final int suggestion=0x7f030007;
         public static final int tab_calendrier=0x7f030008;
         public static final int tab_dossier=0x7f030009;
@@ -116,5 +183,6 @@ public final class R {
         public static final int tabPlus=0x7f040004;
         public static final int tabRecherche=0x7f040006;
         public static final int titreNote=0x7f040008;
+>>>>>>> d0a2c4cef3fdbcf54c2c5f8b5a8e1e2dacff58d4
     }
 }

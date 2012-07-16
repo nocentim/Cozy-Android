@@ -1,24 +1,47 @@
 package org.cozyAndroid;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Properties;
+
+import org.coconut.UnZip;
 import org.codehaus.jackson.JsonNode;
 import org.cozyAndroid.providers.TablesSQL.Notes;
 import org.ektorp.UpdateConflictException;
 
-import org.w3c.dom.*; 
-
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
-
-import android.text.* ;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
-import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.couchbase.touchdb.TDServer;
+import com.couchbase.touchdb.TDView;
+import com.couchbase.touchdb.javascript.TDJavaScriptViewCompiler;
+import com.couchbase.touchdb.listener.TDListener;
+
 
 public class TabPlus extends Activity implements View.OnClickListener {
 
@@ -26,21 +49,33 @@ public class TabPlus extends Activity implements View.OnClickListener {
 
 	private Button clear   = null ;
 	private Button valider = null ;
-	private Button bold    = null ;
-	private Button italic  = null ;
-	private Button underline = null ;
+	private Button bold = null;
+	private Button italic = null;
+	private Button underline = null;
+	
+	// attributs coconut
+	public static final String TAG = "CoconutActivity";
+    private TDListener listener;
+	private WebView webView;
+    private static TabPlus coconutRef;
+    private ProgressDialog progressDialog;
+    private Handler uiHandler;
+    static Handler myHandler;
+    private String couchAppUrl;
+    long long_starttime = 0;
 
-	private WebView webView ;
-
+    
 	/*
 	 * TODO voir avec benjamin pour les fonctions javascript qui permettent de mettre en gras, en italique et 
 	 * de souligner. Il y a aussi la fonction pour remettre a zero la note
 	 */
 
+	
+
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState) ;
-		setContentView(R.layout.plus ) ;
-
+		
+		setContentView(R.layout.plus );	    
 		newName   = (EditText)findViewById(R.id.nameNewNote)    ;
 		clear     = (Button)  findViewById(R.id.buttonClear)    ; 
 		valider   = (Button)  findViewById(R.id.buttonValider)  ;
@@ -58,9 +93,10 @@ public class TabPlus extends Activity implements View.OnClickListener {
 		webView.getSettings().setJavaScriptEnabled(true) ;
 		//		webView.setWebChromeClient (chromeclient) ;
 		webView.loadUrl("file:///android_asset/www/testWebView.html");
+	    
 	}
 
-	/**
+	/*
 	 *  BIU pour: bold italic underligne, ecoute les boutons correspondants
 	 */
 	//TODO verifier le bon fonctionnement de cette methode suite a toutes les modifications
