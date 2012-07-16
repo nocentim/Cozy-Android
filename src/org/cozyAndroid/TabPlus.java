@@ -1,53 +1,25 @@
 package org.cozyAndroid;
 
-<<<<<<< HEAD
 
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Properties;
 
-import org.coconut.CoconutUtils;
-=======
->>>>>>> 2ff8b6450838afd1841b67c39247650cfd8f8950
-import org.codehaus.jackson.JsonNode;
-import org.cozyAndroid.providers.TablesSQL.Notes;
-import org.ektorp.UpdateConflictException;
 import org.coconut.UnZip;
+import org.codehaus.jackson.JsonNode;
+import org.ektorp.UpdateConflictException;
 
-<<<<<<< HEAD
 import android.annotation.SuppressLint;
-=======
-import org.w3c.dom.*; 
-
->>>>>>> 2ff8b6450838afd1841b67c39247650cfd8f8950
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Editable;
-import android.text.Html;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-<<<<<<< HEAD
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -56,16 +28,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.couchbase.touchdb.TDServer;
-import com.couchbase.touchdb.TDView;
-import com.couchbase.touchdb.javascript.TDJavaScriptViewCompiler;
 import com.couchbase.touchdb.listener.TDListener;
-=======
-import android.webkit.WebView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
->>>>>>> 2ff8b6450838afd1841b67c39247650cfd8f8950
+
+
 
 public class TabPlus extends Activity implements View.OnClickListener {
 
@@ -73,7 +38,6 @@ public class TabPlus extends Activity implements View.OnClickListener {
 
 	private Button clear   = null ;
 	private Button valider = null ;
-<<<<<<< HEAD
 	private Button bold = null;
 	private Button italic = null;
 	private Button underline = null;
@@ -245,35 +209,25 @@ public class TabPlus extends Activity implements View.OnClickListener {
 	    	loadWebview();
 	    }*/
 	    
-	    
-	    
-	    
-		newText = (EditText)findViewById(R.id.bodyNewNote)  ;
-		newName = (EditText)findViewById(R.id.nameNewNote)  ;
-		clear   = (Button) findViewById(R.id.buttonClear)   ;
-		valider = (Button) findViewById(R.id.buttonValider) ;
-		
+		newName   = (EditText)findViewById(R.id.nameNewNote)    ;
+		clear     = (Button)  findViewById(R.id.buttonClear)    ; 
+		valider   = (Button)  findViewById(R.id.buttonValider)  ;
+		bold      = (Button)  findViewById(R.id.buttonBold)     ; 
+		italic    = (Button)  findViewById(R.id.buttonItalic)   ; 
+		underline = (Button)  findViewById(R.id.buttonUnderline); 
 
-		clear.setOnClickListener(this);
-		valider.setOnClickListener(this);
+		clear.setOnClickListener(this)    ;
+		valider.setOnClickListener(this)  ;
+		bold.setOnClickListener(this)     ;
+		italic.setOnClickListener(this)   ;
+		underline.setOnClickListener(this);
 
-		// Pour mettre en gras
-		bold = (Button) findViewById(R.id.buttonBold) ;
-		bold.setOnClickListener(BIUListener) ;
-		// Pour mettre en italic
-		italic = (Button) findViewById(R.id.buttonItalic);
-		italic.setOnClickListener(BIUListener);
-		// Pour souligner
-		underline = (Button) findViewById(R.id.buttonUnderline);
-		underline.setOnClickListener(BIUListener);
-
-		//		newText.setMovementMethod (new ScrollingMovementMethod()) ;
-		// On ajouter un Listener sur l'appui de touches
-		newText.setOnKeyListener(EnterListener);
-		// On ajoute un autre Listener sur le changement dans le texte cette fois
-		newText.addTextChangedListener(TextListener);
+		webView = (WebView) findViewById(R.id.webView) ;
+		webView.getSettings().setJavaScriptEnabled(true) ;
+		//		webView.setWebChromeClient (chromeclient) ;
+		webView.loadUrl("file:///android_asset/www/testWebView.html");
+	    
 	}
-
 	private class CustomWebViewClient extends WebViewClient {
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -389,40 +343,9 @@ public class TabPlus extends Activity implements View.OnClickListener {
 			toast.show();
 		}
 	}*/
-	
-=======
-	private Button bold    = null ;
-	private Button italic  = null ;
-	private Button underline = null ;
-
-	private WebView webView ;
 
 
-	public void onCreate(Bundle saveInstanceState) {
-		super.onCreate(saveInstanceState) ;
-		setContentView(R.layout.plus ) ;
-
-		newName   = (EditText)findViewById(R.id.nameNewNote)    ;
-		clear     = (Button)  findViewById(R.id.buttonClear)    ; 
-		valider   = (Button)  findViewById(R.id.buttonValider)  ;
-		bold      = (Button)  findViewById(R.id.buttonBold)     ; 
-		italic    = (Button)  findViewById(R.id.buttonItalic)   ; 
-		underline = (Button)  findViewById(R.id.buttonUnderline); 
-
-		clear.setOnClickListener(this)    ;
-		valider.setOnClickListener(this)  ;
-		bold.setOnClickListener(this)     ;
-		italic.setOnClickListener(this)   ;
-		underline.setOnClickListener(this);
-
-		webView = (WebView) findViewById(R.id.webView) ;
-		webView.getSettings().setJavaScriptEnabled(true) ;
-		//		webView.setWebChromeClient (chromeclient) ;
-		webView.loadUrl("file:///android_asset/www/testWebView.html");
-	}
-
->>>>>>> 2ff8b6450838afd1841b67c39247650cfd8f8950
-	/**
+	/*
 	 *  BIU pour: bold italic underligne, ecoute les boutons correspondants
 	 */
 	//TODO verifier le bon fonctionnement de cette methode suite a toutes les modifications
