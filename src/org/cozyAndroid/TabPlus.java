@@ -1,6 +1,8 @@
 package org.cozyAndroid;
 
+import org.codehaus.jackson.JsonNode;
 import org.cozyAndroid.providers.TablesSQL.Notes;
+import org.ektorp.UpdateConflictException;
 
 import org.w3c.dom.*; 
 
@@ -8,6 +10,7 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Bundle;
+
 import android.text.* ;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -49,7 +52,7 @@ public class TabPlus extends Activity implements View.OnClickListener {
 
 		webView = (WebView) findViewById(R.id.webView) ;
 		webView.getSettings().setJavaScriptEnabled(true) ;
-//		webView.setWebChromeClient (chromeclient) ;
+		//		webView.setWebChromeClient (chromeclient) ;
 		webView.loadUrl("file:///android_asset/www/testWebView.html");
 	}
 
@@ -65,13 +68,13 @@ public class TabPlus extends Activity implements View.OnClickListener {
 			Toast.makeText (TabPlus.this, "appui sur le bouton clear, pas implémenté", Toast.LENGTH_LONG).show();
 			break ;
 		case R.id.buttonValider :
-//			///dataBase.addNote("Notes", "note", newName.getText() + ", body: " + newText.getText()) ;
-//			ContentValues values = new ContentValues();
-//			values.put(Notes.TITLE, newName.getText()+ "");
-//			values.put(Notes.BODY, newText.getText() + "");        
-//			Uri uri = getContentResolver().insert(Notes.CONTENT_URI, values);
-//			newText.setText("") ; // Pour ces deux lignes il faudra surement faire plus
-//			newName.setText("") ;
+			//			///dataBase.addNote("Notes", "note", newName.getText() + ", body: " + newText.getText()) ;
+			//			ContentValues values = new ContentValues();
+			//			values.put(Notes.TITLE, newName.getText()+ "");
+			//			values.put(Notes.BODY, newText.getText() + "");        
+			//			Uri uri = getContentResolver().insert(Notes.CONTENT_URI, values);
+			//			newText.setText("") ; // Pour ces deux lignes il faudra surement faire plus
+			//			newName.setText("") ;
 			Toast.makeText (TabPlus.this, "appui sur le bouton, pas implémenté", Toast.LENGTH_LONG).show();
 
 			break ;
@@ -85,6 +88,29 @@ public class TabPlus extends Activity implements View.OnClickListener {
 			Toast.makeText (TabPlus.this, "appui sur le bouton Underline, pas implémenté", Toast.LENGTH_LONG).show();
 			break ;
 		}
+	} 
+
+	public void createCozyyItem(String name) {
+		final JsonNode item = CozyItemUtils.createWithText(name);
+		CozySyncEktorpAsyncTask createItemTask = new CozySyncEktorpAsyncTask() {
+
+			@Override
+			protected void doInBackground() {
+				CozyAndroidActivity.returnCouchDbConnector().create(item);
+			}
+
+			@Override
+			protected void onSuccess() {
+				Log.d(CozyAndroidActivity.TAG, "Document created successfully");
+			}
+
+			@Override
+			protected void onUpdateConflict(
+					UpdateConflictException updateConflictException) {
+				Log.d(CozyAndroidActivity.TAG, "Got an update conflict for: " + item.toString());
+			}
+		};
+		createItemTask.execute();
 	}
 }
 

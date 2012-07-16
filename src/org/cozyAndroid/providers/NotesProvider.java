@@ -21,7 +21,7 @@ import android.util.Log;
 
 public class NotesProvider extends ContentProvider {
 	 
-    private static final String TAG = "NotesProvider";
+    	private static final String TAG = "NotesProvider";
     
     private SQLiteDatabase notesDB;
  
@@ -288,5 +288,6 @@ public class NotesProvider extends ContentProvider {
 		notesProjectionMap.put(Notes.TITLE, Notes.TITLE);
 		notesProjectionMap.put(Notes.BODY, Notes.BODY);
 		notesProjectionMap.put(Notes.DOSSIER, Notes.DOSSIER);
+		Log.d("ok","ok");
 	}
 }
