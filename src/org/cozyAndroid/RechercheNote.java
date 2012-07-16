@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import org.cozyAndroid.providers.TablesSQL.Dossiers;
 import org.cozyAndroid.providers.TablesSQL.Notes;
 
 import android.app.Activity;
@@ -73,11 +72,9 @@ public class RechercheNote extends MultiAutoCompleteTextView {
 		
 		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
 			String mot = cursor.getString(columnIndex);
-			int start = filterPattern.length();
 			Spannable textSpan = new SpannableString(mot);
-			textSpan.setSpan(new ForegroundColorSpan(getResources().getColor(android.R.color.darker_gray)), start, textSpan.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			textSpan.setSpan(new ForegroundColorSpan(getResources().getColor(android.R.color.black)), 0, filterPattern.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 			((TextView) view).setText(textSpan);
-			((TextView) view).setEllipsize(TruncateAt.MIDDLE);
 			return true;
 		}
 	};
@@ -86,12 +83,15 @@ public class RechercheNote extends MultiAutoCompleteTextView {
 	private FilterQueryProvider filterQuery = new FilterQueryProvider() {
 		//TODO : essayer de faire ca avec un seul acces a la BD
 		public Cursor runQuery(CharSequence constraint) {
+			if (constraint == null || constraint.equals("")) {
+				return null;
+			}
 			String pattern = constraint.toString().toLowerCase();
 			filterPattern = pattern;
 			String[] projection = {Notes.NOTE_ID,Notes.TITLE};
 			Cursor all = context.managedQuery(Notes.CONTENT_URI, projection, null, null, null);
 			String[] proj = {SUGGESTION_ID, SUGGESTION};
-			//TODO tout ca est tres laid : faire mieux
+			//TODO tout ca est tres laid : faire mieux (apres l'implem de touchDB) 
 			HashMap <String,Integer> motsConnus = new HashMap<String, Integer>();
 			if (all.moveToFirst()) {
 				do {
@@ -101,27 +101,31 @@ public class RechercheNote extends MultiAutoCompleteTextView {
 						if (title.startsWith(pattern)) {
 							start = 0;
 						} else if (title.matches(".* " + pattern + ".*")) {
-							start = title.indexOf(" " + pattern);
+							start = title.indexOf(" " + pattern) + 1;
 						} else {
-							continue;
+							break;
 						}
-						for (end = start; end < title.length() && title.charAt(end) != ' '; end ++);
+						//on extrait le mot qui commence par 'pattern'
+						for (end = start + 1; end < title.length() && title.charAt(end) != ' '; end ++);
 						String mot = title.substring(start, end);
 						Integer nombreOccurences = motsConnus.put(mot, 1);
 						if (nombreOccurences != null) {
 							//Si le mot était déja dans la map
 							motsConnus.put(mot,nombreOccurences + 1);
 						}
+						while (end < title.length() && title.charAt(end) == ' ') {
+							//on saute les espaces
+							end++;
+						}
 						title = title.substring(end);
 					}
 				} while (all.moveToNext());
 			}
 			List<Entry<String, Integer>> entries = new ArrayList<Entry<String, Integer>>(motsConnus.entrySet());
-			 
 			// Tri de la liste selon le nombre d'occurences
 			Collections.sort(entries, new Comparator<Entry<String, Integer>>() {
 				public int compare(final Entry<String, Integer> e1, final Entry<String, Integer> e2) {
-					return e1.getValue().compareTo(e2.getValue());
+					return e2.getValue().compareTo(e1.getValue());
 				}
 			});
 			MatrixCursor filtered = new MatrixCursor(proj);
@@ -141,9 +145,9 @@ public class RechercheNote extends MultiAutoCompleteTextView {
 		this.context = context;
 		setThreshold(1);
 		searchAdapter = new SimpleCursorAdapter(
-				context, android.R.layout.simple_dropdown_item_1line,
+				context, R.layout.suggestion,
 				searchCursor, new String [] {SUGGESTION},
-				new int [] {android.R.id.text1});
+				new int [] {R.id.textSuggestion});
 		setAdapter(searchAdapter);
 		searchAdapter.setFilterQueryProvider(filterQuery);
 		searchAdapter.setCursorToStringConverter(converter);

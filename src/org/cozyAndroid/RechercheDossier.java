@@ -78,10 +78,8 @@ public class RechercheDossier extends AutoCompleteTextView {
 			}
 			int end = start + filterPattern.length();
 			Spannable textSpan = new SpannableString(text);
-			textSpan.setSpan(new ForegroundColorSpan(getResources().getColor(android.R.color.darker_gray)), 0, textSpan.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 			textSpan.setSpan(new ForegroundColorSpan(getResources().getColor(android.R.color.black)), start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 			((TextView) view).setText(textSpan);
-			((TextView) view).setEllipsize(TruncateAt.MIDDLE);
 			return true;
 		}
 	};
@@ -90,6 +88,9 @@ public class RechercheDossier extends AutoCompleteTextView {
 	private FilterQueryProvider filterQuery = new FilterQueryProvider() {
 		//TODO : essayer de faire ca avec un seul acces a la BD
 		public Cursor runQuery(CharSequence constraint) {
+			if (constraint == null || constraint.equals("")) {
+				return null;
+			}
 			String pattern = constraint.toString().toLowerCase();
 			filterPattern = pattern;
 			String[] projection = {Dossiers.DOSSIER_ID};
@@ -120,9 +121,9 @@ public class RechercheDossier extends AutoCompleteTextView {
 		this.context = context;
 		setThreshold(1);
 		searchAdapter = new SimpleCursorAdapter(
-				context, android.R.layout.simple_dropdown_item_1line,
+				context, R.layout.suggestion,
 				searchCursor, new String [] {Dossiers.DOSSIER_ID},
-				new int [] {android.R.id.text1});
+				new int [] {R.id.textSuggestion});
 		setAdapter(searchAdapter);
 		searchAdapter.setFilterQueryProvider(filterQuery);
 		searchAdapter.setCursorToStringConverter(converter);

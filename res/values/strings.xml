@@ -15,7 +15,6 @@
     <string name="path">Navigateur</string>
     <string name="search_label_dossier">AAA</string>
     <string name="search_hint">Rechercher des notes</string>
-    <string name="tri">Tri : Pertinence | Chemin | Date modification</string>
     <string name="search_hint_dossier">Rechercher un dossier</string>
     <string name="dossier_vide">Ce dossier est vide.</string>
     <string name="suppr_dossier">Supprimer ce dossier</string>
@@ -23,5 +22,13 @@
     <string name="creer_note">Creer une note</string>
     <string name="hint_creer">Nom du nouveau dossier</string>
     <string name="confirm_creer">Creer</string>
+    
+    <string-array name="sort_array">
+        <item>Pertinence</item>
+        <item>Chemin</item>
+        <item>Date modification</item>
+    </string-array>
+    <string name="sort">Tri : Pertinence | Chemin | Date modification</string>
+
 
 </resources>

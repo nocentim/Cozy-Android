@@ -6,11 +6,12 @@
     android:orientation="vertical" >
 
     <org.cozyAndroid.RechercheNote
-        android:id="@+id/multiAutoCompleteTextView1"
+        android:id="@+id/recherche_note"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/search_hint" >
+        android:hint="@string/search_hint"
+        android:inputType="textPersonName" >
 
         <requestFocus />
     </org.cozyAndroid.RechercheNote>
@@ -23,24 +24,23 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dans le dossier:" />
+            android:text="Dans :" />
 
-        <EditText
-            android:id="@+id/editText1"
-            android:layout_width="0dp"
+        <org.cozyAndroid.RechercheDossier
+            android:id="@+id/dans_dossier"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:ems="10"
+            android:hint="tous les dossiers"
             android:inputType="textPersonName" />
-
     </LinearLayout>
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textTri"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/tri" />
+        android:text="@string/sort" />
 
     <ListView
         android:id="@+id/listNotes"
