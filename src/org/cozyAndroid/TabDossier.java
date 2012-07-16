@@ -39,9 +39,6 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 	private ArrayList<Integer> historique;
 	private int position;
 	
-	//Cursor servant a dialoguer avec le content provider
-	private Cursor cursor;
-	
 	//Widget de l'interface par ordre de lecture
 	private AutoCompleteTextView search;
 	
@@ -76,7 +73,6 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		//Initialisation de la barre de recherche de dossiers
 		search = (RechercheDossier) findViewById(R.id.search_dossier);
 		search.setOnItemClickListener(suggestionClick);
-		//search.init(this);
 		
 		//Boutons
 		precedent = (ImageButton) findViewById(R.id.precedent);
@@ -97,7 +93,7 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 	public void onResume() {
 		super.onResume();
 		String projection[] = {Dossiers.DOSSIER_ID,Dossiers.NAME,Dossiers.PARENT};
-		cursor = managedQuery(Dossiers.CONTENT_URI, projection, null, null, Dossiers.NAME + " COLLATE NOCASE");
+		Cursor cursor = managedQuery(Dossiers.CONTENT_URI, projection, null, null, Dossiers.NAME + " COLLATE NOCASE");
 		Dossier.newArborescence(cursor);
 		String notesProjection []= {Notes.NOTE_ID,Notes.TITLE,Notes.BODY,Notes.DOSSIER};
 		Cursor notesCursor = managedQuery(Notes.CONTENT_URI, notesProjection, null, null, Notes.TITLE + " COLLATE NOCASE");

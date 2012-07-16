@@ -50,7 +50,7 @@ public class CozyAndroidActivity extends TabActivity  implements OnItemClickList
 	protected static HttpClient httpClient;
 	
 	
-	public static String TAG = "GrocerySync";
+	public static String TAG = "CozyAndroid";
 	
 	//constants
 	public static final String DATABASE_NAME = "cozy-sync";
