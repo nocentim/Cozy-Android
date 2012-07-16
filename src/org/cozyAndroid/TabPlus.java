@@ -1,5 +1,6 @@
 package org.cozyAndroid;
 
+<<<<<<< HEAD
 
 
 import java.io.File;
@@ -11,12 +12,19 @@ import java.util.GregorianCalendar;
 import java.util.Properties;
 
 import org.coconut.CoconutUtils;
+=======
+>>>>>>> 2ff8b6450838afd1841b67c39247650cfd8f8950
 import org.codehaus.jackson.JsonNode;
 import org.cozyAndroid.providers.TablesSQL.Notes;
 import org.ektorp.UpdateConflictException;
 import org.coconut.UnZip;
 
+<<<<<<< HEAD
 import android.annotation.SuppressLint;
+=======
+import org.w3c.dom.*; 
+
+>>>>>>> 2ff8b6450838afd1841b67c39247650cfd8f8950
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -36,6 +44,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+<<<<<<< HEAD
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -51,15 +60,20 @@ import com.couchbase.touchdb.TDServer;
 import com.couchbase.touchdb.TDView;
 import com.couchbase.touchdb.javascript.TDJavaScriptViewCompiler;
 import com.couchbase.touchdb.listener.TDListener;
+=======
+import android.webkit.WebView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+>>>>>>> 2ff8b6450838afd1841b67c39247650cfd8f8950
 
 public class TabPlus extends Activity implements View.OnClickListener {
 
-	private EditText newText = null ;
 	private EditText newName = null ;
-	private String currentColor = "#000000";  // Couleur actuelle du texte
 
 	private Button clear   = null ;
 	private Button valider = null ;
+<<<<<<< HEAD
 	private Button bold = null;
 	private Button italic = null;
 	private Button underline = null;
@@ -376,100 +390,75 @@ public class TabPlus extends Activity implements View.OnClickListener {
 		}
 	}*/
 	
+=======
+	private Button bold    = null ;
+	private Button italic  = null ;
+	private Button underline = null ;
+
+	private WebView webView ;
+
+
+	public void onCreate(Bundle saveInstanceState) {
+		super.onCreate(saveInstanceState) ;
+		setContentView(R.layout.plus ) ;
+
+		newName   = (EditText)findViewById(R.id.nameNewNote)    ;
+		clear     = (Button)  findViewById(R.id.buttonClear)    ; 
+		valider   = (Button)  findViewById(R.id.buttonValider)  ;
+		bold      = (Button)  findViewById(R.id.buttonBold)     ; 
+		italic    = (Button)  findViewById(R.id.buttonItalic)   ; 
+		underline = (Button)  findViewById(R.id.buttonUnderline); 
+
+		clear.setOnClickListener(this)    ;
+		valider.setOnClickListener(this)  ;
+		bold.setOnClickListener(this)     ;
+		italic.setOnClickListener(this)   ;
+		underline.setOnClickListener(this);
+
+		webView = (WebView) findViewById(R.id.webView) ;
+		webView.getSettings().setJavaScriptEnabled(true) ;
+		//		webView.setWebChromeClient (chromeclient) ;
+		webView.loadUrl("file:///android_asset/www/testWebView.html");
+	}
+
+>>>>>>> 2ff8b6450838afd1841b67c39247650cfd8f8950
 	/**
 	 *  BIU pour: bold italic underligne, ecoute les boutons correspondants
-	 * @author bissou
 	 */
-	private View.OnClickListener BIUListener = new View.OnClickListener() {
-		public void onClick(View v) {
-			newText.removeTextChangedListener(TextListener) ;
-			int selectionStart = newText.getSelectionStart();  // On récupère la sélection
-			int selectionEnd   = newText.getSelectionEnd();
-			if (selectionStart == -1) selectionStart = 0 ;
-			if (selectionEnd == -1) selectionEnd = 0 ;
-			Editable editable = newText.getText() ;
-			CharSequence baliseOuvrante = "", baliseFermante = "" ;
-
-			switch (v.getId()) {
-			case R.id.buttonBold :
-				baliseOuvrante = "<b>" ;
-				baliseFermante = "</b>" ;
-				break ;
-			case R.id.buttonItalic :
-				baliseOuvrante = "<i>" ;
-				baliseFermante = "</i>" ;
-				break ;
-			case R.id.buttonUnderline :
-				baliseOuvrante = "<u>" ;
-				baliseFermante = "</u>" ;
-				break ;
-			}
-
-			editable.insert(selectionStart, baliseOuvrante) ;    // On met la balise avant la sélection
-			newText.addTextChangedListener(TextListener) ;	
-			editable.insert(selectionEnd + 3 , baliseFermante) ; // On rajoute la balise après la sélection (et les 3 caractères de la balise <b>)
-			//TODO il faut revoir cette double insertion car cela modifie deux fois le texte donc appel deux fois le listener
-			Log.d("allo", "onclicklistener") ;
-			Log.d("allo", newText.getText().toString()) ;
-		}
-	} ;
-
-	/**
-	 * Ecoute le bouton enter pour permettre a l'utilisateur de revenir
-	 * a la ligne dans ca note
-	 */
-	private View.OnKeyListener EnterListener = new View.OnKeyListener() {
-
-		public boolean onKey(View v, int keyCode, KeyEvent event) {
-			// On récupère la position du début de la sélection dans le texte
-			int cursorIndex = newText.getSelectionStart();
-			// Ne réagir qu'à l'appui sur une touche (et pas le relâchement)
-			if(event.getAction() == 0)
-				// S'il s'agit d'un appui sur la touche « entrée »
-				if(keyCode == 66)
-					// On insère une balise de retour à la ligne
-					newText.getText().insert(cursorIndex, "<br />");
-			return true;
-		}
-	} ;
-
-
-	/**
-	 * Ecoute les changements du texte
-	 */
-	private TextWatcher TextListener = new TextWatcher() {
-		public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-		public void onTextChanged(CharSequence s, int start, int before, int count) {}
-		public void afterTextChanged(Editable s) {	
-			newText.removeTextChangedListener(this) ;
-			// Le Textview interprète le texte dans l'éditeur en une certaine couleur
-			newText.setText(Html.fromHtml(newText.getText().toString()));
-			//			newText.setText(Html.fromHtml("<font color=\"" + currentColor + "\">" + newText.getText().toString() + "</font>", null , null));
-			newText.addTextChangedListener(this) ;	
-		}
-	} ;
-
-
+	//TODO verifier le bon fonctionnement de cette methode suite a toutes les modifications
 	public void onClick(View v) {
-		switch(v.getId()) {
+		int id = v.getId() ;
+
+		switch (id) {
 		case R.id.buttonClear : 
-			newText.setText("") ;
+			Toast.makeText (TabPlus.this, "appui sur le bouton clear, pas implémenté", Toast.LENGTH_LONG).show();
 			break ;
 		case R.id.buttonValider :
-			///dataBase.addNote("Notes", "note", newName.getText() + ", body: " + newText.getText()) ;
-			ContentValues values = new ContentValues();
-			values.put(Notes.TITLE, newName.getText()+ "");
-			values.put(Notes.BODY, newText.getText() + "");        
-			Uri uri = getContentResolver().insert(Notes.CONTENT_URI, values);
-			newText.setText("") ;
-			newName.setText("") ;
+			//			///dataBase.addNote("Notes", "note", newName.getText() + ", body: " + newText.getText()) ;
+			//			ContentValues values = new ContentValues();
+			//			values.put(Notes.TITLE, newName.getText()+ "");
+			//			values.put(Notes.BODY, newText.getText() + "");        
+			//			Uri uri = getContentResolver().insert(Notes.CONTENT_URI, values);
+			//			newText.setText("") ; // Pour ces deux lignes il faudra surement faire plus
+			//			newName.setText("") ;
+			Toast.makeText (TabPlus.this, "appui sur le bouton, pas implémenté", Toast.LENGTH_LONG).show();
+
+			break ;
+		case R.id.buttonBold :
+			Toast.makeText (TabPlus.this, "appui sur le bouton bold, pas implémenté", Toast.LENGTH_LONG).show();
+			break ; 
+		case R.id.buttonItalic :
+			Toast.makeText (TabPlus.this, "appui sur le bouton Italic, pas implémenté", Toast.LENGTH_LONG).show();
+			break ;
+		case R.id.buttonUnderline :
+			Toast.makeText (TabPlus.this, "appui sur le bouton Underline, pas implémenté", Toast.LENGTH_LONG).show();
 			break ;
 		}
 	} 
-	
+
 	public void createCozyyItem(String name) {
-        final JsonNode item = CozyItemUtils.createWithText(name);
-        CozySyncEktorpAsyncTask createItemTask = new CozySyncEktorpAsyncTask() {
+		final JsonNode item = CozyItemUtils.createWithText(name);
+		CozySyncEktorpAsyncTask createItemTask = new CozySyncEktorpAsyncTask() {
 
 			@Override
 			protected void doInBackground() {
@@ -487,8 +476,22 @@ public class TabPlus extends Activity implements View.OnClickListener {
 				Log.d(CozyAndroidActivity.TAG, "Got an update conflict for: " + item.toString());
 			}
 		};
-	    createItemTask.execute();
-    }
-	
-	
+		createItemTask.execute();
+	}
 }
+
+
+///**
+//* Ecoute la touche enter pour permettre a l'utilisateur de revenir
+//* a la ligne dans ca note
+//*/
+//private View.OnKeyListener EnterListener = new View.OnKeyListener() {
+//	public boolean onKey(View v, int keyCode, KeyEvent event) {
+//		int cursorIndex = newText.getSelectionStart(); // On récupère la position du début de la sélection dans le texte
+//		if(event.getAction() == 0)                     // Ne réagir qu'à l'appui sur une touche (et pas le relâchement)
+//			if(keyCode == 66)                          // Pour la touche « entrée »
+//				//						((Editable) body).insert(cursorIndex, "<br />"); // On insère une balise de retour à la ligne
+//				afficheText() ;
+//		return true ;
+//	}
+//} ;
