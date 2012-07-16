@@ -5,6 +5,7 @@ import org.cozyAndroid.providers.TablesSQL.Dossiers;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.MatrixCursor;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils.TruncateAt;
@@ -48,7 +49,7 @@ public class RechercheDossier extends AutoCompleteTextView {
 		init((Activity) context);
 	}
 	
-	//Creation de la string a afficher du la TextView a partir du cursor
+	//Creation de la string a afficher de la TextView a partir du cursor
 	private CursorToStringConverter converter = new CursorToStringConverter() {
 		
 		public CharSequence convertToString(Cursor cursor) {
@@ -91,26 +92,20 @@ public class RechercheDossier extends AutoCompleteTextView {
 		public Cursor runQuery(CharSequence constraint) {
 			String pattern = constraint.toString().toLowerCase();
 			filterPattern = pattern;
-			String[] projection = {Dossiers.DOSSIER_ID,Dossiers.NAME};
-			Cursor filtered = context.managedQuery(Dossiers.CONTENT_URI, projection, null, null, null);
-			String selection = Dossiers.DOSSIER_ID + " IN (";
-			if (filtered.moveToFirst()) {
-				Boolean first = true;
+			String[] projection = {Dossiers.DOSSIER_ID};
+			Cursor all = context.managedQuery(Dossiers.CONTENT_URI, projection, null, null, null);
+			MatrixCursor filtered = new MatrixCursor(projection);
+			if (all.moveToFirst()) {
 				do {
-					Dossier temp = Dossier.getDossierParId(filtered.getInt(0));
+					Dossier temp = Dossier.getDossierParId(all.getInt(0));
 					String path = temp.getCheminComplet();
 					path = path.toLowerCase();
 					if (path.startsWith(pattern)
 						|| path.matches(".*/" + pattern + ".*")) {
-						if (!first) {
-							selection += ",";
-						}
-						selection += temp.getId();
-						first = false;
+						Object[] id = {all.getInt(0)};
+						filtered.addRow(id);
 					}
-				} while (filtered.moveToNext());
-				selection += ")";
-				filtered = context.managedQuery(Dossiers.CONTENT_URI, projection, selection, null, null);
+				} while (all.moveToNext());
 			}
 			return filtered;
 		}
