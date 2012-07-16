@@ -38,65 +38,69 @@ import com.couchbase.touchdb.router.TDURLStreamHandlerFactory;
 
 
 public class CozyAndroidActivity extends TabActivity  implements OnItemClickListener, OnItemLongClickListener, OnKeyListener{
-    /** Called when the activity is first created. */
+	/** Called when the activity is first created. */
 	private static TabHost tabHost;
 	private int [] layoutTab;
-	
+
 	private static CozyAndroidActivity instance;
-	
+
 	//couch internals
 	protected static TDServer server;
 	protected static HttpClient httpClient;
-	
-	
+
+
 	public static String TAG = "GrocerySync";
-	
+
 	//constants
 	public static final String DATABASE_NAME = "cozy-sync";
 	public static final String dDocName = "cozy-local";
 	public static final String dDocId = "_design/" + dDocName;
 	public static final String byDateViewName = "byDate";
-	
+
 	protected CouchDbInstance dbInstance;
 	protected static CouchDbConnector couchDbConnector;
 	protected ReplicationCommand pushReplicationCommand;
 	protected ReplicationCommand pullReplicationCommand;
-	
+
 	{
 		TDURLStreamHandlerFactory.registerSelfIgnoreError();
 	}
 
-    public CozyAndroidActivity() {
-        instance = this;
-    }
+	public CozyAndroidActivity() {
+		instance = this;
+	}
 
-    public static Context getContext() {
-        return instance;
-    }
-    
-    public static CouchDbConnector returnCouchDbConnector() {
-    	return couchDbConnector;
-    }
+	public static Context getContext() {
+		return instance;
+	}
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        tabHost = getTabHost();
+	public static CouchDbConnector returnCouchDbConnector() {
+		return couchDbConnector;
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
+		tabHost = getTabHost();
 		layoutTab = new int[4];
 		layoutTab[0] = R.layout.tab_notes;
 		layoutTab[3] = R.layout.tab_calendrier;
 		layoutTab[2] = R.layout.tab_plus;
 		layoutTab[1] = R.layout.tab_dossier;
+	}
 
+	public void onResume(){
+		super.onResume();
 		setupTab("TabListe", new Intent().setClass(this, TabListe.class),0);
 		setupTab("TabTags", new Intent().setClass(this, TabDossier.class),1);
 		setupTab("TabPlus", new Intent().setClass(this, TabPlus.class),2);
-        setupTab("TabCalendrier", new Intent().setClass(this, TabCalendrier.class),3);
-    }
-    
-    //  A VOIR!!!!
-   /* protected void startTouchDB() {
+		setupTab("TabCalendrier", new Intent().setClass(this, TabCalendrier.class),3);
+	}
+
+
+	//TODO A VOIR!!!!
+	/* protected void startTouchDB() {
     	server = null;
 	    String filesDir = getFilesDir().getAbsolutePath();    // getContext().getFilesDir().getAbsolutePath(); ??
 	    try {
@@ -120,8 +124,8 @@ public class CozyAndroidActivity extends TabActivity  implements OnItemClickList
             }
         }, null, "1.0");
 	}*/
-    
-    protected void startEktorp() {
+
+	protected void startEktorp() {
 		Log.v(TAG, "starting ektorp");
 
 		if(httpClient != null) {
@@ -152,15 +156,15 @@ public class CozyAndroidActivity extends TabActivity  implements OnItemClickList
 		};
 		startupTask.execute();
 	}
-    
-    public void startReplications() {
+
+	public void startReplications() {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
 		pushReplicationCommand = new ReplicationCommand.Builder()
-			.source(DATABASE_NAME)
-			.target(prefs.getString("sync_url", "http://mschoch.iriscouch.com/grocery-test"))
-			.continuous(true)
-			.build();
+		.source(DATABASE_NAME)
+		.target(prefs.getString("sync_url", "http://mschoch.iriscouch.com/grocery-test"))
+		.continuous(true)
+		.build();
 
 		CozySyncEktorpAsyncTask pushReplication = new CozySyncEktorpAsyncTask() {
 
@@ -173,10 +177,10 @@ public class CozyAndroidActivity extends TabActivity  implements OnItemClickList
 		pushReplication.execute();
 
 		pullReplicationCommand = new ReplicationCommand.Builder()
-			.source(prefs.getString("sync_url", "http://mschoch.iriscouch.com/grocery-test"))
-			.target(DATABASE_NAME)
-			.continuous(true)
-			.build();
+		.source(prefs.getString("sync_url", "http://mschoch.iriscouch.com/grocery-test"))
+		.target(DATABASE_NAME)
+		.continuous(true)
+		.build();
 
 		CozySyncEktorpAsyncTask pullReplication = new CozySyncEktorpAsyncTask() {
 
@@ -191,22 +195,17 @@ public class CozyAndroidActivity extends TabActivity  implements OnItemClickList
 
 	public void stopEktorp() {
 	}
-    
-    private void setupTab(String tag, Intent intent, int layoutTabIndex) {
+
+	private void setupTab(String tag, Intent intent, int layoutTabIndex) {
 		tabHost.addTab(tabHost.newTabSpec(tag).setIndicator( createTabView(tabHost.getContext(), layoutTabIndex)).setContent(intent));
 	}
-	 
+
 	// créé la vue associée à l'onglet considéré
 	private View createTabView(final Context context, int layoutTabIndex) {
 		View view = LayoutInflater.from(context).inflate(layoutTab[layoutTabIndex], null);
 		view.refreshDrawableState();
 		//view.setBackgroundResource(R.color.Ensimag);
 		return view;
-	}
-	
-	public void onResume(){
-		super.onResume();
-		
 	}
 
 	public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -222,8 +221,8 @@ public class CozyAndroidActivity extends TabActivity  implements OnItemClickList
 
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		// TODO Auto-generated method stub
-		
+
 	}	
-	
-	
+
+
 }

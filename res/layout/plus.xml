@@ -50,16 +50,16 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/buttonValider"
-            android:layout_width="162dp"
-            android:layout_height="wrap_content"
-            android:text="Noter!" />
-
-        <Button
             android:id="@+id/buttonClear"
             android:layout_width="162dp"
             android:layout_height="wrap_content"
             android:text="Clear" />
+
+        <Button
+            android:id="@+id/buttonValider"
+            android:layout_width="162dp"
+            android:layout_height="wrap_content"
+            android:text="Noter!" />
     </LinearLayout>
 
 </LinearLayout>

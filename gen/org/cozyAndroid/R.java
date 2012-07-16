@@ -41,11 +41,11 @@ public final class R {
         public static final int body_note=0x7f050010;
         public static final int buttonAnnuler=0x7f05000c;
         public static final int buttonBold=0x7f050018;
-        public static final int buttonClear=0x7f05001c;
+        public static final int buttonClear=0x7f05001b;
         public static final int buttonEditer=0x7f05000d;
         public static final int buttonItalic=0x7f050019;
         public static final int buttonUnderline=0x7f05001a;
-        public static final int buttonValider=0x7f05001b;
+        public static final int buttonValider=0x7f05001c;
         public static final int button_confirm=0x7f050001;
         public static final int editText1=0x7f050013;
         public static final int icone=0x7f05000e;
