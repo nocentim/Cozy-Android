@@ -1,14 +1,5 @@
 package org.cozyAndroid;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Properties;
-
-import org.coconut.UnZip;
 import org.codehaus.jackson.JsonNode;
 import org.cozyAndroid.providers.TablesSQL.Notes;
 import org.ektorp.UpdateConflictException;
@@ -17,29 +8,15 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.couchbase.touchdb.TDServer;
-import com.couchbase.touchdb.TDView;
-import com.couchbase.touchdb.javascript.TDJavaScriptViewCompiler;
 import com.couchbase.touchdb.listener.TDListener;
 
 
@@ -114,7 +91,6 @@ public class TabPlus extends Activity implements View.OnClickListener {
 			getContentResolver().insert(Notes.CONTENT_URI, values);
 			//TODO il faut remettre le titre et le corps à zero
 			Toast.makeText (TabPlus.this, "Note saved", Toast.LENGTH_LONG).show();
-
 			break ;
 		case R.id.buttonBold :
 			Toast.makeText (TabPlus.this, "appui sur le bouton bold, pas implémenté", Toast.LENGTH_LONG).show();
