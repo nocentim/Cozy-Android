@@ -17,19 +17,12 @@ import android.widget.* ;
 public class TabPlus extends Activity implements View.OnClickListener {
 
 	private EditText newName = null ;
-
-	private Button clear   = null ;
-	private Button valider = null ;
-	private Button bold = null;
-	private Button italic = null;
-	private Button underline = null;
 	
 	// attributs coconut
 	public static final String TAG = "CoconutActivity";
 	private WebView webView;
     static Handler myHandler;
     long long_starttime = 0;
-
     
 	/*
 	 * TODO voir avec benjamin pour les fonctions javascript qui permettent de mettre en gras, en italique et 
@@ -37,28 +30,21 @@ public class TabPlus extends Activity implements View.OnClickListener {
 	 */
 
 	
-
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState) ;
 		
 		setContentView(R.layout.plus );	    
-		newName   = (EditText)findViewById(R.id.nameNewNote)    ;
-		clear     = (Button)  findViewById(R.id.buttonClear)    ; 
-		valider   = (Button)  findViewById(R.id.buttonValider)  ;
-		bold      = (Button)  findViewById(R.id.buttonBold)     ; 
-		italic    = (Button)  findViewById(R.id.buttonItalic)   ; 
-		underline = (Button)  findViewById(R.id.buttonUnderline); 
-
-		clear.setOnClickListener(this)    ;
-		valider.setOnClickListener(this)  ;
-		bold.setOnClickListener(this)     ;
-		italic.setOnClickListener(this)   ;
-		underline.setOnClickListener(this);
+		findViewById(R.id.nameNewNote).setOnClickListener(this)    ;
+		findViewById(R.id.buttonClear).setOnClickListener(this)    ; 
+		findViewById(R.id.buttonValider).setOnClickListener(this)  ;
+		findViewById(R.id.buttonBold).setOnClickListener(this)     ; 
+		findViewById(R.id.buttonItalic).setOnClickListener(this)   ; 
+		findViewById(R.id.buttonUnderline).setOnClickListener(this); 
 
 		webView = (WebView) findViewById(R.id.webView) ;
 		webView.getSettings().setJavaScriptEnabled(true) ;  //elle est pas inutile mais eclipse ne le voit pas
 		webView.setWebChromeClient (new chromeclient()) ; 
-		webView.loadUrl("file:///android_asset/www/testWebView.html");
+		webView.loadUrl("file:///android_asset/www/index.html");
 		webView.addJavascriptInterface(new JavaScriptInterface(this), "Android");
 	}
 
