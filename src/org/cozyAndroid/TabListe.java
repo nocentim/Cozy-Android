@@ -8,13 +8,11 @@ import org.cozyAndroid.providers.TablesSQL.Notes;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -140,7 +138,7 @@ public class TabListe extends Activity {
 			editer.putExtra("id", note.id);
 			editer.putExtra("titre", note.titre);
 			editer.putExtra("body", note.body);
-	    	startActivity(editer);
+	    	TabListe.this.startActivity(editer);
 		}
 		
 	}
