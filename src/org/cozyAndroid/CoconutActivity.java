@@ -8,10 +8,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Properties;
 
-import couchDB.Utils.CoconutUtils;
-import couchDB.Utils.UnZip;
-
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -39,6 +35,9 @@ import com.couchbase.touchdb.TDServer;
 import com.couchbase.touchdb.TDView;
 import com.couchbase.touchdb.javascript.TDJavaScriptViewCompiler;
 import com.couchbase.touchdb.listener.TDListener;
+
+import couchDB.Utils.CoconutUtils;
+import couchDB.Utils.UnZip;
 
 
 public class CoconutActivity extends Activity {

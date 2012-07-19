@@ -88,14 +88,15 @@ public class CozyAndroidActivity extends TabActivity  implements OnItemClickList
 		layoutTab[3] = R.layout.tab_calendrier;
 		layoutTab[2] = R.layout.tab_plus;
 		layoutTab[1] = R.layout.tab_dossier;
-	}
-
-	public void onResume(){
-		super.onResume();
 		setupTab("TabListe", new Intent().setClass(this, TabListe.class),0);
 		setupTab("TabTags", new Intent().setClass(this, TabDossier.class),1);
 		setupTab("TabPlus", new Intent().setClass(this, TabPlus.class),2);
 		setupTab("TabCalendrier", new Intent().setClass(this, TabCalendrier.class),3);
+	}
+
+	public void onResume(){
+		super.onResume();
+		
 	}
 
 
