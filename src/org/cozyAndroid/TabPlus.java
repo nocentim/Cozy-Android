@@ -7,6 +7,7 @@ import org.ektorp.UpdateConflictException;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -90,6 +91,8 @@ public class TabPlus extends Activity implements View.OnClickListener {
 			getContentResolver().insert(Notes.CONTENT_URI, values);
 			//TODO il faut remettre le titre et le corps à zero
 			Toast.makeText (TabPlus.this, "Note saved", Toast.LENGTH_LONG).show();
+			CozyAndroidActivity.gettabHost().setCurrentTab(0);
+
 			break ;
 		case R.id.buttonBold :
 			Toast.makeText (TabPlus.this, "appui sur le bouton bold, pas implémenté", Toast.LENGTH_LONG).show();
