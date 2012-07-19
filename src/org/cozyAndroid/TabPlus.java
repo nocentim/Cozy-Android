@@ -4,6 +4,7 @@ import org.codehaus.jackson.JsonNode;
 import org.cozyAndroid.providers.TablesSQL.Notes;
 import org.ektorp.UpdateConflictException;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.* ;
 import android.os.* ;
@@ -77,8 +78,8 @@ public class TabPlus extends Activity implements View.OnClickListener {
 			values.put(Notes.TITLE, newName.getText()+ "");
 			values.put(Notes.BODY, "texte de la nouvelle note");        
 			getContentResolver().insert(Notes.CONTENT_URI, values);
-			//TODO il faut remettre le titre et le corps à zero
-			Toast.makeText (TabPlus.this, "Note saved", Toast.LENGTH_SHORT).show();
+			//TODO il faut remettre le titre et le corps a zero
+			Toast.makeText (TabPlus.this, "Note saved ", Toast.LENGTH_SHORT).show() ;
 			startActivity(new Intent(TabPlus.this, CozyAndroidActivity.class)) ; // on retourne à la vue liste
 			break ;
 
