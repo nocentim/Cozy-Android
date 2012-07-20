@@ -96,6 +96,7 @@ public class CozyAndroidActivity extends TabActivity  implements OnItemClickList
 
 	public void onResume(){
 		super.onResume();
+		
 	}
 
 
@@ -124,10 +125,6 @@ public class CozyAndroidActivity extends TabActivity  implements OnItemClickList
             }
         }, null, "1.0");
 	}*/
-
-	public static TabHost gettabHost(){
-		return tabHost;
-	}
 
 	protected void startEktorp() {
 		Log.v(TAG, "starting ektorp");
