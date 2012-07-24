@@ -39,8 +39,8 @@ public class TabPlus extends Activity implements View.OnClickListener {
 		findViewById(R.id.nameNewNote).setOnClickListener(this)    ;
 		findViewById(R.id.buttonClear).setOnClickListener(this)    ; 
 		findViewById(R.id.buttonValider).setOnClickListener(this)  ;
-		findViewById(R.id.buttonBold).setOnClickListener(this)     ; 
-		findViewById(R.id.buttonItalic).setOnClickListener(this)   ; 
+		findViewById(R.id.indent).setOnClickListener(this)     ; 
+		findViewById(R.id.unindent).setOnClickListener(this)   ; 
 		findViewById(R.id.buttonUnderline).setOnClickListener(this); 
 
 		webView = (WebView) findViewById(R.id.webView) ;
@@ -56,7 +56,7 @@ public class TabPlus extends Activity implements View.OnClickListener {
 	//TODO verifier le bon fonctionnement de cette methode suite a toutes les modifications
 	public void onClick(View v) {
 		int id = v.getId() ;
-
+	
 		switch (id) {
 		case R.id.buttonClear : 
 			Toast.makeText (TabPlus.this, "appui sur le bouton clear, pas implémenté", Toast.LENGTH_LONG).show();
@@ -71,14 +71,14 @@ public class TabPlus extends Activity implements View.OnClickListener {
 			startActivity(new Intent(TabPlus.this, CozyAndroidActivity.class)) ; // on retourne à la vue liste
 			break ;
 
-		case R.id.buttonBold :
+		case R.id.indent :
 			//Toast.makeText (TabPlus.this, "appui sur le bouton bold, pas implémenté", Toast.LENGTH_LONG).show();
-			webView.loadUrl("javascript:bold()") ;
+			webView.loadUrl("javascript:indentation()") ;
 			break ; 
 
-		case R.id.buttonItalic :
+		case R.id.unindent :
 			//Toast.makeText (TabPlus.this, "appui sur le bouton Italic, pas implémenté", Toast.LENGTH_LONG).show();
-			webView.loadUrl("javascript:italic()") ;
+			webView.loadUrl("javascript:unindentation()") ;
 			break ;
 
 		case R.id.buttonUnderline :
