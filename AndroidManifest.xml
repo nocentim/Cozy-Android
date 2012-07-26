@@ -58,10 +58,6 @@
             android:screenOrientation="portrait" 
             android:configChanges="orientation">
         </activity>
-    <service 
-        android:name="com.couchbase.android.CouchbaseService" 
-        android:enabled="true" 
-        android:exported="false"/>
     </application>
     
 	<uses-permission 

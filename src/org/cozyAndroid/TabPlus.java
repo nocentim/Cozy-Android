@@ -1,54 +1,74 @@
 package org.cozyAndroid;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+
+import junit.framework.Assert;
+
 import org.codehaus.jackson.JsonNode;
-import org.cozyAndroid.providers.TablesSQL.Notes;
 import org.ektorp.UpdateConflictException;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.ContentValues;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.couchbase.touchdb.listener.TDListener;
+import com.couchbase.touchdb.TDDatabase;
+import com.couchbase.touchdb.TDView;
+import com.couchbase.touchdb.TDViewMapBlock;
+import com.couchbase.touchdb.TDViewMapEmitBlock;
+import com.couchbase.touchdb.router.TDURLStreamHandlerFactory;
 
 
-public class TabPlus extends Activity implements View.OnClickListener {
+
+public class TabPlus extends Activity implements View.OnClickListener{
 
 	private EditText newName = null ;
-
 	private Button clear   = null ;
 	private Button valider = null ;
 	private Button bold = null;
 	private Button italic = null;
 	private Button underline = null;
+	private static boolean modif = false;
 	
 	// attributs coconut
-	public static final String TAG = "CoconutActivity";
-    private TDListener listener;
-	private WebView webView;
-    private static TabPlus coconutRef;
-    private ProgressDialog progressDialog;
-    private Handler uiHandler;
+	public static final String TAG = "TabPlus";
     static Handler myHandler;
-    private String couchAppUrl;
+    // setup clock
+    Calendar cal = null;
+    Date starttime = null;
     long long_starttime = 0;
-
     
 	/*
 	 * TODO voir avec benjamin pour les fonctions javascript qui permettent de mettre en gras, en italique et 
 	 * de souligner. Il y a aussi la fonction pour remettre a zero la note
 	 */
-
+	{
+	    TDURLStreamHandlerFactory.registerSelfIgnoreError();
+	}
 	
-
+	
+	public EditText getNewName() {
+		return newName;
+	}
+	
+	public void setNewName(String name) {
+		newName.setText(name);
+	}
+	
+	public static void setModif() {
+		if (modif) {
+			modif = false;
+		} else {
+			modif = true;
+		}
+	}
+	
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState) ;
 		
@@ -65,14 +85,16 @@ public class TabPlus extends Activity implements View.OnClickListener {
 		bold.setOnClickListener(this)     ;
 		italic.setOnClickListener(this)   ;
 		underline.setOnClickListener(this);
-
-		webView = (WebView) findViewById(R.id.webView) ;
-		webView.getSettings().setJavaScriptEnabled(true) ;
-		//		webView.setWebChromeClient (chromeclient) ;
-		webView.loadUrl("file:///android_asset/www/testWebView.html");
-	    
+	}
+	
+	public void onResume() {
+		super.onResume();
+		if (modif) {
+			setNewName(TabListe.getTitleModif());
+		}
 	}
 
+	
 	/*
 	 *  BIU pour: bold italic underligne, ecoute les boutons correspondants
 	 */
@@ -85,14 +107,19 @@ public class TabPlus extends Activity implements View.OnClickListener {
 			Toast.makeText (TabPlus.this, "appui sur le bouton clear, pas implémenté", Toast.LENGTH_LONG).show();
 			break ;
 		case R.id.buttonValider :
-			ContentValues values = new ContentValues();
-			values.put(Notes.TITLE, newName.getText()+ "");
-			values.put(Notes.BODY, "texte de la nouvelle note");        
-			getContentResolver().insert(Notes.CONTENT_URI, values);
 			//TODO il faut remettre le titre et le corps à zero
+			String inputTitle = newName.getText().toString();
+			String inputBody = "prout prout tagada";
+			if (modif) {
+				createOrUpdateItem(inputTitle, inputBody, TabListe.getRev(), TabListe.getId());
+				setModif();
+			//if(!inputTitle.equals("")) {
+			} else {
+				createOrUpdateItem(inputTitle, inputBody, null, null);
+			}
+			newName.setText("");
 			Toast.makeText (TabPlus.this, "Note saved", Toast.LENGTH_LONG).show();
 			CozyAndroidActivity.gettabHost().setCurrentTab(0);
-
 			break ;
 		case R.id.buttonBold :
 			Toast.makeText (TabPlus.this, "appui sur le bouton bold, pas implémenté", Toast.LENGTH_LONG).show();
@@ -106,28 +133,39 @@ public class TabPlus extends Activity implements View.OnClickListener {
 		}
 	} 
 
-	public void createCozyyItem(String name) {
-		final JsonNode item = CozyItemUtils.createWithText(name);
-		CozySyncEktorpAsyncTask createItemTask = new CozySyncEktorpAsyncTask() {
 
-			@Override
-			protected void doInBackground() {
-				CozyAndroidActivity.returnCouchDbConnector().create(item);
-			}
-			@Override
-			protected void onSuccess() {
-				Log.d(CozyAndroidActivity.TAG, "Document created successfully");
-			}
-			@Override
-			protected void onUpdateConflict(
-					UpdateConflictException updateConflictException) {
-				Log.d(CozyAndroidActivity.TAG, "Got an update conflict for: " + item.toString());
-			}
-		};
-		createItemTask.execute();
-	}
+	
+	 public void createOrUpdateItem(String title, String body, final String rev, String id) {
+	        final JsonNode item = CozyItemUtils.createOrUpdate(title, body, rev, id);
+	        CozySyncEktorpAsyncTask createItemTask = new CozySyncEktorpAsyncTask() {
+
+				@Override
+				protected void doInBackground() {
+					if (rev == null) {
+						Replication.couchDbConnector.create(item);
+					} else {
+						Replication.couchDbConnector.update(item);
+					}
+					
+				}
+
+				@Override
+				protected void onSuccess() {
+					Log.d(TAG, "Document created successfully");
+				}
+
+				@Override
+				protected void onUpdateConflict(
+						UpdateConflictException updateConflictException) {
+					Log.d(TAG, "Got an update conflict for: " + item.toString());
+				}
+			};
+		    createItemTask.execute();
+	    }
+	 
+	 
+	 
 }
-
 
 ///**
 //* Ecoute la touche enter pour permettre a l'utilisateur de revenir
@@ -143,3 +181,5 @@ public class TabPlus extends Activity implements View.OnClickListener {
 //		return true ;
 //	}
 //} ;
+
+

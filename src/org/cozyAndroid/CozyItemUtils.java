@@ -1,5 +1,6 @@
 package org.cozyAndroid;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.UUID;
@@ -7,42 +8,36 @@ import java.util.UUID;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
+import org.ektorp.ViewQuery;
+import org.ektorp.ViewResult;
 
-import android.text.format.DateFormat;
+
+import android.widget.EditText;
 
 public class CozyItemUtils {
-
-	public static void toggleCheck(JsonNode item) {
-		ObjectNode itemObject = (ObjectNode)item;
-		JsonNode checkNode = item.get("check");
-		if(checkNode != null) {
-			if(checkNode.getBooleanValue()) {
-				itemObject.put("check", false);
-			}
-			else {
-				itemObject.put("check", true);
-			}
-		}
-		else {
-			itemObject.put("check", true);
-		}
-	}
 	
-	public static JsonNode createWithText(String text) {
-    	UUID uuid = UUID.randomUUID();
-    	Calendar calendar = GregorianCalendar.getInstance();
-    	long currentTime = calendar.getTimeInMillis();
-    	String currentTimeString = DateFormat.format("EEEE-MM-dd'T'HH:mm:ss.SSS'Z'", calendar).toString();
+    public static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-    	String id = currentTime + "-" + uuid.toString();
+	public static JsonNode createOrUpdate(String title, String body, String rev, String id) {
+		ObjectNode item = JsonNodeFactory.instance.objectNode();
+		Calendar calendar = GregorianCalendar.getInstance();
+		String currentTimeString = dateFormatter.format(calendar.getTime());
+		if (rev == null) {
+			UUID uuid = UUID.randomUUID(); 
+	    	long currentTime = calendar.getTimeInMillis();
+	    	String new_id = currentTime + "-" + uuid.toString();
 
-    	ObjectNode item = JsonNodeFactory.instance.objectNode();
 
-    	item.put("_id", id);
-    	item.put("text", text);
-    	item.put("check", Boolean.FALSE);
-    	item.put("created_at", currentTimeString);
-
+	    	item.put("_id", new_id);
+	    	item.put("created_at", currentTimeString);
+		} else {
+			item.put("_id", id);
+			item.put("_rev", rev);
+		}
+		item.put("title", title);
+    	item.put("body", body);
+    	item.put("icon", Boolean.FALSE);
+    	item.put("modified_at", currentTimeString);
     	return item;
 	}
 }
