@@ -124,7 +124,7 @@ public class TabListe extends Activity {
 		Cursor cursor = managedQuery(Notes.CONTENT_URI, projection, selection, null, null);
 		if (cursor.moveToFirst()) {
 			do {
-				note.add(new Note(cursor));
+				note.add(new Note(cursor)) ;
 			} while (cursor.moveToNext());
 		}
 
@@ -143,7 +143,7 @@ public class TabListe extends Activity {
 			editer.putExtra("id", note.id);
 			editer.putExtra("titre", note.titre);
 			editer.putExtra("body", note.body);
-	    	startActivity(editer);
+			TabListe.this.startActivity(editer);
 		}
 		
 	}

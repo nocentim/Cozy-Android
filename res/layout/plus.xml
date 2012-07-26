@@ -23,18 +23,18 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/buttonBold"
+            android:id="@+id/indent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Bold" />
+            android:text="Indent" />
 
         <Button
-            android:id="@+id/buttonItalic"
+            android:id="@+id/unindent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Italic" />
+            android:text="Unindent" />
 
         <Button
             android:id="@+id/buttonUnderline"
@@ -50,16 +50,16 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/buttonValider"
-            android:layout_width="162dp"
-            android:layout_height="wrap_content"
-            android:text="Noter!" />
-
-        <Button
             android:id="@+id/buttonClear"
             android:layout_width="162dp"
             android:layout_height="wrap_content"
             android:text="Clear" />
+
+        <Button
+            android:id="@+id/buttonValider"
+            android:layout_width="162dp"
+            android:layout_height="wrap_content"
+            android:text="Noter!" />
     </LinearLayout>
 
 </LinearLayout>

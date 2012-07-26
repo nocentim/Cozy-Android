@@ -4,73 +4,50 @@ import org.codehaus.jackson.JsonNode;
 import org.cozyAndroid.providers.TablesSQL.Notes;
 import org.ektorp.UpdateConflictException;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.ContentValues;
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
+import android.content.* ;
+import android.os.* ;
 import android.util.Log;
-import android.view.View;
-import android.webkit.WebView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
-
-import com.couchbase.touchdb.listener.TDListener;
+import android.view.* ;
+import android.webkit.* ;
+import android.widget.* ;
 
 
 public class TabPlus extends Activity implements View.OnClickListener {
 
 	private EditText newName = null ;
 
-	private Button clear   = null ;
-	private Button valider = null ;
-	private Button bold = null;
-	private Button italic = null;
-	private Button underline = null;
-	
 	// attributs coconut
 	public static final String TAG = "CoconutActivity";
-    private TDListener listener;
 	private WebView webView;
-    private static TabPlus coconutRef;
-    private ProgressDialog progressDialog;
-    private Handler uiHandler;
-    static Handler myHandler;
-    private String couchAppUrl;
-    long long_starttime = 0;
+	static Handler myHandler;
+	long long_starttime = 0;
 
-    
+
 	/*
 	 * TODO voir avec benjamin pour les fonctions javascript qui permettent de mettre en gras, en italique et 
 	 * de souligner. Il y a aussi la fonction pour remettre a zero la note
 	 */
 
-	
+
 
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState) ;
-		
-		setContentView(R.layout.plus );	    
-		newName   = (EditText)findViewById(R.id.nameNewNote)    ;
-		clear     = (Button)  findViewById(R.id.buttonClear)    ; 
-		valider   = (Button)  findViewById(R.id.buttonValider)  ;
-		bold      = (Button)  findViewById(R.id.buttonBold)     ; 
-		italic    = (Button)  findViewById(R.id.buttonItalic)   ; 
-		underline = (Button)  findViewById(R.id.buttonUnderline); 
 
-		clear.setOnClickListener(this)    ;
-		valider.setOnClickListener(this)  ;
-		bold.setOnClickListener(this)     ;
-		italic.setOnClickListener(this)   ;
-		underline.setOnClickListener(this);
+		setContentView(R.layout.plus );	    
+		findViewById(R.id.nameNewNote).setOnClickListener(this)    ;
+		findViewById(R.id.buttonClear).setOnClickListener(this)    ; 
+		findViewById(R.id.buttonValider).setOnClickListener(this)  ;
+		findViewById(R.id.indent).setOnClickListener(this)     ; 
+		findViewById(R.id.unindent).setOnClickListener(this)   ; 
+		findViewById(R.id.buttonUnderline).setOnClickListener(this); 
 
 		webView = (WebView) findViewById(R.id.webView) ;
-		webView.getSettings().setJavaScriptEnabled(true) ;
-		//		webView.setWebChromeClient (chromeclient) ;
-		webView.loadUrl("file:///android_asset/www/testWebView.html");
-	    
+		webView.getSettings().setJavaScriptEnabled(true) ;  //elle est pas inutile mais eclipse ne le voit pas
+		webView.setWebChromeClient (new chromeclient()) ; 
+		webView.addJavascriptInterface(new JavaScriptInterface(this), "Android");
+		webView.loadUrl("file:///android_asset/www/index.html");
 	}
 
 	/*
@@ -79,7 +56,7 @@ public class TabPlus extends Activity implements View.OnClickListener {
 	//TODO verifier le bon fonctionnement de cette methode suite a toutes les modifications
 	public void onClick(View v) {
 		int id = v.getId() ;
-
+	
 		switch (id) {
 		case R.id.buttonClear : 
 			Toast.makeText (TabPlus.this, "appui sur le bouton clear, pas implémenté", Toast.LENGTH_LONG).show();
@@ -89,20 +66,63 @@ public class TabPlus extends Activity implements View.OnClickListener {
 			values.put(Notes.TITLE, newName.getText()+ "");
 			values.put(Notes.BODY, "texte de la nouvelle note");        
 			getContentResolver().insert(Notes.CONTENT_URI, values);
-			//TODO il faut remettre le titre et le corps à zero
-			Toast.makeText (TabPlus.this, "Note saved", Toast.LENGTH_LONG).show();
+			//TODO il faut remettre le titre et le corps a zero
+			Toast.makeText (TabPlus.this, "Note saved ", Toast.LENGTH_SHORT).show() ;
+			startActivity(new Intent(TabPlus.this, CozyAndroidActivity.class)) ; // on retourne à la vue liste
 			break ;
-		case R.id.buttonBold :
-			Toast.makeText (TabPlus.this, "appui sur le bouton bold, pas implémenté", Toast.LENGTH_LONG).show();
+
+		case R.id.indent :
+			//Toast.makeText (TabPlus.this, "appui sur le bouton bold, pas implémenté", Toast.LENGTH_LONG).show();
+			webView.loadUrl("javascript:indentation()") ;
 			break ; 
-		case R.id.buttonItalic :
-			Toast.makeText (TabPlus.this, "appui sur le bouton Italic, pas implémenté", Toast.LENGTH_LONG).show();
+
+		case R.id.unindent :
+			//Toast.makeText (TabPlus.this, "appui sur le bouton Italic, pas implémenté", Toast.LENGTH_LONG).show();
+			webView.loadUrl("javascript:unindentation()") ;
 			break ;
+
 		case R.id.buttonUnderline :
-			Toast.makeText (TabPlus.this, "appui sur le bouton Underline, pas implémenté", Toast.LENGTH_LONG).show();
+			//Toast.makeText (TabPlus.this, "appui sur le bouton Underline, pas implémenté", Toast.LENGTH_LONG).show();
+			webView.loadUrl("javascript:underline()") ;
 			break ;
 		}
 	} 
+
+	/**
+	 * utilisee pour ecouter les alertes js
+	 * @author bissou
+	 */
+	private class chromeclient extends WebChromeClient {
+		/**
+		 * permet de reagir lors de l'envoi d'une alerte par les fonctions JS
+		 */
+		public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+			// cette methode vient du livre android  mais elle n'avait pas exactement cette forme,
+			// il peut etre interessant de retourner la voir
+			Toast.makeText (TabPlus.this, "Interception d'une alertejs:\n" + message, Toast.LENGTH_LONG).show();
+			result.confirm();
+			return true;
+		}
+	} ;
+
+	/**
+	 * contient les methodes qui peuvent etre appelée par le javascript
+	 * @author bissou
+	 *
+	 */
+	public class JavaScriptInterface {
+		Context mContext;
+
+		/** Instantiate the interface and set the context */
+		JavaScriptInterface(Context c) {
+			mContext = c;
+		}
+
+		/** Show a toast from the web page */
+		public void showToast(String toast) {
+			Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
+		}
+	}
 
 	public void createCozyyItem(String name) {
 		final JsonNode item = CozyItemUtils.createWithText(name);
