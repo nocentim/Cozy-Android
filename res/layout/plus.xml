@@ -14,52 +14,66 @@
     <WebView
         android:id="@+id/webView"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="0dip"
         android:layout_weight="2" />
 
-    <LinearLayout
+    <HorizontalScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:layout_height="wrap_content" >
 
-        <Button
-            android:id="@+id/indent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Indent" />
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal" >
 
-        <Button
-            android:id="@+id/unindent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Unindent" />
+            <ImageButton
+                android:id="@+id/clear"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="5dip"
+                android:scaleType="centerCrop"
+                android:src="@drawable/clear" />
 
-        <Button
-            android:id="@+id/buttonUnderline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Underline" />
-    </LinearLayout>
+            <ImageButton
+                android:id="@+id/save"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:padding="5dip"
+                android:scaleType="centerCrop"
+                android:src="@drawable/save" />
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+            <ImageButton
+                android:id="@+id/indent"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:padding="5dip"
+                android:scaleType="centerCrop"
+                android:src="@drawable/indent" />
 
-        <Button
-            android:id="@+id/buttonClear"
-            android:layout_width="162dp"
-            android:layout_height="wrap_content"
-            android:text="Clear" />
-
-        <Button
-            android:id="@+id/buttonValider"
-            android:layout_width="162dp"
-            android:layout_height="wrap_content"
-            android:text="Noter!" />
-    </LinearLayout>
+            <ImageButton
+                android:id="@+id/unindent"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:padding="5dip"
+                android:scaleType="centerCrop"
+                android:src="@drawable/unindent" />
+            <ImageButton
+                android:id="@+id/listBullets"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:padding="5dip"
+                android:scaleType="centerCrop"
+                android:src="@drawable/list_bullets" />
+            <ImageButton
+                android:id="@+id/listNum"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:padding="5dip"
+                android:scaleType="centerCrop"
+                android:src="@drawable/list_num" />
+            </LinearLayout>
+    </HorizontalScrollView>
 
 </LinearLayout>

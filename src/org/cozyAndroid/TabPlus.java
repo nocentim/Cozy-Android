@@ -26,22 +26,20 @@ public class TabPlus extends Activity implements View.OnClickListener {
 
 
 	/*
-	 * TODO voir avec benjamin pour les fonctions javascript qui permettent de mettre en gras, en italique et 
-	 * de souligner. Il y a aussi la fonction pour remettre a zero la note
+	 * TODO voir avec benjamin pour remettre a zero la note
 	 */
-
-
 
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState) ;
 
 		setContentView(R.layout.plus );	    
-		findViewById(R.id.nameNewNote).setOnClickListener(this)    ;
-		findViewById(R.id.buttonClear).setOnClickListener(this)    ; 
-		findViewById(R.id.buttonValider).setOnClickListener(this)  ;
+		newName = (EditText) findViewById(R.id.nameNewNote) ;
+		findViewById(R.id.clear).setOnClickListener(this)    ; 
+		findViewById(R.id.save).setOnClickListener(this)  ;
 		findViewById(R.id.indent).setOnClickListener(this)     ; 
 		findViewById(R.id.unindent).setOnClickListener(this)   ; 
-		findViewById(R.id.buttonUnderline).setOnClickListener(this); 
+		findViewById(R.id.listBullets).setOnClickListener(this)   ; 
+		findViewById(R.id.listNum).setOnClickListener(this)   ; 
 
 		webView = (WebView) findViewById(R.id.webView) ;
 		webView.getSettings().setJavaScriptEnabled(true) ;  //elle est pas inutile mais eclipse ne le voit pas
@@ -49,41 +47,44 @@ public class TabPlus extends Activity implements View.OnClickListener {
 		webView.addJavascriptInterface(new JavaScriptInterface(this), "Android");
 		webView.loadUrl("file:///android_asset/www/index.html");
 	}
+	
 
-	/*
-	 *  BIU pour: bold italic underligne, ecoute les boutons correspondants
-	 */
-	//TODO verifier le bon fonctionnement de cette methode suite a toutes les modifications
+//TODO verifier le bon fonctionnement de cette methode suite a toutes les modifications
 	public void onClick(View v) {
 		int id = v.getId() ;
 	
 		switch (id) {
-		case R.id.buttonClear : 
+		case R.id.clear : 
 			Toast.makeText (TabPlus.this, "appui sur le bouton clear, pas implémenté", Toast.LENGTH_LONG).show();
 			break ;
-		case R.id.buttonValider :
+		case R.id.save :
 			ContentValues values = new ContentValues();
 			values.put(Notes.TITLE, newName.getText()+ "");
 			values.put(Notes.BODY, "texte de la nouvelle note");        
 			getContentResolver().insert(Notes.CONTENT_URI, values);
-			//TODO il faut remettre le titre et le corps a zero
+			//TODO il faut remettre le titre et le corps a zero, on peut inverser l'ordre des deux premiers case et
+			//pas mettre de break entre les deux pour qu'après la sauvegarde il y ai directement la remise à zero
 			Toast.makeText (TabPlus.this, "Note saved ", Toast.LENGTH_SHORT).show() ;
 			startActivity(new Intent(TabPlus.this, CozyAndroidActivity.class)) ; // on retourne à la vue liste
 			break ;
 
 		case R.id.indent :
-			//Toast.makeText (TabPlus.this, "appui sur le bouton bold, pas implémenté", Toast.LENGTH_LONG).show();
 			webView.loadUrl("javascript:indentation()") ;
 			break ; 
 
 		case R.id.unindent :
-			//Toast.makeText (TabPlus.this, "appui sur le bouton Italic, pas implémenté", Toast.LENGTH_LONG).show();
+//			Toast.makeText (TabPlus.this, "appui sur le bouton Underline, pas implémenté", Toast.LENGTH_LONG).show();
 			webView.loadUrl("javascript:unindentation()") ;
 			break ;
-
-		case R.id.buttonUnderline :
-			//Toast.makeText (TabPlus.this, "appui sur le bouton Underline, pas implémenté", Toast.LENGTH_LONG).show();
-			webView.loadUrl("javascript:underline()") ;
+			
+		case R.id.listBullets :
+//			Toast.makeText (TabPlus.this, "appui sur le bouton Underline, pas implémenté", Toast.LENGTH_LONG).show();
+			webView.loadUrl("javascript:markerListAndroid()") ;
+			break ;
+			
+		case R.id.listNum :
+//			Toast.makeText (TabPlus.this, "appui sur le bouton Underline, pas implémenté", Toast.LENGTH_LONG).show();
+			webView.loadUrl("javascript:titleListAndroid()") ;
 			break ;
 		}
 	} 
