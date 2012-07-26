@@ -55,10 +55,8 @@ public final class R {
         public static final int bodyEdition=0x7f09000b;
         public static final int body_note=0x7f090010;
         public static final int buttonAnnuler=0x7f09000c;
-        public static final int buttonBold=0x7f090018;
         public static final int buttonClear=0x7f09001b;
         public static final int buttonEditer=0x7f09000d;
-        public static final int buttonItalic=0x7f090019;
         public static final int buttonUnderline=0x7f09001a;
         public static final int buttonValider=0x7f09001c;
         public static final int button_confirm=0x7f090001;
@@ -66,6 +64,7 @@ public final class R {
         public static final int icone=0x7f09000e;
         public static final int image=0x7f09002e;
         public static final int imageView1=0x7f09001d;
+        public static final int indent=0x7f090018;
         public static final int listNotes=0x7f090015;
         public static final int nameEdition=0x7f09000a;
         public static final int nameNewNote=0x7f090016;
@@ -96,6 +95,7 @@ public final class R {
         public static final int text_creer=0x7f090000;
         public static final int titre_note=0x7f09000f;
         public static final int toast_layout_large=0x7f09002d;
+        public static final int unindent=0x7f090019;
         public static final int webView=0x7f090017;
     }
     public static final class layout {
