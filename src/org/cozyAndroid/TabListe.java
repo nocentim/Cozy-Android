@@ -123,6 +123,11 @@ public class TabListe extends Activity {
 		//adapter.notifyDataSetChanged();
 	}*/
 	
+	public void onResume() {
+		super.onResume();
+		titleModif = "";
+	}
+	
 	public void setTri (int tri) {
 		methodeTri = tri;
 	}
@@ -198,14 +203,14 @@ public class TabListe extends Activity {
 	 * Handle click on item in list
 	 */
 	private class clicknote implements OnItemClickListener {
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {			
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {		
+			TabPlus.modif = true;
 			Row row = (Row)parent.getItemAtPosition(position);
 			JsonNode item = row.getValueAsNode();
 			JsonNode itemText = item.get("title");
 			setRev(item.get("_rev").getTextValue());
 			setId(item.get("_id").getTextValue());
 	        titleModif = itemText.getTextValue();
-	        TabPlus.setModif();
 	        CozyAndroidActivity.gettabHost().setCurrentTab(2);
 			
 		}
