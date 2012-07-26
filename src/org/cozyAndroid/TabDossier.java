@@ -92,11 +92,11 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 	@Override
 	public void onResume() {
 		super.onResume();
-		String projection[] = {Dossiers.DOSSIER_ID,Dossiers.NAME,Dossiers.PARENT};
-		Cursor cursor = managedQuery(Dossiers.CONTENT_URI, projection, null, null, Dossiers.NAME + " COLLATE NOCASE");
+		String projection[] = {Dossiers._ID,Dossiers.NAME,Dossiers.PARENT};
+		Cursor cursor = managedQuery(Dossiers.CONTENT_URI, projection, null, null, Dossiers.NAME);
 		Dossier.newArborescence(cursor);
-		String notesProjection []= {Notes.NOTE_ID,Notes.TITLE,Notes.BODY,Notes.DOSSIER};
-		Cursor notesCursor = managedQuery(Notes.CONTENT_URI, notesProjection, null, null, Notes.TITLE + " COLLATE NOCASE");
+		String notesProjection []= {Notes._ID,Notes.TITLE,Notes.BODY,Notes.DOSSIER};
+		Cursor notesCursor = managedQuery(Notes.CONTENT_URI, notesProjection, null, null, Notes.TITLE);
 		Dossier.addNotes(notesCursor);
 		dossierAdapter.setDossier(getDossierCourant());
 		dossierAdapter.notifyDataSetChanged();
@@ -174,7 +174,7 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 	private void supprimerCourant() {
 		Dossier supprimeMoi = getDossierCourant();
 		int id = supprimeMoi.getId();
-		int count = getContentResolver().delete(Dossiers.CONTENT_URI, Dossiers.DOSSIER_ID + "= " + id, null);
+		int count = getContentResolver().delete(Dossiers.CONTENT_URI, Dossiers._ID + "= " + id, null);
 		if (count < 1) {
 			Toast t = Toast.makeText(TabDossier.this, "Echec de la suppression", Toast.LENGTH_SHORT);
 			t.show();

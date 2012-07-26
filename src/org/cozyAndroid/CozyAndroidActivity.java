@@ -95,6 +95,18 @@ public class CozyAndroidActivity extends TabActivity  implements OnItemClickList
 		setupTab("TabPlus", new Intent().setClass(this, TabPlus.class),2);
         setupTab("TabCalendrier", new Intent().setClass(this, TabCalendrier.class),3);
     }
+    @Override
+    public void onNewIntent (Intent intent) {
+    	int dossierId = intent.getIntExtra("ouvreDossier", -1);
+    	if (dossierId != -1) {
+    		//On veut basculer vers TabDossier et ouvrir le dossier choisi
+    		Dossier d = Dossier.getDossierParId(dossierId);
+    		if (d != null) {
+	    		getTabHost().setCurrentTab(1);
+	    		((TabDossier) getCurrentActivity()).ouvreDossier(Dossier.getDossierParId(dossierId));
+    		}
+    	}
+    }
     
     //  A VOIR!!!!
    /* protected void startTouchDB() {

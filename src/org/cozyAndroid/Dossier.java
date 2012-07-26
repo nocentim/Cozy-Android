@@ -304,5 +304,46 @@ public class Dossier {
 	public String getCheminComplet() {
 		return getChemin() + nom + "/";
 	}
+
+	public static ArrayList<Dossier> getSuggestions(String[] patternStrings) {
+		ArrayList<Dossier> res = new ArrayList<Dossier>();
+		ArrayList<String> patterns = new ArrayList<String>();
+		for (int i = 0; i < patternStrings.length; i++) {
+			patterns.add(patternStrings[i]);
+		}
+		for (int fils = 0; fils < racine.sousDossiers.size(); fils ++) {
+			racine.sousDossiers.get(fils).getSuggestions(patterns,res);
+		}
+		return res;
+	}
+
+	private void getSuggestions(ArrayList<String> patterns, ArrayList<Dossier> res) {
+		ArrayList<String> match = new ArrayList<String>();
+		if (patterns.isEmpty()) {
+			//le parent match tout les criteres, on se rajoute (basse priorite)
+			res.add(this);
+		} else {
+			String nomLower = nom.toLowerCase();
+			for (int i = 0; i < patterns.size();) {
+				String mot = patterns.get(i).toLowerCase();
+				if (nomLower.matches(mot +".*") || nomLower.matches(".* " + mot + ".*")) {
+					match.add(mot);
+					patterns.remove(i);
+				} else {
+					i++;
+				}
+			}
+			if (patterns.isEmpty()) {
+				//on match tout les criteres, on se rajoute en haute priorité
+				res.add(0,this);
+			}
+		}
+		//on regarde si les fils correspondent aux critères
+		for (int fils = 0; fils < sousDossiers.size(); fils ++) {
+			sousDossiers.get(fils).getSuggestions(patterns,res);
+		}
+		//On remet la liste de criteres dans son etat initial
+		patterns.addAll(match);
+	}
 	
 }

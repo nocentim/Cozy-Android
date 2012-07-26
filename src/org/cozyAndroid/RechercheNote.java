@@ -1,28 +1,27 @@
 package org.cozyAndroid;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
 
 import org.cozyAndroid.providers.TablesSQL.Notes;
+import org.cozyAndroid.providers.TablesSQL.Suggestions;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.TextUtils.TruncateAt;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FilterQueryProvider;
+import android.widget.ImageView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.SimpleCursorAdapter.CursorToStringConverter;
@@ -30,10 +29,20 @@ import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.TextView;
 
 public class RechercheNote extends MultiAutoCompleteTextView {
-
-	public static final String SUGGESTION_ID = "_id";
 	
-	public static final String SUGGESTION = "suggestion";
+	private static final String _ID = "_id";
+	
+	private static final String SUGGESTION = "suggestion";
+	
+	private static final String SOURCE = "source";
+	
+	private static final String TYPE = "type";
+	
+	private static final int TYPE_MOT = 0;
+	
+	private static final int TYPE_NOTE = 1;
+	
+	private static final int TYPE_DOSSIER = 2;
 	
 	private Activity context;
 	
@@ -59,7 +68,7 @@ public class RechercheNote extends MultiAutoCompleteTextView {
 		init((Activity) context);
 	}
 	
-	//Creation de la string a afficher de la TextView a partir du cursor
+	//Creation de la string a afficher dans la TextView a partir du cursor
 	private CursorToStringConverter converter = new CursorToStringConverter() {
 		
 		public CharSequence convertToString(Cursor cursor) {
@@ -67,15 +76,94 @@ public class RechercheNote extends MultiAutoCompleteTextView {
 		}
 	};
 	
+	private OnItemClickListener onItem  = new OnItemClickListener() {
+
+		@Override
+		public void onItemClick(AdapterView<?> parents, View v, int position,
+				long id) {
+			Log.d("onItemClick", "view: " + v.getId() + "pos: " + position + "id: " + id);
+			//setListSelection(position);
+			//performCompletion();
+		}
+	};
+	
 	//
 	private ViewBinder viewBinder = new ViewBinder() {
 		
 		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-			String mot = cursor.getString(columnIndex);
-			Spannable textSpan = new SpannableString(mot);
-			textSpan.setSpan(new ForegroundColorSpan(getResources().getColor(android.R.color.black)), 0, filterPattern.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-			((TextView) view).setText(textSpan);
-			return true;
+			if (columnIndex == 1) {
+				//On met le texte dans la textview
+				String text = cursor.getString(columnIndex);
+				Spannable textSpan = new SpannableString(text);
+				String [] pattern;
+				switch (cursor.getInt(3)) {
+				case TYPE_NOTE : 
+				case TYPE_DOSSIER :
+					// tout le texte de recherche nous interesse
+					pattern = getText().toString().split(" +");
+					break;
+				default :
+					//Seulement le dernier mot nous interesse
+					pattern = new String [] {filterPattern};
+				}
+				for (int i = 0; i < pattern.length; i++) {
+					int start = text.toLowerCase().indexOf(pattern[i].toLowerCase());
+					if (start != -1) {
+						textSpan.setSpan(new ForegroundColorSpan(getResources().getColor(android.R.color.black)), start, start + pattern[i].length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					}
+				}
+				((TextView) view).setText(textSpan);
+				return true;
+			} else if (columnIndex == 2) {
+				//On affiche ou pas le bouton d'acces rapide
+				switch (cursor.getInt(3)) {
+				case TYPE_MOT :
+					view.setVisibility(GONE);
+					break;
+				case TYPE_NOTE :
+					view.setVisibility(VISIBLE);
+					((ImageView)view).setImageDrawable(getResources().getDrawable(R.drawable.note));
+					final int noteId = cursor.getInt(columnIndex);
+					final String titre = cursor.getString(1);
+					view.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View v) {
+							Log.d("rechercheNote", "bouton note cliqué");
+							String [] projection = {Notes.BODY};
+							Cursor c = context.managedQuery(Notes.CONTENT_URI, projection, Notes._ID + " = " + noteId, null, null);
+							if (c.moveToFirst()) {
+								Intent editer = new Intent(context, Edition.class);
+								editer.putExtra("id", noteId);
+								editer.putExtra("titre", titre);
+								editer.putExtra("body", c.getString(0));
+						    	context.startActivity(editer);
+							}
+						}
+					});
+					break;
+				case TYPE_DOSSIER :
+					view.setVisibility(VISIBLE);
+					((ImageView)view).setImageDrawable(getResources().getDrawable(R.drawable.folder));
+					final int dossierId = cursor.getInt(columnIndex);
+					view.setOnClickListener(new OnClickListener() {
+						
+						@Override
+						public void onClick(View v) {
+							Log.d("rechercheNote", "bouton dossier cliqué");
+							Intent ouvreDossier = new Intent(context, CozyAndroidActivity.class);
+							ouvreDossier.addCategory("android.intent.category.LAUNCHER");
+							ouvreDossier.putExtra("ouvreDossier",dossierId);
+							context.startActivity(ouvreDossier);
+						}
+					});
+					break;
+				default:
+					return false;
+				}
+				return true;
+			}
+			return false;	
 		}
 	};
 	
@@ -86,52 +174,51 @@ public class RechercheNote extends MultiAutoCompleteTextView {
 			if (constraint == null || constraint.equals("")) {
 				return null;
 			}
-			String pattern = constraint.toString().toLowerCase();
+			// Suggestions de mots (contenus dans les titres et corps de notes)
+			String pattern = constraint.toString();
 			filterPattern = pattern;
-			String[] projection = {Notes.NOTE_ID,Notes.TITLE};
-			Cursor all = context.managedQuery(Notes.CONTENT_URI, projection, null, null, null);
-			String[] proj = {SUGGESTION_ID, SUGGESTION};
-			//TODO tout ca est tres laid : faire mieux (apres l'implem de touchDB) 
-			HashMap <String,Integer> motsConnus = new HashMap<String, Integer>();
-			if (all.moveToFirst()) {
-				do {
-					String title = all.getString(1).toLowerCase();
-					int start, end;
-					while (!title.equals("")) {
-						if (title.startsWith(pattern)) {
-							start = 0;
-						} else if (title.matches(".* " + pattern + ".*")) {
-							start = title.indexOf(" " + pattern) + 1;
-						} else {
-							break;
-						}
-						//on extrait le mot qui commence par 'pattern'
-						for (end = start + 1; end < title.length() && title.charAt(end) != ' '; end ++);
-						String mot = title.substring(start, end);
-						Integer nombreOccurences = motsConnus.put(mot, 1);
-						if (nombreOccurences != null) {
-							//Si le mot était déja dans la map
-							motsConnus.put(mot,nombreOccurences + 1);
-						}
-						while (end < title.length() && title.charAt(end) == ' ') {
-							//on saute les espaces
-							end++;
-						}
-						title = title.substring(end);
-					}
-				} while (all.moveToNext());
-			}
-			List<Entry<String, Integer>> entries = new ArrayList<Entry<String, Integer>>(motsConnus.entrySet());
-			// Tri de la liste selon le nombre d'occurences
-			Collections.sort(entries, new Comparator<Entry<String, Integer>>() {
-				public int compare(final Entry<String, Integer> e1, final Entry<String, Integer> e2) {
-					return e2.getValue().compareTo(e1.getValue());
-				}
-			});
+			String[] projection = {Suggestions._ID,Suggestions.WORD};
+			String selection = Suggestions.WORD + " LIKE \'" + pattern + "%\'";
+			Cursor cursor = context.managedQuery(Suggestions.CONTENT_URI, projection, selection, null, Suggestions.OCCURENCES + " DESC");
+			String [] proj = {_ID,SUGGESTION,SOURCE,TYPE};
 			MatrixCursor filtered = new MatrixCursor(proj);
-			for (int i = 0; i < entries.size(); i++) {
-				Object[] mot = {i,entries.get(i).getKey()};
-				filtered.addRow(mot);
+			int id =0;
+			if (cursor.moveToFirst()) {
+				do {
+					id++;
+					Object[] row = {id,cursor.getString(1),cursor.getString(0),TYPE_MOT};
+					filtered.addRow(row);
+				} while (cursor.moveToNext());
+			}
+			//Suggestions de titre de notes
+			String[] fullPattern = getText().toString().split(" +");
+			selection = "";
+			for (int i = 0; i + 1 < fullPattern.length; i++) {
+				selection += "(" + Notes.TITLE + " LIKE \'" + fullPattern[i] + "%\' OR " + Notes.TITLE + " LIKE \'% " + fullPattern[i] +"%\') AND ";
+			}
+			if (fullPattern.length > 0) {
+				int last = fullPattern.length - 1;
+				selection += "(" + Notes.TITLE + " LIKE \'" + fullPattern[last] + "%\' OR " + Notes.TITLE + " LIKE \'% " + fullPattern[last] +"%\')";
+			}
+			projection = new String [] {Notes._ID,Notes.TITLE};
+			cursor = context.managedQuery(Notes.CONTENT_URI, projection, selection, null, null);
+			int count = 0;
+			if (cursor.moveToFirst()) {
+				do {
+					id++;
+					Object[] row = {id,cursor.getString(1),cursor.getString(0),TYPE_NOTE};
+					filtered.addRow(row);
+					count++;
+				} while (cursor.moveToNext() && count < 2);
+			}
+			// Suggestions de dossiers
+			ArrayList <Dossier> dossiers = Dossier.getSuggestions(fullPattern);
+			count = 0;
+			for (int i = 0; i < dossiers.size() && count < 2; i++, count ++) {
+				id++;
+				Dossier d = dossiers.get(i);
+				Object[] row = {id, d.nom,d.getId(),TYPE_DOSSIER};
+				filtered.addRow(row);
 			}
 			return filtered;
 		}
@@ -146,14 +233,15 @@ public class RechercheNote extends MultiAutoCompleteTextView {
 		setThreshold(1);
 		searchAdapter = new SimpleCursorAdapter(
 				context, R.layout.suggestion,
-				searchCursor, new String [] {SUGGESTION},
-				new int [] {R.id.textSuggestion});
+				searchCursor, new String [] {SUGGESTION,SOURCE},
+				new int [] {R.id.textSuggestion,R.id.buttonSuggestion});
 		setAdapter(searchAdapter);
 		searchAdapter.setFilterQueryProvider(filterQuery);
 		searchAdapter.setCursorToStringConverter(converter);
 		searchAdapter.setViewBinder(viewBinder);
 		Tokenizer space = new SpaceTokenizer();
 		setTokenizer(space);
+		setOnItemClickListener(onItem);
 	}
 	
 	/**
