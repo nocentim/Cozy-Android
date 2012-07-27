@@ -7,28 +7,27 @@ import org.codehaus.jackson.JsonNode;
 import org.ektorp.UpdateConflictException;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.couchbase.touchdb.router.TDURLStreamHandlerFactory;
-import android.content.* ;
-import android.webkit.* ;
-import android.widget.* ;
-
-
 
 
 public class TabPlus extends Activity implements View.OnClickListener{
 
 	private EditText newName = null ;
-	private static boolean modif = false;
+	static boolean modif = false ;
 	private WebView webView;
 
 	// attributs coconut
 	public static final String TAG = "TabPlus";
-	static Handler myHandler;
 	// setup clock
 	Calendar cal = null;
 	Date starttime = null;
@@ -38,8 +37,8 @@ public class TabPlus extends Activity implements View.OnClickListener{
 	 * TODO voir avec benjamin pour remettre a zero la note
 	 */
 	{
-		TDURLStreamHandlerFactory.registerSelfIgnoreError();
-	}
+	    TDURLStreamHandlerFactory.registerSelfIgnoreError();
+		}
 
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState) ;
@@ -58,7 +57,7 @@ public class TabPlus extends Activity implements View.OnClickListener{
 		webView.setWebChromeClient (new chromeclient()) ; 
 		webView.addJavascriptInterface(new JavaScriptInterface(this), "Android");
 		webView.loadUrl("file:///android_asset/www/index.html");
-	}
+		}
 
 	public EditText getNewName() {
 		return newName;
@@ -103,8 +102,8 @@ public class TabPlus extends Activity implements View.OnClickListener{
 			String inputBody = "prout prout tagada";
 			if (modif) {
 				createOrUpdateItem(inputTitle, inputBody, TabListe.getRev(), TabListe.getId());
-				setModif();
-				//if(!inputTitle.equals("")) {
+				modif = false;
+			//if(!inputTitle.equals("")) {
 			} else {
 				createOrUpdateItem(inputTitle, inputBody, null, null);
 			}

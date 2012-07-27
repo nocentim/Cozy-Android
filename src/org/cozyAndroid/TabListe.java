@@ -125,10 +125,12 @@ public class TabListe extends Activity {
 	
 	public void onResume() {
 		super.onResume();
+		titleModif = "";
 		//Recupperation des dossiers pour les suggestions
 		String projection[] = {Dossiers._ID,Dossiers.NAME,Dossiers.PARENT};
 		Cursor cursor = managedQuery(Dossiers.CONTENT_URI, projection, null, null, Dossiers.NAME + " COLLATE NOCASE");
 		Dossier.newArborescence(cursor);
+
 	}
 	
 	public void setTri (int tri) {
@@ -206,14 +208,14 @@ public class TabListe extends Activity {
 	 * Handle click on item in list
 	 */
 	private class clicknote implements OnItemClickListener {
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {			
+		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {		
+			TabPlus.modif = true;
 			Row row = (Row)parent.getItemAtPosition(position);
 			JsonNode item = row.getValueAsNode();
 			JsonNode itemText = item.get("title");
 			setRev(item.get("_rev").getTextValue());
 			setId(item.get("_id").getTextValue());
 	        titleModif = itemText.getTextValue();
-	        TabPlus.setModif();
 	        CozyAndroidActivity.gettabHost().setCurrentTab(2);
 			
 		}
