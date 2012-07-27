@@ -1,73 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<manifest 
-    xmlns:android="http://schemas.android.com/apk/res/android" 
-    package="org.cozyAndroid" 
-    android:versionCode="1" 
-    android:versionName="1.0">
-	
-    <uses-sdk android:minSdkVersion="15"/>
-    
- 
-    <application android:icon="@drawable/ic_launcher" android:label="@string/app_name"
-                 android:theme="@android:style/Theme.NoTitleBar" >
-        <activity android:name=".CozyAndroidActivity" android:label="@string/app_name">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.cozyAndroid"
+    android:versionCode="1"
+    android:versionName="1.0" >
 
+    <uses-sdk android:minSdkVersion="15" />
+
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@android:style/Theme.NoTitleBar" >
+        <activity
+            android:name=".CozyAndroidActivity"
+            android:label="@string/app_name" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <provider 
-            android:name="org.cozyAndroid.providers.NotesProvider" 
-            android:authorities="org.cozyAndroid.providers.NotesProvider"/>
-        <activity 
-            android:name=".TabListe" 
-            android:screenOrientation="portrait" 
-            android:configChanges="keyboardHidden|orientation">
+
+        <provider
+            android:name="org.cozyAndroid.providers.NotesProvider"
+            android:authorities="org.cozyAndroid.providers.NotesProvider" />
+
+        <activity
+            android:name=".TabListe"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity 
-            android:name=".TabCalendrier" 
-            android:screenOrientation="portrait" 
-            android:configChanges="keyboardHidden|orientation">
+        <activity
+            android:name=".TabCalendrier"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity 
-            android:name=".TabPlus" 
-            android:screenOrientation="portrait" 
-            android:configChanges="keyboardHidden|orientation">
+        <activity
+            android:name=".TabPlus"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity 
-            android:name=".TabDossier" 
-            android:screenOrientation="portrait" 
-            android:configChanges="keyboardHidden|orientation" 
-            android:launchMode="singleTop">
-            </activity>
-        <activity 
-            android:name=".TabRecherche" 
-            android:screenOrientation="portrait" 
-            android:configChanges="keyboardHidden|orientation">
+        <activity
+            android:name=".TabDossier"
+            android:configChanges="keyboardHidden|orientation"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity 
-            android:name=".Edition" 
-            android:screenOrientation="portrait" 
-            android:configChanges="orientation">
+        <activity
+            android:name=".TabRecherche"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" >
         </activity>
-        <activity 
-            android:name=".CoconutActivity" 
-            android:screenOrientation="portrait" 
-            android:configChanges="orientation">
+        <activity
+            android:name=".Edition"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" >
         </activity>
-    <service 
-        android:name="com.couchbase.android.CouchbaseService" 
-        android:enabled="true" 
-        android:exported="false"/>
+        <activity
+            android:name=".CoconutActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
-    
-	<uses-permission 
-    	android:name="android.permission.ACCESS_NETWORK_STATE"/>
-	<uses-permission 
-    	android:name="android.permission.INTERNET"/>
-	<uses-permission 
-	    android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
 </manifest>

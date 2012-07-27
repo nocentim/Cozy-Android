@@ -9,7 +9,7 @@ public abstract class CozySyncEktorpAsyncTask extends EktorpAsyncTask {
 
 	@Override
 	protected void onDbAccessException(DbAccessException dbAccessException) {
-		Log.e(CozyAndroidActivity.TAG, "DbAccessException in background", dbAccessException);
+		Log.e(TabListe.TAG, "DbAccessException in background", dbAccessException);
 	}
 
 }

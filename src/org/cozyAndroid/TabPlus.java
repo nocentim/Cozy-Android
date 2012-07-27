@@ -1,11 +1,29 @@
 package org.cozyAndroid;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+
+import junit.framework.Assert;
+
 import org.codehaus.jackson.JsonNode;
-import org.cozyAndroid.providers.TablesSQL.Notes;
 import org.ektorp.UpdateConflictException;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.couchbase.touchdb.TDDatabase;
+import com.couchbase.touchdb.TDView;
+import com.couchbase.touchdb.TDViewMapBlock;
+import com.couchbase.touchdb.TDViewMapEmitBlock;
+import com.couchbase.touchdb.router.TDURLStreamHandlerFactory;
 import android.content.* ;
 import android.os.* ;
 import android.util.Log;
@@ -14,20 +32,28 @@ import android.webkit.* ;
 import android.widget.* ;
 
 
-public class TabPlus extends Activity implements View.OnClickListener {
+
+
+public class TabPlus extends Activity implements View.OnClickListener{
 
 	private EditText newName = null ;
+	private static boolean modif = false;
+	private WebView webView;
 
 	// attributs coconut
-	public static final String TAG = "CoconutActivity";
-	private WebView webView;
+	public static final String TAG = "TabPlus";
 	static Handler myHandler;
+	// setup clock
+	Calendar cal = null;
+	Date starttime = null;
 	long long_starttime = 0;
-
 
 	/*
 	 * TODO voir avec benjamin pour remettre a zero la note
 	 */
+	{
+		TDURLStreamHandlerFactory.registerSelfIgnoreError();
+	}
 
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState) ;
@@ -46,44 +72,84 @@ public class TabPlus extends Activity implements View.OnClickListener {
 		webView.setWebChromeClient (new chromeclient()) ; 
 		webView.addJavascriptInterface(new JavaScriptInterface(this), "Android");
 		webView.loadUrl("file:///android_asset/www/index.html");
-	}
-	
 
-//TODO verifier le bon fonctionnement de cette methode suite a toutes les modifications
+		/*newName   = (EditText)findViewById(R.id.nameNewNote)    ;
+		clear     = (Button)  findViewById(R.id.buttonClear)    ; 
+		valider   = (Button)  findViewById(R.id.buttonValider)  ;
+		//bold      = (Button)  findViewById(R.id.buttonBold)     ; 
+		//italic    = (Button)  findViewById(R.id.buttonItalic)   ; 
+		underline = (Button)  findViewById(R.id.buttonUnderline); 
+
+		clear.setOnClickListener(this)    ;
+		valider.setOnClickListener(this)  ;
+		bold.setOnClickListener(this)     ;
+		italic.setOnClickListener(this)   ;
+		underline.setOnClickListener(this);*/
+	}
+
+	public EditText getNewName() {
+		return newName;
+	}
+
+	//TODO pour ouvrir une note existante il faudra charger son body grace à la fonction js setEditorContent
+	
+	public void setNewName(String name) {
+		newName.setText(name);
+	}
+
+	public static void setModif() {
+		if (modif) {
+			modif = false;
+		} else {
+			modif = true;
+		}
+	}	
+
+	public void onResume() {
+		super.onResume();
+		if (modif) {
+			setNewName(TabListe.getTitleModif());
+		}
+	}
+
+	//TODO verifier le bon fonctionnement de cette methode suite a toutes les modifications
+
 	public void onClick(View v) {
 		int id = v.getId() ;
-	
+
 		switch (id) {
 		case R.id.clear : 
-			Toast.makeText (TabPlus.this, "appui sur le bouton clear, pas implémenté", Toast.LENGTH_LONG).show();
+			webView.loadUrl("javascript:deleteContentAndroid()") ;
 			break ;
+
 		case R.id.save :
-			ContentValues values = new ContentValues();
-			values.put(Notes.TITLE, newName.getText()+ "");
-			values.put(Notes.BODY, "texte de la nouvelle note");        
-			getContentResolver().insert(Notes.CONTENT_URI, values);
 			//TODO il faut remettre le titre et le corps a zero, on peut inverser l'ordre des deux premiers case et
 			//pas mettre de break entre les deux pour qu'après la sauvegarde il y ai directement la remise à zero
-			Toast.makeText (TabPlus.this, "Note saved ", Toast.LENGTH_SHORT).show() ;
-			startActivity(new Intent(TabPlus.this, CozyAndroidActivity.class)) ; // on retourne à la vue liste
+			String inputTitle = newName.getText().toString();
+			//TODO utiliser la fonction js pour récupérer le corps du text
+			String inputBody = "prout prout tagada";
+			if (modif) {
+				createOrUpdateItem(inputTitle, inputBody, TabListe.getRev(), TabListe.getId());
+				setModif();
+				//if(!inputTitle.equals("")) {
+			} else {
+				createOrUpdateItem(inputTitle, inputBody, null, null);
+			}
+			newName.setText("");
+			Toast.makeText (TabPlus.this, "Note saved", Toast.LENGTH_LONG).show();
+			CozyAndroidActivity.gettabHost().setCurrentTab(0);
 			break ;
 
 		case R.id.indent :
 			webView.loadUrl("javascript:indentation()") ;
 			break ; 
-
 		case R.id.unindent :
-//			Toast.makeText (TabPlus.this, "appui sur le bouton Underline, pas implémenté", Toast.LENGTH_LONG).show();
 			webView.loadUrl("javascript:unindentation()") ;
 			break ;
-			
 		case R.id.listBullets :
-//			Toast.makeText (TabPlus.this, "appui sur le bouton Underline, pas implémenté", Toast.LENGTH_LONG).show();
 			webView.loadUrl("javascript:markerListAndroid()") ;
 			break ;
-			
 		case R.id.listNum :
-//			Toast.makeText (TabPlus.this, "appui sur le bouton Underline, pas implémenté", Toast.LENGTH_LONG).show();
 			webView.loadUrl("javascript:titleListAndroid()") ;
 			break ;
 		}
@@ -125,40 +191,33 @@ public class TabPlus extends Activity implements View.OnClickListener {
 		}
 	}
 
-	public void createCozyyItem(String name) {
-		final JsonNode item = CozyItemUtils.createWithText(name);
+	public void createOrUpdateItem(String title, String body, final String rev, String id) {
+		final JsonNode item = CozyItemUtils.createOrUpdate(title, body, rev, id);
 		CozySyncEktorpAsyncTask createItemTask = new CozySyncEktorpAsyncTask() {
 
 			@Override
 			protected void doInBackground() {
-				CozyAndroidActivity.returnCouchDbConnector().create(item);
+				if (rev == null) {
+					Replication.couchDbConnector.create(item);
+				} else {
+					Replication.couchDbConnector.update(item);
+				}
+
 			}
+
 			@Override
 			protected void onSuccess() {
-				Log.d(CozyAndroidActivity.TAG, "Document created successfully");
+				Log.d(TAG, "Document created successfully");
 			}
+
 			@Override
 			protected void onUpdateConflict(
 					UpdateConflictException updateConflictException) {
-				Log.d(CozyAndroidActivity.TAG, "Got an update conflict for: " + item.toString());
+				Log.d(TAG, "Got an update conflict for: " + item.toString());
 			}
 		};
 		createItemTask.execute();
 	}
+
 }
 
-
-///**
-//* Ecoute la touche enter pour permettre a l'utilisateur de revenir
-//* a la ligne dans ca note
-//*/
-//private View.OnKeyListener EnterListener = new View.OnKeyListener() {
-//	public boolean onKey(View v, int keyCode, KeyEvent event) {
-//		int cursorIndex = newText.getSelectionStart(); // On récupère la position du début de la sélection dans le texte
-//		if(event.getAction() == 0)                     // Ne réagir qu'à l'appui sur une touche (et pas le relâchement)
-//			if(keyCode == 66)                          // Pour la touche « entrée »
-//				//						((Editable) body).insert(cursorIndex, "<br />"); // On insère une balise de retour à la ligne
-//				afficheText() ;
-//		return true ;
-//	}
-//} ;
