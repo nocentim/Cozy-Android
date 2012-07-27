@@ -2,9 +2,9 @@ package org.cozyAndroid.providers;
 
 import java.util.HashMap;
 
-import org.cozyAndroid.Note;
 import org.cozyAndroid.providers.TablesSQL.Dossiers;
 import org.cozyAndroid.providers.TablesSQL.Notes;
+import org.cozyAndroid.providers.TablesSQL.Suggestions;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -17,6 +17,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.sax.StartElementListener;
 import android.util.Log;
 
 public class NotesProvider extends ContentProvider {
@@ -32,6 +33,8 @@ public class NotesProvider extends ContentProvider {
 	private static final String NOTES_TABLE_NAME = "notes";
 	
 	private static final String DOSSIERS_TABLE_NAME = "dossiers";
+	
+	private static final String SUGGESTIONS_TABLE_NAME = "suggestions";
 	 
     public static final String AUTHORITY = "org.cozyAndroid.providers.NotesProvider";
 	 
@@ -39,11 +42,15 @@ public class NotesProvider extends ContentProvider {
     
     private static HashMap<String, String> dossiersProjectionMap;
     
+    private static HashMap<String, String> suggestionsProjectionMap;
+    
     private static final UriMatcher sUriMatcher;
 	 
     private static final int NOTES = 1;
     
     private static final int DOSSIERS = 2;
+    
+    private static final int SUGGESTIONS = 3;
     
 	// classe implémentant la base de données
     public static class DataBase extends SQLiteOpenHelper  {
@@ -70,9 +77,11 @@ public class NotesProvider extends ContentProvider {
 		public void onCreate(SQLiteDatabase db) {
 			
 			db.execSQL("CREATE TABLE "+NOTES_TABLE_NAME+
-					" (_id INTEGER PRIMARY KEY AUTOINCREMENT, "+ Notes.TITLE + " VARCHAR NOT NULL, " + Notes.BODY + " VARCHAR NOT NULL, " + Notes.DOSSIER +" VARCHAR);");
+					" (_id INTEGER PRIMARY KEY AUTOINCREMENT, "+ Notes.TITLE + " VARCHAR NOT NULL COLLATE NOCASE, " + Notes.BODY + " VARCHAR NOT NULL COLLATE NOCASE, " + Notes.DOSSIER +" VARCHAR);");
 			db.execSQL("CREATE TABLE "+DOSSIERS_TABLE_NAME+
-					" (_id INTEGER PRIMARY KEY AUTOINCREMENT, "+ Dossiers.NAME + " VARCHAR NOT NULL, " + Dossiers.PARENT + " VARCHAR);");
+					" (_id INTEGER PRIMARY KEY AUTOINCREMENT, "+ Dossiers.NAME + " VARCHAR NOT NULL COLLATE NOCASE, " + Dossiers.PARENT + " VARCHAR);");
+			db.execSQL("CREATE TABLE "+SUGGESTIONS_TABLE_NAME+
+					" (_id INTEGER PRIMARY KEY AUTOINCREMENT, "+ Suggestions.WORD  + " VARCHAR NOT NULL COLLATE NOCASE, " + Suggestions.OCCURENCES  + " INTEGER NOT NULL);");
 			/*File fichier = new File("src/exemple.txt");
 			Log.d("ok","Chemin absolu du fichier : " + fichier.getAbsolutePath());
 			Log.d("ok","Nom du fichier : " + fichier.getName());
@@ -91,6 +100,7 @@ public class NotesProvider extends ContentProvider {
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			db.execSQL("DROP TABLE IF EXISTS " + NOTES_TABLE_NAME);
 			db.execSQL("DROP TABLE IF EXISTS " + DOSSIERS_TABLE_NAME);
+			db.execSQL("DROP TABLE IF EXISTS " + SUGGESTIONS_TABLE_NAME);
 			onCreate(db);
 		}
     }
@@ -171,10 +181,14 @@ public class NotesProvider extends ContentProvider {
 		int count = 0;
 		switch (sUriMatcher.match(uri)) {
 			case NOTES:
+				deleteSuggestionsWhere(where, whereArgs);
 				count = notesDB.delete(NOTES_TABLE_NAME, where, whereArgs);
 		        break;
 			case DOSSIERS:
 				count = notesDB.delete(DOSSIERS_TABLE_NAME, where, whereArgs);
+				break;
+			case SUGGESTIONS:
+				count = notesDB.delete(SUGGESTIONS_TABLE_NAME, where, whereArgs);
 				break;
 	        default:
 	        	throw new IllegalArgumentException("Unknown URI " + uri);
@@ -191,6 +205,8 @@ public class NotesProvider extends ContentProvider {
 				return Notes.CONTENT_TYPE;
 			case DOSSIERS:
 				return Dossiers.CONTENT_TYPE;
+			case SUGGESTIONS:
+				return Suggestions.CONTENT_TYPE;
 		    default:
 		    	throw new IllegalArgumentException("Unknown URI " + uri);
 		}
@@ -213,11 +229,17 @@ public class NotesProvider extends ContentProvider {
 				table = NOTES_TABLE_NAME;
 				nullCollumn = Notes.BODY;
 				contentUri = Notes.CONTENT_URI;
+				insertSuggestions (values.getAsString(Notes.TITLE),1);
 				break;
 			case DOSSIERS :
 				table = DOSSIERS_TABLE_NAME;
 				nullCollumn = Dossiers.PARENT;
 				contentUri = Dossiers.CONTENT_URI;
+				break;
+			case SUGGESTIONS :
+				table = SUGGESTIONS_TABLE_NAME;
+				nullCollumn = Suggestions.OCCURENCES;
+				contentUri = Suggestions.CONTENT_URI;
 				break;
 			default:
 				throw new IllegalArgumentException("Unknown URI " + uri);
@@ -232,10 +254,10 @@ public class NotesProvider extends ContentProvider {
 		throw new SQLException("Failed to insert row into " + uri);
 	}
 
-
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 		SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
+		String limit = null;
 		switch (sUriMatcher.match(uri)) {
 			case NOTES:
 				qb.setTables(NOTES_TABLE_NAME);
@@ -245,11 +267,16 @@ public class NotesProvider extends ContentProvider {
 				qb.setTables(DOSSIERS_TABLE_NAME);
 				qb.setProjectionMap(dossiersProjectionMap);
 				break;
+			case SUGGESTIONS:
+				qb.setTables(SUGGESTIONS_TABLE_NAME);
+				qb.setProjectionMap(suggestionsProjectionMap);
+				limit = "4";
+				break;
 			default:
 				throw new IllegalArgumentException("Unknown URI " + uri);
 		}
 		//SQLiteDatabase db = dbHelper.getReadableDatabase();     A remettre à la place de notesDB?
-		Cursor c = qb.query(notesDB, projection, selection, selectionArgs, null, null, sortOrder);
+		Cursor c = qb.query(notesDB, projection, selection, selectionArgs, null, null, sortOrder,limit);
 		c.setNotificationUri(getContext().getContentResolver(), uri);
 		return c;
 	}
@@ -260,10 +287,19 @@ public class NotesProvider extends ContentProvider {
 		int count=0;
 		switch (sUriMatcher.match(uri)) {
 			case NOTES:
+				if (values.containsKey(Notes.TITLE)) {
+					deleteSuggestionsWhere(where,whereArgs);
+				}
 				count = notesDB.update(NOTES_TABLE_NAME, values, where, whereArgs);
-		        break;
+				if (values.containsKey(Notes.TITLE)) {
+					insertSuggestions(values.getAsString(Notes.TITLE),count);
+				}
+				break;
 			case DOSSIERS:
 				count = notesDB.update(DOSSIERS_TABLE_NAME, values, where, whereArgs);
+				break;
+			case SUGGESTIONS:
+				count = notesDB.update(SUGGESTIONS_TABLE_NAME, values, where, whereArgs);
 				break;
 		    default:
 		    	throw new IllegalArgumentException("Unknown URI " + uri);
@@ -273,21 +309,88 @@ public class NotesProvider extends ContentProvider {
 		return count;
 	}
 	
+	private void insertSuggestions (String title, int occurences) {
+		String [] mots = title.split(" +");
+		Cursor cursor;
+		String table = SUGGESTIONS_TABLE_NAME;
+		String [] columns = {Suggestions._ID,Suggestions.OCCURENCES};
+		for (int i = 0; i < mots.length; i++) {
+			String mot = mots[i].toLowerCase();
+			if (mot.length() > 3 ) {
+				ContentValues values = new ContentValues();
+				cursor = notesDB.query(table, columns, Suggestions.WORD + " = \'" + mot + "\'", null, null, null, null);
+				if (cursor.moveToFirst()) {
+					//Le mot existe deja dans la DB, on augmente son nombre d'occurences
+					values.put(Suggestions.OCCURENCES, cursor.getInt(1) + occurences);
+					notesDB.update(table, values, Suggestions._ID + " = " + cursor.getString(0), null);
+				} else {
+					//Le mot n'existe pas dans la DB, on l'insert
+					values.put(Suggestions.WORD, mot);
+					values.put(Suggestions.OCCURENCES, occurences);
+					notesDB.insert(table, Suggestions.OCCURENCES, values);
+				}
+				cursor.close();
+			}
+		}
+	}
+	
+	private void deleteSuggestionsWhere (String where, String [] whereArgs) {
+		String[] columns = {Notes._ID,Notes.TITLE};
+		Cursor notesToDelete = notesDB.query(NOTES_TABLE_NAME, columns, where, whereArgs, null, null, null);
+		
+		if (notesToDelete.moveToFirst()) {
+			do {
+				deleteSuggestions(notesToDelete.getString(1));
+			} while (notesToDelete.moveToNext());
+		}
+		notesToDelete.close();
+	}
+	
+	
+	private void deleteSuggestions (String title) {
+		String [] mots = title.split(" +");
+		Cursor cursor = null;
+		String table = SUGGESTIONS_TABLE_NAME;
+		String [] columns = {Suggestions._ID,Suggestions.OCCURENCES};
+		for (int i = 0; i < mots.length; i++) {
+			String mot = mots[i].toLowerCase();
+			if (mot.length() > 3 ) {
+				cursor = notesDB.query(table, columns, Suggestions.WORD + " = \'" + mot + "\'", null, null, null, null);
+				if (cursor.moveToFirst()) {
+					if (cursor.getColumnCount() >= 2 && cursor.getInt(1) > 1) {
+						ContentValues values = new ContentValues();
+						values.put(Suggestions.OCCURENCES, cursor.getInt(1) - 1);
+						notesDB.update(table, values, Suggestions._ID + " = " + cursor.getString(0), null);
+					} else if (cursor.getColumnCount() >= 2 && cursor.getInt(1) == 1) {
+						notesDB.delete(table, Suggestions._ID + " = " + cursor.getString(0), null);
+					}
+				}
+				cursor.close();
+			}
+		} 
+	}
+	
 	static {
 		sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 		sUriMatcher.addURI(AUTHORITY, NOTES_TABLE_NAME, NOTES);
 		sUriMatcher.addURI(AUTHORITY, DOSSIERS_TABLE_NAME, DOSSIERS);
+		sUriMatcher.addURI(AUTHORITY, SUGGESTIONS_TABLE_NAME, SUGGESTIONS);
 			 
 		dossiersProjectionMap = new HashMap<String, String>();
-		dossiersProjectionMap.put(Dossiers.DOSSIER_ID, Dossiers.DOSSIER_ID);
+		dossiersProjectionMap.put(Dossiers._ID, Dossiers._ID);
 		dossiersProjectionMap.put(Dossiers.NAME, Dossiers.NAME);
 		dossiersProjectionMap.put(Dossiers.PARENT, Dossiers.PARENT);
 			
 		notesProjectionMap = new HashMap<String, String>();
-		notesProjectionMap.put(Notes.NOTE_ID, Notes.NOTE_ID);
+		notesProjectionMap.put(Notes._ID, Notes._ID);
 		notesProjectionMap.put(Notes.TITLE, Notes.TITLE);
 		notesProjectionMap.put(Notes.BODY, Notes.BODY);
 		notesProjectionMap.put(Notes.DOSSIER, Notes.DOSSIER);
+		
+		suggestionsProjectionMap = new HashMap<String, String>();
+		suggestionsProjectionMap.put(Suggestions._ID, Suggestions._ID);
+		suggestionsProjectionMap.put(Suggestions.WORD, Suggestions.WORD);
+		suggestionsProjectionMap.put(Suggestions.OCCURENCES, Suggestions.OCCURENCES);
 		Log.d("ok","ok");
 	}
 }

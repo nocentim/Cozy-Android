@@ -19,8 +19,6 @@ public class TablesSQL {
 	        // que faut-il mettre ici???
 	        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.Cozy-Android.notes";
 	 
-	        public static final String NOTE_ID = "_id";
-	 
 	        public static final String TITLE = "title";
 	 
 	        public static final String BODY = "text";
@@ -37,12 +35,33 @@ public class TablesSQL {
 	    	
 	    	public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.Cozy-Android.dossiers";
 	    	
-	    	public static final String DOSSIER_ID = "_id";
-	    	
 	    	public static final String NAME = "name";
 	    	
 	    	public static final String PARENT = "parent";
 	    	
 	    }
-	 
+	    
+	    public static final class Suggestions implements BaseColumns {
+	    	private Suggestions() {
+	    	}
+	    	
+	    	public static final Uri CONTENT_URI = Uri.parse("content://"
+	                + NotesProvider.AUTHORITY + "/suggestions");
+	    	
+	    	public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.Cozy-Android.suggestions";
+	    	
+	    	public static final String WORD = "word";
+	    	
+	    	public static final String OCCURENCES = "occurences";
+	    	
+	    	public static final int TYPE_MOT = 0;
+	    	
+	    	public static final int TYPE_NOTE = 1;
+	    	
+	    	public static final int TYPE_DOSSIER = 2;
+	    	
+	    	
+	    	
+	    	
+	    }
 	}

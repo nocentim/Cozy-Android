@@ -2,32 +2,18 @@ package org.cozyAndroid;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
-
-import junit.framework.Assert;
 
 import org.codehaus.jackson.JsonNode;
 import org.ektorp.UpdateConflictException;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
-import com.couchbase.touchdb.TDDatabase;
-import com.couchbase.touchdb.TDView;
-import com.couchbase.touchdb.TDViewMapBlock;
-import com.couchbase.touchdb.TDViewMapEmitBlock;
 import com.couchbase.touchdb.router.TDURLStreamHandlerFactory;
 import android.content.* ;
-import android.os.* ;
-import android.util.Log;
-import android.view.* ;
 import android.webkit.* ;
 import android.widget.* ;
 
@@ -72,19 +58,6 @@ public class TabPlus extends Activity implements View.OnClickListener{
 		webView.setWebChromeClient (new chromeclient()) ; 
 		webView.addJavascriptInterface(new JavaScriptInterface(this), "Android");
 		webView.loadUrl("file:///android_asset/www/index.html");
-
-		/*newName   = (EditText)findViewById(R.id.nameNewNote)    ;
-		clear     = (Button)  findViewById(R.id.buttonClear)    ; 
-		valider   = (Button)  findViewById(R.id.buttonValider)  ;
-		//bold      = (Button)  findViewById(R.id.buttonBold)     ; 
-		//italic    = (Button)  findViewById(R.id.buttonItalic)   ; 
-		underline = (Button)  findViewById(R.id.buttonUnderline); 
-
-		clear.setOnClickListener(this)    ;
-		valider.setOnClickListener(this)  ;
-		bold.setOnClickListener(this)     ;
-		italic.setOnClickListener(this)   ;
-		underline.setOnClickListener(this);*/
 	}
 
 	public EditText getNewName() {
@@ -92,7 +65,7 @@ public class TabPlus extends Activity implements View.OnClickListener{
 	}
 
 	//TODO pour ouvrir une note existante il faudra charger son body grace à la fonction js setEditorContent
-	
+
 	public void setNewName(String name) {
 		newName.setText(name);
 	}
