@@ -1,6 +1,7 @@
 package org.cozyAndroid;
 
 import org.codehaus.jackson.JsonNode;
+import org.cozyAndroid.providers.TablesSQL.Dossiers;
 import org.ektorp.ViewQuery;
 import org.ektorp.ViewResult.Row;
 import org.ektorp.impl.StdCouchDbInstance;
@@ -10,13 +11,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 
 import com.couchbase.touchdb.ektorp.TouchDBHttpClient;
@@ -84,7 +85,6 @@ public class TabListe extends Activity {
 		//listeNotes.setAdapter(adapter);
 		rechercheNote = (RechercheNote) findViewById(R.id.recherche_note);
 		dansDossier = (RechercheDossier) findViewById(R.id.dans_dossier);
-		
 		showSplashScreen();
 		removeSplashScreen();
 		Replication.startTouchDB(returnBaseContext());
@@ -103,15 +103,15 @@ public class TabListe extends Activity {
 					setTri(ii);
 					//lanceRecherche();
 				}
-			});	
+			});
 		}
-	
+		
 	}
 	
 	/*public void onResume() {
 		super.onResume();
 		ArrayList<Note> note = new ArrayList<Note>();
-		String projection[] = {Notes.NOTE_ID,Notes.TITLE,Notes.BODY,Notes.DOSSIER};
+		String [] projection = {Notes._ID,Notes.TITLE,Notes.BODY,Notes.DOSSIER};
 		Cursor cursor = managedQuery(Notes.CONTENT_URI, projection, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
@@ -126,6 +126,11 @@ public class TabListe extends Activity {
 	public void onResume() {
 		super.onResume();
 		titleModif = "";
+		//Recupperation des dossiers pour les suggestions
+		String projection[] = {Dossiers._ID,Dossiers.NAME,Dossiers.PARENT};
+		Cursor cursor = managedQuery(Dossiers.CONTENT_URI, projection, null, null, Dossiers.NAME + " COLLATE NOCASE");
+		Dossier.newArborescence(cursor);
+
 	}
 	
 	public void setTri (int tri) {
@@ -163,15 +168,15 @@ public class TabListe extends Activity {
 		if (!constraint.matches(" *")) {
 			String [] mots = constraint.split(" +");
 			for (int i = 0; i < mots.length - 1; i++) {
-				selection += Notes.TITLE +" LIKE \'%" + mots[i] + "%\' OR " + Notes.BODY +" LIKE \'%" + mots[i] + "%\' OR";
+				selection += "(" + Notes.TITLE +" LIKE \'%" + mots[i] + "%\' OR " + Notes.BODY +" LIKE \'%" + mots[i] + "%\') AND ";
 			}
-			selection += Notes.TITLE +" LIKE \'%" + mots[mots.length-1] + "%\' OR " + Notes.BODY +" LIKE \'%" + mots[mots.length-1] + "%\'";
+			selection += "(" + Notes.TITLE +" LIKE \'%" + mots[mots.length-1] + "%\' OR " + Notes.BODY +" LIKE \'%" + mots[mots.length-1] + "%\')";
 			if (dossiersAChercher != null && !dossiersAChercher.isEmpty()) {
 				selection += ")";
 			}
 		}
 		ArrayList<Note> note = new ArrayList<Note>();
-		String projection[] = {Notes.NOTE_ID,Notes.TITLE,Notes.BODY,Notes.DOSSIER};
+		String projection[] = {Notes._ID,Notes.TITLE,Notes.BODY,Notes.DOSSIER};
 		Cursor cursor = managedQuery(Notes.CONTENT_URI, projection, selection, null, null);
 		if (cursor.moveToFirst()) {
 			do {

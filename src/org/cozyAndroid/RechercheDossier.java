@@ -93,7 +93,7 @@ public class RechercheDossier extends AutoCompleteTextView {
 			}
 			String pattern = constraint.toString().toLowerCase();
 			filterPattern = pattern;
-			String[] projection = {Dossiers.DOSSIER_ID};
+			String[] projection = {Dossiers._ID};
 			Cursor all = context.managedQuery(Dossiers.CONTENT_URI, projection, null, null, null);
 			MatrixCursor filtered = new MatrixCursor(projection);
 			if (all.moveToFirst()) {
@@ -122,7 +122,7 @@ public class RechercheDossier extends AutoCompleteTextView {
 		setThreshold(1);
 		searchAdapter = new SimpleCursorAdapter(
 				context, R.layout.suggestion,
-				searchCursor, new String [] {Dossiers.DOSSIER_ID},
+				searchCursor, new String [] {Dossiers._ID},
 				new int [] {R.id.textSuggestion});
 		setAdapter(searchAdapter);
 		searchAdapter.setFilterQueryProvider(filterQuery);
