@@ -1,5 +1,6 @@
 package org.cozyAndroid;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -8,6 +9,7 @@ import org.ektorp.UpdateConflictException;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,10 +25,13 @@ import com.couchbase.touchdb.router.TDURLStreamHandlerFactory;
 public class TabPlus extends Activity implements View.OnClickListener{
 
 	private EditText newName = null ;
+	private String title;
 	static boolean modif = false ;
+	static boolean retour=false;
 	private WebView webView;
-
-	// attributs coconut
+	private static ArrayList<String> tags = new ArrayList<String>();
+	private static String formerActivity;
+	
 	public static final String TAG = "TabPlus";
 	// setup clock
 	Calendar cal = null;
@@ -40,17 +45,30 @@ public class TabPlus extends Activity implements View.OnClickListener{
 	    TDURLStreamHandlerFactory.registerSelfIgnoreError();
 		}
 
+	public static void addTag(String s) {
+		tags.add(s);
+	}
+	
+	public static void formerActivity(String a) {
+		formerActivity = a;
+	}
+	
+	public static String formerActivity() {
+		return formerActivity;
+	}
+	
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState) ;
 
 		setContentView(R.layout.plus );	    
 		newName = (EditText) findViewById(R.id.nameNewNote) ;
-		findViewById(R.id.clear).setOnClickListener(this)    ; 
-		findViewById(R.id.save).setOnClickListener(this)  ;
+		findViewById(R.id.clear).setOnClickListener(this); 
+		findViewById(R.id.save).setOnClickListener(this);
 		findViewById(R.id.indent).setOnClickListener(this)     ; 
 		findViewById(R.id.unindent).setOnClickListener(this)   ; 
 		findViewById(R.id.listBullets).setOnClickListener(this)   ; 
 		findViewById(R.id.listNum).setOnClickListener(this)   ; 
+		findViewById(R.id.properties).setOnClickListener(this);
 
 		webView = (WebView) findViewById(R.id.webView) ;
 		webView.getSettings().setJavaScriptEnabled(true) ;  //elle est pas inutile mais eclipse ne le voit pas
@@ -69,19 +87,17 @@ public class TabPlus extends Activity implements View.OnClickListener{
 		newName.setText(name);
 	}
 
-	public static void setModif() {
-		if (modif) {
-			modif = false;
-		} else {
-			modif = true;
-		}
-	}	
-
 	public void onResume() {
 		super.onResume();
 		if (modif) {
 			setNewName(TabListe.getTitleModif());
+			tags = TabListe.getListTags();
 		}
+		if ((formerActivity=="properties") && (retour)) {
+			setNewName(title);
+			retour=false;
+		}
+		
 	}
 
 	//TODO verifier le bon fonctionnement de cette methode suite a toutes les modifications
@@ -93,22 +109,51 @@ public class TabPlus extends Activity implements View.OnClickListener{
 		case R.id.clear : 
 			webView.loadUrl("javascript:deleteContentAndroid()") ;
 			break ;
-
+			
+		case R.id.properties :
+			Intent properties = new Intent(TabPlus.this, Properties.class);
+			
+			if (modif) {
+				properties.putExtra("id", TabListe.getId());
+				properties.putExtra("rev", TabListe.getRev());
+				properties.putExtra("title", newName.getText().toString());
+				properties.putExtra("body", "prout prout tagada");
+			}
+			title = newName.getText().toString();
+			TabPlus.this.startActivity(properties);
+			break;
 		case R.id.save :
 			//TODO il faut remettre le titre et le corps a zero, on peut inverser l'ordre des deux premiers case et
 			//pas mettre de break entre les deux pour qu'après la sauvegarde il y ai directement la remise à zero
 			String inputTitle = newName.getText().toString();
 			//TODO utiliser la fonction js pour récupérer le corps du text
 			String inputBody = "prout prout tagada";
-			if (modif) {
-				createOrUpdateItem(inputTitle, inputBody, TabListe.getRev(), TabListe.getId());
-				modif = false;
-			//if(!inputTitle.equals("")) {
+			Log.d("tag.size", " "+ tags.size());
+			if (tags.size()<1) {
+				if (modif) {
+					createOrUpdateItem(inputTitle, inputBody, TabListe.getRev(), TabListe.getId(), null);
+					modif = false;
+				//if(!inputTitle.equals("")) {
+				} else {
+					createOrUpdateItem(inputTitle, inputBody, null, null, null);
+				}
 			} else {
-				createOrUpdateItem(inputTitle, inputBody, null, null);
+				if (modif) {
+					createOrUpdateItem(inputTitle, inputBody, TabListe.getRev(), TabListe.getId(), tags);
+					modif = false;
+				//if(!inputTitle.equals("")) {
+				} else {
+					createOrUpdateItem(inputTitle, inputBody, null, null, tags);
+				}
 			}
 			newName.setText("");
 			Toast.makeText (TabPlus.this, "Note saved", Toast.LENGTH_LONG).show();
+			int size = tags.size();
+			int i = size-1;
+			while (i>=0) {
+				tags.remove(i);
+				i--;
+			}
 			CozyAndroidActivity.gettabHost().setCurrentTab(0);
 			break ;
 
@@ -163,8 +208,8 @@ public class TabPlus extends Activity implements View.OnClickListener{
 		}
 	}
 
-	public void createOrUpdateItem(String title, String body, final String rev, String id) {
-		final JsonNode item = CozyItemUtils.createOrUpdate(title, body, rev, id);
+	public static void createOrUpdateItem(String title, String body, final String rev, String id, ArrayList<String> tags) {
+		final JsonNode item = CozyItemUtils.createOrUpdate(title, body, rev, id,tags);
 		CozySyncEktorpAsyncTask createItemTask = new CozySyncEktorpAsyncTask() {
 
 			@Override

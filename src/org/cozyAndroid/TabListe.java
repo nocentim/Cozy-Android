@@ -1,5 +1,7 @@
 package org.cozyAndroid;
 
+import java.util.ArrayList;
+
 import org.codehaus.jackson.JsonNode;
 import org.cozyAndroid.providers.TablesSQL.Dossiers;
 import org.ektorp.ViewQuery;
@@ -33,6 +35,7 @@ public class TabListe extends Activity {
 	private static String titleModif;
 	private static String rev;
 	private static String id;
+	private static ArrayList<String> tags;
 	
 	public static String TAG = "TabListe";
 	//Recherche
@@ -72,9 +75,20 @@ public class TabListe extends Activity {
     	return id;
     }
     
+    public void setListTags(String s) {
+    	tags.remove(0);
+    	tags.add(s);
+    }
+    
+    public static ArrayList<String> getListTags(){
+    	return tags;
+    }
+    
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState);
 		setContentView(R.layout.liste_notes);
+		tags= new ArrayList<String>();
+		tags.add("aucune");
 		
 		//connect items from layout
 		
@@ -87,7 +101,7 @@ public class TabListe extends Activity {
 		dansDossier = (RechercheDossier) findViewById(R.id.dans_dossier);
 		showSplashScreen();
 		removeSplashScreen();
-		Replication.startTouchDB(returnBaseContext());
+		Replication.NotesView(returnBaseContext());
         startEktorp();
 		//Recupperation des dossiers pour les suggestions
 		/*String projection[] = {Dossiers.DOSSIER_ID,Dossiers.NAME,Dossiers.PARENT};
@@ -213,9 +227,13 @@ public class TabListe extends Activity {
 			Row row = (Row)parent.getItemAtPosition(position);
 			JsonNode item = row.getValueAsNode();
 			JsonNode itemText = item.get("title");
+			Log.d("title", itemText.getTextValue());
 			setRev(item.get("_rev").getTextValue());
 			setId(item.get("_id").getTextValue());
+			setListTags(item.get("tags").getTextValue());   // Pour l'instant on ne teste qu'un tag
+			Log.d("tags", item.get("tags").getTextValue());
 	        titleModif = itemText.getTextValue();
+	        TabPlus.formerActivity("tabliste");
 	        CozyAndroidActivity.gettabHost().setCurrentTab(2);
 			
 		}

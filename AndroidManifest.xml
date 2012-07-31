@@ -56,11 +56,16 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait" >
         </activity>
-        <activity
-            android:name=".CoconutActivity"
+       	<activity 
+       	    android:name=".Properties"
             android:configChanges="orientation"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait">
+       	</activity>
+       	<activity 
+       	    android:name=".TagNote"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
+       	</activity>
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
