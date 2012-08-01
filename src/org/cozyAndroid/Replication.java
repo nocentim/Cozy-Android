@@ -34,6 +34,7 @@ public class Replication {
 	public static final String dDocName = "grocery-local";
 	public static final String dDocId = "_design/" + dDocName;
 	public static final String byDateViewName = "byDate";
+	public static final String byTitleViewName = "byTitle";
 	
 	//couch internals
 	protected static TDServer server;
@@ -69,6 +70,19 @@ public class Replication {
                 Object modifiedAt = document.get("modified_at");
                 if(modifiedAt != null) {
                     emitter.emit(modifiedAt.toString(), document);
+                }
+
+            }
+        }, null, "1.0");
+	    //Test pour les suggestions
+	    TDView viewByTitle = db.getViewNamed(String.format("%s/%s", dDocName, byTitleViewName));
+	    viewByTitle.setMapReduceBlocks(new TDViewMapBlock() {
+
+            @Override
+            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
+                Object title = document.get("title");
+                if(title != null) {
+                    emitter.emit(title.toString(), document);
                 }
 
             }

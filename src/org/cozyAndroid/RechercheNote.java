@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.cozyAndroid.providers.TablesSQL.Notes;
 import org.cozyAndroid.providers.TablesSQL.Suggestions;
+import org.ektorp.ViewQuery;
 
 import android.app.Activity;
 import android.content.Context;
@@ -23,9 +24,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FilterQueryProvider;
 import android.widget.ImageView;
 import android.widget.MultiAutoCompleteTextView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.SimpleCursorAdapter.CursorToStringConverter;
-import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.TextView;
 
 public class RechercheNote extends MultiAutoCompleteTextView {
@@ -46,9 +44,7 @@ public class RechercheNote extends MultiAutoCompleteTextView {
 	
 	private Activity context;
 	
-	private Cursor searchCursor = null;
-	
-	private SimpleCursorAdapter searchAdapter;
+	private CozySyncListAdapter searchAdapter;
 	
 	private String filterPattern = "";
 	
@@ -68,27 +64,7 @@ public class RechercheNote extends MultiAutoCompleteTextView {
 		init((Activity) context);
 	}
 	
-	//Creation de la string a afficher dans la TextView a partir du cursor
-	private CursorToStringConverter converter = new CursorToStringConverter() {
-		
-		public CharSequence convertToString(Cursor cursor) {
-			return cursor.getString(1);
-		}
-	};
-	
-	private OnItemClickListener onItem  = new OnItemClickListener() {
-
-		@Override
-		public void onItemClick(AdapterView<?> parents, View v, int position,
-				long id) {
-			Log.d("onItemClick", "view: " + v.getId() + "pos: " + position + "id: " + id);
-			//setListSelection(position);
-			//performCompletion();
-		}
-	};
-	
-	//
-	private ViewBinder viewBinder = new ViewBinder() {
+	/*private ViewBinder viewBinder = new ViewBinder() {
 		
 		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
 			if (columnIndex == 1) {
@@ -109,7 +85,8 @@ public class RechercheNote extends MultiAutoCompleteTextView {
 				for (int i = 0; i < pattern.length; i++) {
 					int start = text.toLowerCase().indexOf(pattern[i].toLowerCase());
 					if (start != -1) {
-						textSpan.setSpan(new ForegroundColorSpan(getResources().getColor(android.R.color.black)), start, start + pattern[i].length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+						ForegroundColorSpan black = new ForegroundColorSpan(getResources().getColor(android.R.color.black));
+						textSpan.setSpan(black, start, start + pattern[i].length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 					}
 				}
 				((TextView) view).setText(textSpan);
@@ -165,10 +142,10 @@ public class RechercheNote extends MultiAutoCompleteTextView {
 			}
 			return false;	
 		}
-	};
+	};*/
 	
 	//Filtrage des resultats suivant la string rentree par l'utilisateur
-	private FilterQueryProvider filterQuery = new FilterQueryProvider() {
+	/*private FilterQueryProvider filterQuery = new FilterQueryProvider() {
 		//TODO : essayer de faire ca avec un seul acces a la BD
 		public Cursor runQuery(CharSequence constraint) {
 			if (constraint == null || constraint.equals("")) {
@@ -222,7 +199,7 @@ public class RechercheNote extends MultiAutoCompleteTextView {
 			}
 			return filtered;
 		}
-	};
+	};*/
 	
 	/**
 	 * Initialise l'adapter, les listeners et tout ce qu'il faut pour les suggestions
@@ -231,17 +208,8 @@ public class RechercheNote extends MultiAutoCompleteTextView {
 	private void init(Activity context) {
 		this.context = context;
 		setThreshold(1);
-		searchAdapter = new SimpleCursorAdapter(
-				context, R.layout.suggestion,
-				searchCursor, new String [] {SUGGESTION,SOURCE},
-				new int [] {R.id.textSuggestion,R.id.buttonSuggestion});
-		setAdapter(searchAdapter);
-		searchAdapter.setFilterQueryProvider(filterQuery);
-		searchAdapter.setCursorToStringConverter(converter);
-		searchAdapter.setViewBinder(viewBinder);
 		Tokenizer space = new SpaceTokenizer();
 		setTokenizer(space);
-		setOnItemClickListener(onItem);
 	}
 	
 	/**

@@ -243,6 +243,10 @@ public class TabListe extends Activity {
 				ViewQuery viewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.byDateViewName).descending(true);
 				adapter = new CozySyncListAdapter(TabListe.this, Replication.couchDbConnector, viewQuery, TabListe.this);
 				listeNotes.setAdapter(adapter);
+				//adapter for suggestions
+				ViewQuery sViewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.byTitleViewName).descending(false);
+				SuggestionAdapter searchAdapter = new SuggestionAdapter(Replication.couchDbConnector, sViewQuery, TabListe.this);
+				rechercheNote.setAdapter(searchAdapter);
 				//listeNotes.setOnItemClickListener(TabListe.this);
 				listeNotes.setOnItemLongClickListener(deleteItem);
 
@@ -266,25 +270,25 @@ public class TabListe extends Activity {
 			}
 		
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(TabListe.this);
-		AlertDialog alert = builder.setTitle("Delete Item?")
-			   .setMessage("Are you sure you want to delete \"" + itemText + "\"?")
-		       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
-		        	   Replication.deleteGroceryItem(item);
-		           }
-		       })
-		       .setNegativeButton("No", new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
-		               // Handle Cancel
-		           }
-		       })
-		       .create();
-
-		alert.show();
-
-		return true;
-	}
+			AlertDialog.Builder builder = new AlertDialog.Builder(TabListe.this);
+			AlertDialog alert = builder.setTitle("Delete Item?")
+				   .setMessage("Are you sure you want to delete \"" + itemText + "\"?")
+			       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			        	   Replication.deleteGroceryItem(item);
+			           }
+			       })
+			       .setNegativeButton("No", new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			               // Handle Cancel
+			           }
+			       })
+			       .create();
+	
+			alert.show();
+	
+			return true;
+		}
 	};
 
 	/**
