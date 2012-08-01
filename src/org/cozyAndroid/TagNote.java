@@ -34,8 +34,8 @@ public class TagNote extends Activity implements View.OnClickListener{
 		findViewById(R.id.oktag).setOnClickListener(this);
 		tag = (EditText) findViewById(R.id.TagEdition);
 		param = this.getIntent().getExtras();
-		//Replication.TagView(this);
-		//startEktorp();
+		Replication.TagView(this);
+		startEktorp();
 		
 	}
 	

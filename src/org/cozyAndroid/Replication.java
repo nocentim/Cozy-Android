@@ -94,7 +94,7 @@ public class Replication {
 	            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
 	                Object tagged = document.get("tags");
 	                if(tagged != null) {
-	                    emitter.emit(tagged.toString(), document);
+	                    emitter.emit(tagged.toString(), document.get("tags"));
 	                }
         }
     }, null, "1.0");
@@ -104,7 +104,6 @@ public class Replication {
 	
 	public static void startReplications(Context context) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		Log.d("preferences", "ok");
 		pushReplicationCommand = new ReplicationCommand.Builder()
 			.source(DATABASE_NOTES)
 			.target(prefs.getString("sync_url", "http://mschoch.iriscouch.com/grocery-test"))
