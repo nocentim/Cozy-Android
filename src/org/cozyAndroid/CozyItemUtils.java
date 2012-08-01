@@ -34,8 +34,8 @@ public class CozyItemUtils {
 			
 			Iterator<String> it = tags.iterator();
 			item.put("tags", it.next());
-		} else {
-			item.put("tags", "aucun");
+		//} else {
+			//item.put("tags", null);
 		}
     	item.put("body", body);
     	item.put("icon", Boolean.FALSE);

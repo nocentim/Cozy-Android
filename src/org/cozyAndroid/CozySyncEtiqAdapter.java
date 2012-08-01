@@ -7,6 +7,7 @@ import org.ektorp.ViewResult.Row;
 import org.ektorp.android.util.CouchbaseViewListAdapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,8 +42,11 @@ public class CozySyncEtiqAdapter extends CouchbaseViewListAdapter {
         Row row = getRow(position);
         JsonNode item = row.getValueAsNode();
         JsonNode itemText = item.get("tags");
-        if(itemText != null) {
-        	tag.setText(itemText.getTextValue());
+        if (itemText != null) {
+        	if (itemText.getTextValue()!="aucun") {
+        		tag.setText(itemText.getTextValue());
+        		Log.d("aucun", "different");
+        	}
         }
         else {
         	tag.setText("");
