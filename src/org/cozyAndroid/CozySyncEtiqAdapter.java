@@ -43,9 +43,8 @@ public class CozySyncEtiqAdapter extends CouchbaseViewListAdapter {
         JsonNode item = row.getValueAsNode();
         JsonNode itemText = item.get("tags");
         if (itemText != null) {
-        	if (itemText.getTextValue()!="aucun") {
+        	if (itemText.getTextValue().toString()!="aucun") {
         		tag.setText(itemText.getTextValue());
-        		Log.d("aucun", "different");
         	}
         }
         else {
