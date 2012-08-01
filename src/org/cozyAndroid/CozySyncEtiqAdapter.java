@@ -35,17 +35,17 @@ public class CozySyncEtiqAdapter extends CouchbaseViewListAdapter {
             v = inflater.inflate(R.layout.elem_tag, null);
         }
         ViewHolder vh = new ViewHolder();
-        vh.name = (TextView) v.findViewById(R.id.titre_tag);
+        vh.name = (TextView) v.findViewById(R.id.tag);
         v.setTag(vh);
-        TextView title = ((ViewHolder)v.getTag()).name;
+        TextView tag = ((ViewHolder)v.getTag()).name;
         Row row = getRow(position);
         JsonNode item = row.getValueAsNode();
-        JsonNode itemText = item.get("title");
+        JsonNode itemText = item.get("tags");
         if(itemText != null) {
-        	title.setText(itemText.getTextValue());
+        	tag.setText(itemText.getTextValue());
         }
         else {
-        	title.setText("");
+        	tag.setText("");
         }
 
         return v;

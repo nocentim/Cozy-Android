@@ -90,11 +90,11 @@ public class Replication {
 	    TDView view = db.getViewNamed(String.format("%s/%s", dDocName, byTagsViewName));
 	    view.setMapReduceBlocks(new TDViewMapBlock() {
 	    	
-	    	 @Override
+	    	@Override
 	            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
 	                Object tagged = document.get("tags");
 	                if(tagged != null) {
-	                    emitter.emit(tagged.toString(), document.get("tags"));
+	                    emitter.emit(tagged.toString(), document);
 	                }
         }
     }, null, "1.0");

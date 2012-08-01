@@ -114,6 +114,7 @@ public final class R {
         public static final int tab_event=0x7f09002f;
         public static final int tab_infos=0x7f09002c;
         public static final int tab_news=0x7f090029;
+        public static final int tag=0x7f090011;
         public static final int tags=0x7f090022;
         public static final int tbCalendrier=0x7f09002b;
         public static final int tbDossier=0x7f09002e;
@@ -125,7 +126,6 @@ public final class R {
         public static final int textView2=0x7f090013;
         public static final int text_creer=0x7f090000;
         public static final int titre_note=0x7f09000f;
-        public static final int titre_tag=0x7f090011;
         public static final int toast_layout_large=0x7f090038;
         public static final int unindent=0x7f09001d;
         public static final int webView=0x7f090019;
