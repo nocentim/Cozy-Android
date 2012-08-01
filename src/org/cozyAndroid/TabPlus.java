@@ -1,164 +1,173 @@
 package org.cozyAndroid;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
-
-import junit.framework.Assert;
 
 import org.codehaus.jackson.JsonNode;
 import org.ektorp.UpdateConflictException;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
+import android.webkit.WebView;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.couchbase.touchdb.TDDatabase;
-import com.couchbase.touchdb.TDView;
-import com.couchbase.touchdb.TDViewMapBlock;
-import com.couchbase.touchdb.TDViewMapEmitBlock;
 import com.couchbase.touchdb.router.TDURLStreamHandlerFactory;
-import android.content.* ;
-import android.os.* ;
-import android.util.Log;
-import android.view.* ;
-import android.webkit.* ;
-import android.widget.* ;
-
-
 
 
 public class TabPlus extends Activity implements View.OnClickListener{
 
 	private EditText newName = null ;
-	private Button clear   = null ;
-	private Button valider = null ;
-	private Button bold = null;
-	private Button italic = null;
-	private Button underline = null;
-	private static boolean modif = false;
+	private String title;
+	static boolean modif = false ;
+	static boolean retour=false;
 	private WebView webView;
+	private static ArrayList<String> tags = new ArrayList<String>();
+	private static String formerActivity;
 	
-	// attributs coconut
 	public static final String TAG = "TabPlus";
-    static Handler myHandler;
-    // setup clock
-    Calendar cal = null;
-    Date starttime = null;
-    long long_starttime = 0;
-    
-	/*
-	 * TODO voir avec benjamin pour les fonctions javascript qui permettent de mettre en gras, en italique et 
-	 * de souligner. Il y a aussi la fonction pour remettre a zero la note
-	 */
+	// setup clock
+	Calendar cal = null;
+	Date starttime = null;
+	long long_starttime = 0;
 
+	/*
+	 * TODO voir avec benjamin pour remettre a zero la note
+	 */
 	{
 	    TDURLStreamHandlerFactory.registerSelfIgnoreError();
-	}
-	
-	
-	public EditText getNewName() {
-		return newName;
-	}
-	
-	public void setNewName(String name) {
-		newName.setText(name);
-	}
-	
-	public static void setModif() {
-		if (modif) {
-			modif = false;
-		} else {
-			modif = true;
 		}
-	}
 
+	public static void addTag(String s) {
+		tags.add(s);
+	}
+	
+	public static void formerActivity(String a) {
+		formerActivity = a;
+	}
+	
+	public static String formerActivity() {
+		return formerActivity;
+	}
+	
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState) ;
 
-		setContentView(R.layout.plus );	 
-		findViewById(R.id.nameNewNote).setOnClickListener(this)    ;
-		findViewById(R.id.buttonClear).setOnClickListener(this)    ; 
-		findViewById(R.id.buttonValider).setOnClickListener(this)  ;
+		setContentView(R.layout.plus );	    
+		newName = (EditText) findViewById(R.id.nameNewNote) ;
+		findViewById(R.id.clear).setOnClickListener(this); 
+		findViewById(R.id.save).setOnClickListener(this);
 		findViewById(R.id.indent).setOnClickListener(this)     ; 
 		findViewById(R.id.unindent).setOnClickListener(this)   ; 
-		findViewById(R.id.buttonUnderline).setOnClickListener(this); 
+		findViewById(R.id.listBullets).setOnClickListener(this)   ; 
+		findViewById(R.id.listNum).setOnClickListener(this)   ; 
+		findViewById(R.id.properties).setOnClickListener(this);
 
 		webView = (WebView) findViewById(R.id.webView) ;
 		webView.getSettings().setJavaScriptEnabled(true) ;  //elle est pas inutile mais eclipse ne le voit pas
 		webView.setWebChromeClient (new chromeclient()) ; 
 		webView.addJavascriptInterface(new JavaScriptInterface(this), "Android");
 		webView.loadUrl("file:///android_asset/www/index.html");
-		
-		newName   = (EditText)findViewById(R.id.nameNewNote)    ;
-		clear     = (Button)  findViewById(R.id.buttonClear)    ; 
-		valider   = (Button)  findViewById(R.id.buttonValider)  ;
-		//bold      = (Button)  findViewById(R.id.buttonBold)     ; 
-		//italic    = (Button)  findViewById(R.id.buttonItalic)   ; 
-		underline = (Button)  findViewById(R.id.buttonUnderline); 
+		}
 
-		clear.setOnClickListener(this)    ;
-		valider.setOnClickListener(this)  ;
-		//bold.setOnClickListener(this)     ;
-		//italic.setOnClickListener(this)   ;
-		underline.setOnClickListener(this);
+	public EditText getNewName() {
+		return newName;
 	}
-	
-	
+
+	//TODO pour ouvrir une note existante il faudra charger son body grace à la fonction js setEditorContent
+
+	public void setNewName(String name) {
+		newName.setText(name);
+	}
+
 	public void onResume() {
 		super.onResume();
 		if (modif) {
 			setNewName(TabListe.getTitleModif());
+			tags = TabListe.getListTags();
 		}
+		if ((formerActivity=="properties") && (retour)) {
+			setNewName(title);
+			retour=false;
+		}
+		
 	}
 
-	
-	/*
-	 *  BIU pour: bold italic underligne, ecoute les boutons correspondants
-	 */
 	//TODO verifier le bon fonctionnement de cette methode suite a toutes les modifications
+
 	public void onClick(View v) {
 		int id = v.getId() ;
-	
+
 		switch (id) {
-		case R.id.buttonClear : 
-			Toast.makeText (TabPlus.this, "appui sur le bouton clear, pas implémenté", Toast.LENGTH_LONG).show();
+		case R.id.clear : 
+			webView.loadUrl("javascript:deleteContentAndroid()") ;
 			break ;
-		case R.id.buttonValider :
-			//TODO il faut remettre le titre et le corps à zero
-			String inputTitle = newName.getText().toString();
-			String inputBody = "prout prout tagada";
+			
+		case R.id.properties :
+			Intent properties = new Intent(TabPlus.this, Properties.class);
+			
 			if (modif) {
-				createOrUpdateItem(inputTitle, inputBody, TabListe.getRev(), TabListe.getId());
-				setModif();
-			//if(!inputTitle.equals("")) {
+				properties.putExtra("id", TabListe.getId());
+				properties.putExtra("rev", TabListe.getRev());
+				properties.putExtra("title", newName.getText().toString());
+				properties.putExtra("body", "prout prout tagada");
+			}
+			title = newName.getText().toString();
+			TabPlus.this.startActivity(properties);
+			break;
+		case R.id.save :
+			//TODO il faut remettre le titre et le corps a zero, on peut inverser l'ordre des deux premiers case et
+			//pas mettre de break entre les deux pour qu'après la sauvegarde il y ai directement la remise à zero
+			String inputTitle = newName.getText().toString();
+			//TODO utiliser la fonction js pour récupérer le corps du text
+			String inputBody = "prout prout tagada";
+			Log.d("tag.size", " "+ tags.size());
+			if (tags.size()<1) {
+				if (modif) {
+					createOrUpdateItem(inputTitle, inputBody, TabListe.getRev(), TabListe.getId(), null);
+					modif = false;
+				//if(!inputTitle.equals("")) {
+				} else {
+					createOrUpdateItem(inputTitle, inputBody, null, null, null);
+				}
 			} else {
-				createOrUpdateItem(inputTitle, inputBody, null, null);
+				if (modif) {
+					createOrUpdateItem(inputTitle, inputBody, TabListe.getRev(), TabListe.getId(), tags);
+					modif = false;
+				//if(!inputTitle.equals("")) {
+				} else {
+					createOrUpdateItem(inputTitle, inputBody, null, null, tags);
+				}
 			}
 			newName.setText("");
 			Toast.makeText (TabPlus.this, "Note saved", Toast.LENGTH_LONG).show();
+			int size = tags.size();
+			int i = size-1;
+			while (i>=0) {
+				tags.remove(i);
+				i--;
+			}
 			CozyAndroidActivity.gettabHost().setCurrentTab(0);
 			break ;
 
 		case R.id.indent :
-			//Toast.makeText (TabPlus.this, "appui sur le bouton bold, pas implémenté", Toast.LENGTH_LONG).show();
 			webView.loadUrl("javascript:indentation()") ;
 			break ; 
-
 		case R.id.unindent :
-			//Toast.makeText (TabPlus.this, "appui sur le bouton Italic, pas implémenté", Toast.LENGTH_LONG).show();
 			webView.loadUrl("javascript:unindentation()") ;
 			break ;
-
-		case R.id.buttonUnderline :
-			//Toast.makeText (TabPlus.this, "appui sur le bouton Underline, pas implémenté", Toast.LENGTH_LONG).show();
-			webView.loadUrl("javascript:underline()") ;
+		case R.id.listBullets :
+			webView.loadUrl("javascript:markerListAndroid()") ;
+			break ;
+		case R.id.listNum :
+			webView.loadUrl("javascript:titleListAndroid()") ;
 			break ;
 		}
 	} 
@@ -199,52 +208,33 @@ public class TabPlus extends Activity implements View.OnClickListener{
 		}
 	}
 
-	
-	 public void createOrUpdateItem(String title, String body, final String rev, String id) {
-	        final JsonNode item = CozyItemUtils.createOrUpdate(title, body, rev, id);
-	        CozySyncEktorpAsyncTask createItemTask = new CozySyncEktorpAsyncTask() {
+	public static void createOrUpdateItem(String title, String body, final String rev, String id, ArrayList<String> tags) {
+		final JsonNode item = CozyItemUtils.createOrUpdate(title, body, rev, id,tags);
+		CozySyncEktorpAsyncTask createItemTask = new CozySyncEktorpAsyncTask() {
 
-				@Override
-				protected void doInBackground() {
-					if (rev == null) {
-						Replication.couchDbConnector.create(item);
-					} else {
-						Replication.couchDbConnector.update(item);
-					}
-					
+			@Override
+			protected void doInBackground() {
+				if (rev == null) {
+					Replication.couchDbConnector.create(item);
+				} else {
+					Replication.couchDbConnector.update(item);
 				}
 
-				@Override
-				protected void onSuccess() {
-					Log.d(TAG, "Document created successfully");
-				}
+			}
 
-				@Override
-				protected void onUpdateConflict(
-						UpdateConflictException updateConflictException) {
-					Log.d(TAG, "Got an update conflict for: " + item.toString());
-				}
-			};
-		    createItemTask.execute();
-	    }
-	 
-	 
-	 
+			@Override
+			protected void onSuccess() {
+				Log.d(TAG, "Document created successfully");
+			}
+
+			@Override
+			protected void onUpdateConflict(
+					UpdateConflictException updateConflictException) {
+				Log.d(TAG, "Got an update conflict for: " + item.toString());
+			}
+		};
+		createItemTask.execute();
+	}
+
 }
-
-///**
-//* Ecoute la touche enter pour permettre a l'utilisateur de revenir
-//* a la ligne dans ca note
-//*/
-//private View.OnKeyListener EnterListener = new View.OnKeyListener() {
-//	public boolean onKey(View v, int keyCode, KeyEvent event) {
-//		int cursorIndex = newText.getSelectionStart(); // On récupère la position du début de la sélection dans le texte
-//		if(event.getAction() == 0)                     // Ne réagir qu'à l'appui sur une touche (et pas le relâchement)
-//			if(keyCode == 66)                          // Pour la touche « entrée »
-//				//						((Editable) body).insert(cursorIndex, "<br />"); // On insère une balise de retour à la ligne
-//				afficheText() ;
-//		return true ;
-//	}
-//} ;
-
 

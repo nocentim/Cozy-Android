@@ -30,11 +30,12 @@ public class Replication {
 	public static final String TAG = "Replication";
 	
 	//constants
-	public static final String DATABASE_NAME = "grocery-sync";
+	public static final String DATABASE_NOTES = "grocery-sync";
 	public static final String dDocName = "grocery-local";
 	public static final String dDocId = "_design/" + dDocName;
 	public static final String byDateViewName = "byDate";
 	public static final String byTitleViewName = "byTitle";
+	public static final String byTagsViewName = "ByTags";
 	
 	//couch internals
 	protected static TDServer server;
@@ -52,7 +53,7 @@ public class Replication {
     }
 	
     
-	protected static void startTouchDB(Context context) {
+	protected static void NotesView(Context context) {
 	    String filesDir = context.getFilesDir().getAbsolutePath();
 	    try {
             server = new TDServer(filesDir);
@@ -61,18 +62,18 @@ public class Replication {
         }
 
 	    //install a view definition needed by the application
-	    TDDatabase db = server.getDatabaseNamed(DATABASE_NAME);
+	    TDDatabase db = server.getDatabaseNamed(DATABASE_NOTES);
 	    TDView view = db.getViewNamed(String.format("%s/%s", dDocName, byDateViewName));
 	    view.setMapReduceBlocks(new TDViewMapBlock() {
 
-            @Override
-            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
-                Object modifiedAt = document.get("modified_at");
-                if(modifiedAt != null) {
-                    emitter.emit(modifiedAt.toString(), document);
-                }
+	    	 @Override
+	            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
+	                Object modifiedAt = document.get("modified_at");
+	                if(modifiedAt != null) {
+	                    emitter.emit(modifiedAt.toString(), document);
+	                }
 
-            }
+	            }
         }, null, "1.0");
 	    //Test pour les suggestions
 	    TDView viewByTitle = db.getViewNamed(String.format("%s/%s", dDocName, byTitleViewName));
@@ -89,12 +90,35 @@ public class Replication {
         }, null, "1.0");
 	}
 	
+	protected static void TagView(Context context) {
+		String filesDir = context.getFilesDir().getAbsolutePath();
+	    try {
+            server = new TDServer(filesDir);
+        } catch (IOException e) {
+            Log.e(TAG, "Error starting TDServer", e);
+        }
+	    
+	    //install a view definition needed by the application
+	    TDDatabase db = server.getDatabaseNamed(DATABASE_NOTES);
+	    TDView view = db.getViewNamed(String.format("%s/%s", dDocName, byTagsViewName));
+	    view.setMapReduceBlocks(new TDViewMapBlock() {
+	    	
+	    	@Override
+	            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
+	                Object tagged = document.get("tags");
+	                if(tagged != null) {
+	                    emitter.emit(tagged.toString(), document);
+	                }
+        }
+    }, null, "1.0");
+
+	}
+	
 	
 	public static void startReplications(Context context) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		Log.d("preferences", "ok");
 		pushReplicationCommand = new ReplicationCommand.Builder()
-			.source(DATABASE_NAME)
+			.source(DATABASE_NOTES)
 			.target(prefs.getString("sync_url", "http://mschoch.iriscouch.com/grocery-test"))
 			.continuous(true)
 			.build();
@@ -111,7 +135,7 @@ public class Replication {
 
 		pullReplicationCommand = new ReplicationCommand.Builder()
 			.source(prefs.getString("sync_url", "http://mschoch.iriscouch.com/grocery-test"))
-			.target(DATABASE_NAME)
+			.target(DATABASE_NOTES)
 			.continuous(true)
 			.build();
 
