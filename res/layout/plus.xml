@@ -4,12 +4,26 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <EditText
-        android:id="@+id/nameNewNote"
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Nom de la note"
-        android:text="@string/nameNewNote" />
+        android:orientation="horizontal" >
+        <EditText
+	        android:id="@+id/nameNewNote"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:hint="Nom de la note"
+	        android:text="@string/nameNewNote"
+	        android:layout_weight="1" />
+        
+        <Button
+            android:id="@+id/properties"
+            android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:textSize="7dp"
+        	android:text="Propriétés"
+        	android:layout_weight="0"/>
+    </LinearLayout>
 
     <WebView
         android:id="@+id/webView"

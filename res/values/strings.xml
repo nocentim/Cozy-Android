@@ -2,7 +2,6 @@
 <resources>
 
     <string name="hello">Hello World, CozyAndroidActivity!</string>
-    <string name="app_name">Cozy-Android</string>
     <string name="tabListe">Recherche</string>
     <string name="tabCalendrier">Historique</string>
     <string name="tabPlus">Nouvelle</string>
@@ -10,6 +9,7 @@
     <string name="tabRecherche">Recherche</string>
     <string name="nameNewNote"></string>
     <string name="titreNote">Titre</string>
+    <string name="titreTag">Titre</string>
     <string name="sousTitreNote"></string>
     <string name="path">Navigateur</string>
     <string name="search_label_dossier">AAA</string>
@@ -33,6 +33,8 @@
         <item>Date modification</item>
     </string-array>
     <string name="sort">Tri : Pertinence | Chemin | Date modification</string>
+    <string name="InfosNote">Informations sur la note</string>
+    
 
 
 </resources>

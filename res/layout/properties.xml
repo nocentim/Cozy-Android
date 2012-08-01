@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+    
+    <TextView
+        android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:text="@string/InfosNote"
+    	android:textSize="20dp"
+    	android:textAppearance="@style/ListItemTextStyle"
+    	android:gravity="center_horizontal"
+    />
+    
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="horizontal" android:layout_height="45dp"
+		android:layout_width="fill_parent" android:gravity="center_vertical|left"
+		android:layout_marginTop="30dp"
+		android:background="@color/Pagora"
+		>
+		<TextView android:layout_height="wrap_content"
+			android:layout_weight="1" 
+			android:textAppearance="@style/ListItemTextStyle"
+			android:layout_width="fill_parent" 
+			android:id="@+id/dossier"
+			android:text="Dossier" />
+	 
+		<ImageView 
+		    android:src="@drawable/list_item_arrow"
+			android:layout_weight="0" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" />
+	</LinearLayout>
+	<LinearLayout
+	    android:id="@+id/click_etiquettes"
+	    xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="horizontal" android:layout_height="45dp"
+		android:layout_marginTop="10dp"
+		android:layout_width="fill_parent" android:gravity="center_vertical|left"
+		android:background="@color/Pagora"
+		>
+		<TextView android:layout_height="wrap_content"
+			android:layout_weight="1" 
+			android:textAppearance="@style/ListItemTextStyle"
+			android:layout_width="fill_parent" 
+			android:id="@+id/tags"
+			android:text="Etiquettes" />
+	 
+		<TextView 
+		    android:id="@+id/etiq"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:textAppearance="@style/ListItemTextStyle"
+		    android:layout_marginRight="10dp"
+		    />
+		<ImageView 
+		    android:src="@drawable/list_item_arrow"
+			android:layout_weight="0" 
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"/>
+	</LinearLayout>
+</LinearLayout>
