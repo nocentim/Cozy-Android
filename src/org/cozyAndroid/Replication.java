@@ -1,6 +1,7 @@
 package org.cozyAndroid;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jackson.JsonNode;
@@ -17,6 +18,7 @@ import com.couchbase.touchdb.TDServer;
 import com.couchbase.touchdb.TDView;
 import com.couchbase.touchdb.TDViewMapBlock;
 import com.couchbase.touchdb.TDViewMapEmitBlock;
+import com.couchbase.touchdb.TDViewReduceBlock;
 import com.couchbase.touchdb.ektorp.TouchDBHttpClient;
 import com.couchbase.touchdb.router.TDURLStreamHandlerFactory;
 
@@ -36,6 +38,7 @@ public class Replication {
 	public static final String byDateViewName = "byDate";
 	public static final String byTitleViewName = "byTitle";
 	public static final String byTagsViewName = "ByTags";
+	public static final String suggestionsViewName =  "suggestions";
 	
 	//couch internals
 	protected static TDServer server;
@@ -88,6 +91,35 @@ public class Replication {
 
             }
         }, null, "1.0");
+	}
+	
+	protected static void suggestionView(Context context) {
+	    
+	    //install a view definition needed by the application
+	    TDDatabase db = server.getDatabaseNamed(DATABASE_NOTES);
+	    TDView view = db.getViewNamed(String.format("%s/%s", dDocName, suggestionsViewName));
+	    view.setMapReduceBlocks(new TDViewMapBlock() {
+	    	
+	    	@Override
+            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
+	    		Object title = document.get("title");
+	    		if (title != null) {
+                	String [] mots = title.toString().split(" +");
+                	for (int i = 0; i < mots.length; i++) {
+                        if (mots[i].length() > 3) {
+                        	emitter.emit(mots[i], 1);
+                        }
+                    }
+                }
+	    	}
+	    }, new TDViewReduceBlock() {
+			
+			@Override
+			public Object reduce(List<Object> keys, List<Object> values,
+					boolean rereduce) {
+				return TDView.totalValues(values);
+			}
+		}, "1.0");
 	}
 	
 	protected static void TagView(Context context) {

@@ -102,6 +102,7 @@ public class TabListe extends Activity {
 		showSplashScreen();
 		removeSplashScreen();
 		Replication.NotesView(returnBaseContext());
+		Replication.suggestionView(returnBaseContext());
         startEktorp();
 		//Recupperation des dossiers pour les suggestions
 		/*String projection[] = {Dossiers.DOSSIER_ID,Dossiers.NAME,Dossiers.PARENT};
@@ -264,7 +265,7 @@ public class TabListe extends Activity {
 				adapter = new CozySyncListAdapter(TabListe.this, Replication.couchDbConnector, viewQuery, TabListe.this);
 				listeNotes.setAdapter(adapter);
 				//adapter for suggestions
-				ViewQuery sViewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.byTitleViewName).descending(false);
+				ViewQuery sViewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.suggestionsViewName).descending(false);
 				SuggestionAdapter searchAdapter = new SuggestionAdapter(Replication.couchDbConnector, sViewQuery, TabListe.this);
 				rechercheNote.setAdapter(searchAdapter);
 				//listeNotes.setOnItemClickListener(TabListe.this);

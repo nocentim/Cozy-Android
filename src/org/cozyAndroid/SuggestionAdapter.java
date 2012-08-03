@@ -1,5 +1,10 @@
 package org.cozyAndroid;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+
 import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.util.Comparators;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.ViewQuery;
 import org.ektorp.ViewResult.Row;
@@ -51,10 +56,8 @@ public class SuggestionAdapter extends CouchbaseViewListAdapter  implements Filt
         	vh = (ViewHolder) v.getTag();
         }
         Row row = getRow(position);
-        JsonNode item = row.getValueAsNode();
-        JsonNode itemText = item.get("title");
-        if(itemText != null) {
-        	CharSequence text = itemText.getTextValue();
+       CharSequence text = row.getKey();
+        if(text != null) {
 			Spannable textSpan = new SpannableString(text);
         	int start = text.toString().toLowerCase().indexOf(constraint);
 			if (start != -1) {
@@ -81,8 +84,7 @@ public class SuggestionAdapter extends CouchbaseViewListAdapter  implements Filt
 		@Override
 		public CharSequence convertResultToString (Object resultValue) {
 			Row row = (Row) resultValue;
-			JsonNode item = row.getValueAsNode();
-			return item.get("title").getTextValue();
+			return row.getKey();
 		}
 		
 		@Override
@@ -96,8 +98,17 @@ public class SuggestionAdapter extends CouchbaseViewListAdapter  implements Filt
 			SuggestionAdapter.this.constraint = constraint.toString().toLowerCase();
 			String start = constraint.toString().toLowerCase();
 			String end = start.toUpperCase() + "\u9999";
-			SuggestionAdapter.this.viewQuery.startKey(start).endKey(end);
+			SuggestionAdapter.this.viewQuery.startKey(start).endKey(end).group(true);
 			SuggestionAdapter.this.updateListItems();
+			Collections.sort(listRows, new Comparator<Row>() {
+
+				@Override
+				public int compare(Row lhs, Row rhs) {
+					Log.d("tri par valeur", "left : " + lhs.getValueAsInt() + " right : " + rhs.getValueAsInt());
+					return ((Integer)rhs.getValueAsInt()).compareTo(lhs.getValueAsInt());
+				}
+			});
+			listRows.add(new Row(listRows.get(0).getDocAsNode()));
 			res.count = getCount();
 			Log.d("filtrage suggestions","count = " + res.count);
 			res.values = null;
