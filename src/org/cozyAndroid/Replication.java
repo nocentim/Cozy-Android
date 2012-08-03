@@ -9,9 +9,12 @@ import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
 import org.ektorp.ReplicationCommand;
 import org.ektorp.UpdateConflictException;
-import org.ektorp.ViewQuery;
 import org.ektorp.http.HttpClient;
-import org.ektorp.impl.StdCouchDbInstance;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.couchbase.touchdb.TDDatabase;
 import com.couchbase.touchdb.TDServer;
@@ -19,13 +22,7 @@ import com.couchbase.touchdb.TDView;
 import com.couchbase.touchdb.TDViewMapBlock;
 import com.couchbase.touchdb.TDViewMapEmitBlock;
 import com.couchbase.touchdb.TDViewReduceBlock;
-import com.couchbase.touchdb.ektorp.TouchDBHttpClient;
 import com.couchbase.touchdb.router.TDURLStreamHandlerFactory;
-
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.util.Log;
 
 public class Replication {
 	
@@ -123,12 +120,12 @@ public class Replication {
 	}
 	
 	protected static void TagView(Context context) {
-		String filesDir = context.getFilesDir().getAbsolutePath();
+		/*String filesDir = context.getFilesDir().getAbsolutePath();
 	    try {
             server = new TDServer(filesDir);
         } catch (IOException e) {
             Log.e(TAG, "Error starting TDServer", e);
-        }
+        }*/
 	    
 	    //install a view definition needed by the application
 	    TDDatabase db = server.getDatabaseNamed(DATABASE_NOTES);
@@ -139,7 +136,9 @@ public class Replication {
 	            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
 	                Object tagged = document.get("tags");
 	                if(tagged != null) {
-	                    emitter.emit(tagged.toString(), document);
+	                	if (tagged !="aucun") {
+	                		emitter.emit(tagged.toString(), document);
+	                	}
 	                }
         }
     }, null, "1.0");

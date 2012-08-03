@@ -7,14 +7,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 public class Properties extends Activity implements View.OnClickListener{
 	
 	private Bundle param;
 	private TextView list_tags;
+	private TextView created_at;
+	private TextView modified_at;
 	public static String tag;
+	
 	
 	public void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -29,11 +31,15 @@ public class Properties extends Activity implements View.OnClickListener{
 	public void onResume() {
 		super.onResume();
 		list_tags = (TextView) findViewById(R.id.etiq);
+		created_at = (TextView) findViewById(R.id.creation);
+		modified_at = (TextView) findViewById(R.id.modification);
 		if ((TabPlus.modif) && (TabPlus.formerActivity()=="tabliste")) {
 			param = this.getIntent().getExtras();
 			if (TabListe.getListTags()!=null) {
 				Iterator<?> i = TabListe.getListTags().iterator();
 				list_tags.setText((CharSequence) i.next());
+				created_at.setText(TabListe.getDateCreation());
+				modified_at.setText(TabListe.getDateModification());
 			} else {
 				list_tags.setText(tag);
 			}

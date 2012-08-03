@@ -13,7 +13,7 @@ import org.codehaus.jackson.node.ObjectNode;
 
 public class CozyItemUtils {
 	
-    public static SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    public static SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
 
 	public static JsonNode createOrUpdate(String title, String body, String rev, String id, ArrayList<String> tags) {
 		ObjectNode item = JsonNodeFactory.instance.objectNode();
@@ -34,8 +34,8 @@ public class CozyItemUtils {
 			
 			Iterator<String> it = tags.iterator();
 			item.put("tags", it.next());
-		//} else {
-			//item.put("tags", null);
+		} else {
+			item.put("tags", "aucun");
 		}
     	item.put("body", body);
     	item.put("icon", Boolean.FALSE);

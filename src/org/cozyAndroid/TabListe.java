@@ -35,6 +35,8 @@ public class TabListe extends Activity {
 	private static String titleModif;
 	private static String rev;
 	private static String id;
+	private static String created_at;
+	private static String modified_at;
 	private static ArrayList<String> tags;
 	
 	public static String TAG = "TabListe";
@@ -78,6 +80,14 @@ public class TabListe extends Activity {
     public void setListTags(String s) {
     	tags.remove(0);
     	tags.add(s);
+    }
+    
+    public static String getDateCreation() {
+    	return created_at;
+    }
+    
+    public static String getDateModification() {
+    	return modified_at;
     }
     
     public static ArrayList<String> getListTags(){
@@ -232,6 +242,8 @@ public class TabListe extends Activity {
 			setRev(item.get("_rev").getTextValue());
 			setId(item.get("_id").getTextValue());
 			setListTags(item.get("tags").getTextValue());   // Pour l'instant on ne teste qu'un tag
+			created_at = item.get("created_at").getTextValue();
+			modified_at = item.get("modified_at").getTextValue();
 			Log.d("tags", item.get("tags").getTextValue());
 	        titleModif = itemText.getTextValue();
 	        TabPlus.formerActivity("tabliste");

@@ -36,7 +36,7 @@ public class TagNote extends Activity implements View.OnClickListener{
 		param = this.getIntent().getExtras();
 		Replication.TagView(this);
 		startEktorp();
-		
+		Replication.startReplications(this);
 	}
 	
 	@Override
