@@ -147,13 +147,12 @@ public class Replication {
 	}
 	
 	protected static void ViewByDay(Context context) {
-		String filesDir = context.getFilesDir().getAbsolutePath();
+		/*String filesDir = context.getFilesDir().getAbsolutePath();
 	    try {
             server = new TDServer(filesDir);
         } catch (IOException e) {
             Log.e(TAG, "Error starting TDServer", e);
-        }
-	    Log.d("passe par la", "ok");
+        }*/
 	    //install a view definition needed by the application
 	    TDDatabase db = server.getDatabaseNamed(DATABASE_NOTES);
 	    TDView view = db.getViewNamed(String.format("%s/%s", dDocName, byDayViewName));
@@ -164,7 +163,7 @@ public class Replication {
 	                Object createdAt = document.get("created_at");
 	                Log.d("createdAt", " "+createdAt);
 	                if(createdAt != null) {
-	                	if (createdAt !=TabCalendrier.getDay()) {
+	                	if (createdAt == TabCalendrier.getDay()) {
 	                		emitter.emit(createdAt.toString(), document);
 	                	}
 	                }
