@@ -24,7 +24,7 @@ public class Properties extends Activity implements View.OnClickListener{
 		tag = "aucune";
 		TabPlus.retour=true;
 		
-		// Listener sur le bouton ok
+		// Listener sur le bouton etiquettes
 		findViewById(R.id.click_etiquettes).setOnClickListener(this); 
 	}
 	
