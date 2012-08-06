@@ -90,8 +90,8 @@ public class TabPlus extends Activity implements View.OnClickListener{
 	public void onResume() {
 		super.onResume();
 		if (modif) {
-			setNewName(TabListe.getTitleModif());
-			tags = TabListe.getListTags();
+			setNewName(CozyItemUtils.getTitleModif());
+			tags = CozyItemUtils.getListTags();
 		}
 		if ((formerActivity=="properties") && (retour)) {
 			setNewName(title);
@@ -114,8 +114,8 @@ public class TabPlus extends Activity implements View.OnClickListener{
 			Intent properties = new Intent(TabPlus.this, Properties.class);
 			
 			if (modif) {
-				properties.putExtra("id", TabListe.getId());
-				properties.putExtra("rev", TabListe.getRev());
+				properties.putExtra("id", CozyItemUtils.getId());
+				properties.putExtra("rev", CozyItemUtils.getRev());
 				properties.putExtra("title", newName.getText().toString());
 				properties.putExtra("body", "prout prout tagada");
 			}
@@ -131,7 +131,7 @@ public class TabPlus extends Activity implements View.OnClickListener{
 			Log.d("tag.size", " "+ tags.size());
 			if (tags.size()<1) {
 				if (modif) {
-					createOrUpdateItem(inputTitle, inputBody, TabListe.getRev(), TabListe.getId(), null);
+					createOrUpdateItem(inputTitle, inputBody, CozyItemUtils.getRev(), CozyItemUtils.getId(), null);
 					modif = false;
 				//if(!inputTitle.equals("")) {
 				} else {
@@ -139,7 +139,7 @@ public class TabPlus extends Activity implements View.OnClickListener{
 				}
 			} else {
 				if (modif) {
-					createOrUpdateItem(inputTitle, inputBody, TabListe.getRev(), TabListe.getId(), tags);
+					createOrUpdateItem(inputTitle, inputBody, CozyItemUtils.getRev(), CozyItemUtils.getId(), tags);
 					modif = false;
 				//if(!inputTitle.equals("")) {
 				} else {
