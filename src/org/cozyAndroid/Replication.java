@@ -113,6 +113,32 @@ public class Replication {
 
 	}
 	
+	protected static void ViewByDay(Context context) {
+		/*String filesDir = context.getFilesDir().getAbsolutePath();
+	    try {
+            server = new TDServer(filesDir);
+        } catch (IOException e) {
+            Log.e(TAG, "Error starting TDServer", e);
+        }*/
+	    
+	    //install a view definition needed by the application
+	    TDDatabase db = server.getDatabaseNamed(DATABASE_NOTES);
+	    TDView view = db.getViewNamed(String.format("%s/%s", dDocName, byTagsViewName));
+	    view.setMapReduceBlocks(new TDViewMapBlock() {
+	    	
+	    	@Override
+	            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
+	                Object tagged = document.get("tags");
+	                if(tagged != null) {
+	                	if (tagged !="aucun") {
+	                		emitter.emit(tagged.toString(), document);
+	                	}
+	                }
+        }
+    }, null, "1.0");
+
+	}
+	
 	
 	public static void startReplications(Context context) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
