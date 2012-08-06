@@ -97,6 +97,11 @@ public class TabListe extends Activity {
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState);
 		setContentView(R.layout.liste_notes);
+		Replication.NotesView(returnBaseContext());
+		Replication.suggestionView(returnBaseContext());
+		Replication.ViewByFolder(getBaseContext());
+        startEktorp();
+        
 		tags= new ArrayList<String>();
 		tags.add("aucune");
 		
@@ -111,9 +116,6 @@ public class TabListe extends Activity {
 		dansDossier = (RechercheDossier) findViewById(R.id.dans_dossier);
 		showSplashScreen();
 		removeSplashScreen();
-		Replication.NotesView(returnBaseContext());
-		Replication.suggestionView(returnBaseContext());
-        startEktorp();
 		//Recupperation des dossiers pour les suggestions
 		/*String projection[] = {Dossiers.DOSSIER_ID,Dossiers.NAME,Dossiers.PARENT};
 		Cursor cursor = managedQuery(Dossiers.CONTENT_URI, projection, null, null, Dossiers.NAME + " COLLATE NOCASE");
@@ -280,6 +282,10 @@ public class TabListe extends Activity {
 				ViewQuery sViewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.suggestionsViewName).descending(false);
 				SuggestionAdapter searchAdapter = new SuggestionAdapter(Replication.couchDbConnector, sViewQuery, TabListe.this);
 				rechercheNote.setAdapter(searchAdapter);
+				//adapter for folders
+				ViewQuery fViewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.byFolderViewName).descending(true);
+				CozySyncFolderAdapter folderAdapter = new CozySyncFolderAdapter(Replication.couchDbConnector, fViewQuery, TabListe.this);
+				TabDossier.folderAdapter = folderAdapter;
 				//listeNotes.setOnItemClickListener(TabListe.this);
 				listeNotes.setOnItemLongClickListener(deleteItem);
 

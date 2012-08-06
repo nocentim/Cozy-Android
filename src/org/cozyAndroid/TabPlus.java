@@ -209,7 +209,7 @@ public class TabPlus extends Activity implements View.OnClickListener{
 	}
 
 	public static void createOrUpdateItem(String title, String body, final String rev, String id, ArrayList<String> tags) {
-		final JsonNode item = CozyItemUtils.createOrUpdate(title, body, rev, id,tags);
+		final JsonNode item = CozyItemUtils.createOrUpdateNote(title, body, rev, id,tags);
 		CozySyncEktorpAsyncTask createItemTask = new CozySyncEktorpAsyncTask() {
 
 			@Override

@@ -37,6 +37,7 @@ public class Replication {
 	public static final String byTagsViewName = "ByTags";
 	public static final String suggestionsViewName =  "suggestions";
 	public static final String byDayViewName = "ByDay";
+	public static final String byFolderViewName = "ByFolder";
 	
 	//couch internals
 	protected static TDServer server;
@@ -70,7 +71,8 @@ public class Replication {
 	    	 @Override
 	            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
 	                Object modifiedAt = document.get("modified_at");
-	                if(modifiedAt != null) {
+	                Object type = document.get("type");
+	                if(type != null && ((String)type).equals("note") && modifiedAt != null) {
 	                    emitter.emit(modifiedAt.toString(), document);
 	                }
 
@@ -141,8 +143,8 @@ public class Replication {
 	                		emitter.emit(tagged.toString(), document);
 	                	}
 	                }
-        }
-    }, null, "1.0");
+	    	}
+	    }, null, "1.0");
 
 	}
 	
@@ -162,13 +164,31 @@ public class Replication {
 	            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
 	                Object createdAt = document.get("created_at");
 	                Log.d("createdAt", " "+createdAt);
-	                if(createdAt != null) {
+	                Object type = document.get("type");
+	                if(type != null && ((String)type).equals("note") && createdAt != null) {
 	                	if (createdAt == TabCalendrier.getDay()) {
 	                		emitter.emit(createdAt.toString(), document);
 	                	}
 	                }
-        }
-    }, null, "1.0");
+	        }
+	    }, null, "1.0");
+
+	}
+	
+	protected static void ViewByFolder(Context context) {
+	    TDDatabase db = server.getDatabaseNamed(DATABASE_NOTES);
+	    TDView view = db.getViewNamed(String.format("%s/%s", dDocName, byFolderViewName));
+	    view.setMapReduceBlocks(new TDViewMapBlock() {
+	    	
+	    	@Override
+	            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
+	                Object parent = document.get("parent");
+	                Log.d("parent", parent.toString());
+	                if( parent != null) {
+                		emitter.emit(parent.toString(), document);
+	                }
+	        }
+	    }, null, "1.0");
 
 	}
 	
