@@ -33,6 +33,7 @@ public class Replication {
 	public static final String byDateViewName = "byDate";
 	public static final String byTitleViewName = "byTitle";
 	public static final String byTagsViewName = "ByTags";
+	public static final String byDayViewName = "ByDay";
 	
 	//couch internals
 	protected static TDServer server;
@@ -114,24 +115,25 @@ public class Replication {
 	}
 	
 	protected static void ViewByDay(Context context) {
-		/*String filesDir = context.getFilesDir().getAbsolutePath();
+		String filesDir = context.getFilesDir().getAbsolutePath();
 	    try {
             server = new TDServer(filesDir);
         } catch (IOException e) {
             Log.e(TAG, "Error starting TDServer", e);
-        }*/
-	    
+        }
+	    Log.d("passe par la", "ok");
 	    //install a view definition needed by the application
 	    TDDatabase db = server.getDatabaseNamed(DATABASE_NOTES);
-	    TDView view = db.getViewNamed(String.format("%s/%s", dDocName, byTagsViewName));
+	    TDView view = db.getViewNamed(String.format("%s/%s", dDocName, byDayViewName));
 	    view.setMapReduceBlocks(new TDViewMapBlock() {
 	    	
 	    	@Override
 	            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
-	                Object tagged = document.get("tags");
-	                if(tagged != null) {
-	                	if (tagged !="aucun") {
-	                		emitter.emit(tagged.toString(), document);
+	                Object createdAt = document.get("created_at");
+	                Log.d("createdAt", " "+createdAt);
+	                if(createdAt != null) {
+	                	if (createdAt !=TabCalendrier.getDay()) {
+	                		emitter.emit(createdAt.toString(), document);
 	                	}
 	                }
         }
