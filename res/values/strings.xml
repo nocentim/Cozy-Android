@@ -22,6 +22,7 @@
     <string name="hint_creer">Nom du nouveau dossier</string>
     <string name="confirm_creer">Creer</string>
     
+    <string name="app_name">Cozy Android</string>
     <string name="startup_message">Starting Couchbase Mobile</string>
     <string name="add_item_hint">Add Item</string>
     <string name="error_dialog_title">Couchbase Error</string>

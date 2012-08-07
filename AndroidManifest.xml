@@ -65,8 +65,14 @@
         <activity
             android:name=".TagNote"
             android:configChanges="orientation"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait">
+       	</activity>
+       	<activity 
+       	    android:name=".NoteByDay"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait">
+       	</activity>
+>>>>>>> 13d68cb8275bd0bc7ad15f4f4cc5a72d3ba59965
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

@@ -35,6 +35,8 @@ public class TabListe extends Activity {
 	private static String titleModif;
 	private static String rev;
 	private static String id;
+	private static String created_at;
+	private static String modified_at;
 	private static ArrayList<String> tags;
 	
 	public static String TAG = "TabListe";
@@ -78,6 +80,14 @@ public class TabListe extends Activity {
     public void setListTags(String s) {
     	tags.remove(0);
     	tags.add(s);
+    }
+    
+    public static String getDateCreation() {
+    	return created_at;
+    }
+    
+    public static String getDateModification() {
+    	return modified_at;
     }
     
     public static ArrayList<String> getListTags(){
@@ -231,6 +241,8 @@ public class TabListe extends Activity {
 			setRev(item.get("_rev").getTextValue());
 			setId(item.get("_id").getTextValue());
 			setListTags(item.get("tags").getTextValue());   // Pour l'instant on ne teste qu'un tag
+			created_at = item.get("created_at").getTextValue();
+			modified_at = item.get("modified_at").getTextValue();
 			Log.d("tags", item.get("tags").getTextValue());
 	        titleModif = itemText.getTextValue();
 	        TabPlus.formerActivity("tabliste");
@@ -263,6 +275,10 @@ public class TabListe extends Activity {
 				ViewQuery viewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.byDateViewName).descending(true);
 				adapter = new CozySyncListAdapter(TabListe.this, Replication.couchDbConnector, viewQuery, TabListe.this);
 				listeNotes.setAdapter(adapter);
+				//adapter for suggestions
+				ViewQuery sViewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.byTitleViewName).descending(false);
+				SuggestionAdapter searchAdapter = new SuggestionAdapter(Replication.couchDbConnector, sViewQuery, TabListe.this);
+				rechercheNote.setAdapter(searchAdapter);
 				//listeNotes.setOnItemClickListener(TabListe.this);
 				listeNotes.setOnItemLongClickListener(deleteItem);
 
@@ -286,25 +302,25 @@ public class TabListe extends Activity {
 			}
 		
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(TabListe.this);
-		AlertDialog alert = builder.setTitle("Delete Item?")
-			   .setMessage("Are you sure you want to delete \"" + itemText + "\"?")
-		       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
-		        	   Replication.deleteGroceryItem(item);
-		           }
-		       })
-		       .setNegativeButton("No", new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
-		               // Handle Cancel
-		           }
-		       })
-		       .create();
-
-		alert.show();
-
-		return true;
-	}
+			AlertDialog.Builder builder = new AlertDialog.Builder(TabListe.this);
+			AlertDialog alert = builder.setTitle("Delete Item?")
+				   .setMessage("Are you sure you want to delete \"" + itemText + "\"?")
+			       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			        	   Replication.deleteGroceryItem(item);
+			           }
+			       })
+			       .setNegativeButton("No", new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			               // Handle Cancel
+			           }
+			       })
+			       .create();
+	
+			alert.show();
+	
+			return true;
+		}
 	};
 
 	/**

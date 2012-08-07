@@ -8,22 +8,19 @@ import org.ektorp.CouchDbConnector;
 import org.ektorp.CouchDbInstance;
 import org.ektorp.ReplicationCommand;
 import org.ektorp.UpdateConflictException;
-import org.ektorp.ViewQuery;
 import org.ektorp.http.HttpClient;
-import org.ektorp.impl.StdCouchDbInstance;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.couchbase.touchdb.TDDatabase;
 import com.couchbase.touchdb.TDServer;
 import com.couchbase.touchdb.TDView;
 import com.couchbase.touchdb.TDViewMapBlock;
 import com.couchbase.touchdb.TDViewMapEmitBlock;
-import com.couchbase.touchdb.ektorp.TouchDBHttpClient;
 import com.couchbase.touchdb.router.TDURLStreamHandlerFactory;
-
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.util.Log;
 
 public class Replication {
 	
@@ -34,8 +31,9 @@ public class Replication {
 	public static final String dDocName = "grocery-local";
 	public static final String dDocId = "_design/" + dDocName;
 	public static final String byDateViewName = "byDate";
+	public static final String byTitleViewName = "byTitle";
 	public static final String byTagsViewName = "ByTags";
-	
+	public static final String byDayViewName = "ByDay";
 	
 	//couch internals
 	protected static TDServer server;
@@ -75,15 +73,28 @@ public class Replication {
 
 	            }
         }, null, "1.0");
+	    //Test pour les suggestions
+	    TDView viewByTitle = db.getViewNamed(String.format("%s/%s", dDocName, byTitleViewName));
+	    viewByTitle.setMapReduceBlocks(new TDViewMapBlock() {
+
+            @Override
+            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
+                Object title = document.get("title");
+                if(title != null) {
+                    emitter.emit(title.toString(), document);
+                }
+
+            }
+        }, null, "1.0");
 	}
 	
 	protected static void TagView(Context context) {
-		String filesDir = context.getFilesDir().getAbsolutePath();
+		/*String filesDir = context.getFilesDir().getAbsolutePath();
 	    try {
             server = new TDServer(filesDir);
         } catch (IOException e) {
             Log.e(TAG, "Error starting TDServer", e);
-        }
+        }*/
 	    
 	    //install a view definition needed by the application
 	    TDDatabase db = server.getDatabaseNamed(DATABASE_NOTES);
@@ -94,7 +105,35 @@ public class Replication {
 	            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
 	                Object tagged = document.get("tags");
 	                if(tagged != null) {
-	                    emitter.emit(tagged.toString(), document);
+	                	if (tagged !="aucun") {
+	                		emitter.emit(tagged.toString(), document);
+	                	}
+	                }
+        }
+    }, null, "1.0");
+
+	}
+	
+	protected static void ViewByDay(Context context) {
+		/*String filesDir = context.getFilesDir().getAbsolutePath();
+	    try {
+            server = new TDServer(filesDir);
+        } catch (IOException e) {
+            Log.e(TAG, "Error starting TDServer", e);
+        }*/
+	    //install a view definition needed by the application
+	    TDDatabase db = server.getDatabaseNamed(DATABASE_NOTES);
+	    TDView view = db.getViewNamed(String.format("%s/%s", dDocName, byDayViewName));
+	    view.setMapReduceBlocks(new TDViewMapBlock() {
+	    	
+	    	@Override
+	            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
+	                Object createdAt = document.get("created_at");
+	                Log.d("createdAt", " "+createdAt);
+	                if(createdAt != null) {
+	                	if (createdAt == TabCalendrier.getDay()) {
+	                		emitter.emit(createdAt.toString(), document);
+	                	}
 	                }
         }
     }, null, "1.0");
