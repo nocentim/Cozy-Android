@@ -60,6 +60,11 @@ public class TabListe extends Activity {
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState);
 		setContentView(R.layout.liste_notes);
+		Replication.NotesView(returnBaseContext());
+		Replication.suggestionView(returnBaseContext());
+		Replication.ViewByFolder(returnBaseContext());
+        startEktorp();
+        
 		CozyItemUtils.initListTags();
 		
 		//connect items from layout
@@ -73,8 +78,6 @@ public class TabListe extends Activity {
 		dansDossier = (RechercheDossier) findViewById(R.id.dans_dossier);
 		showSplashScreen();
 		removeSplashScreen();
-		Replication.NotesView(returnBaseContext());
-        startEktorp();
 		//Recupperation des dossiers pour les suggestions
 		/*String projection[] = {Dossiers.DOSSIER_ID,Dossiers.NAME,Dossiers.PARENT};
 		Cursor cursor = managedQuery(Dossiers.CONTENT_URI, projection, null, null, Dossiers.NAME + " COLLATE NOCASE");
@@ -244,16 +247,21 @@ public class TabListe extends Activity {
 				adapter = new CozySyncListAdapter(TabListe.this, Replication.couchDbConnector, viewQuery, TabListe.this);
 				listeNotes.setAdapter(adapter);
 				//adapter for suggestions
-				ViewQuery sViewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.byTitleViewName).descending(false);
+				ViewQuery sViewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.suggestionsViewName).descending(false);
 				SuggestionAdapter searchAdapter = new SuggestionAdapter(Replication.couchDbConnector, sViewQuery, TabListe.this);
 				rechercheNote.setAdapter(searchAdapter);
 				
 				TabCalendrier.setViewQuery();
 				NoteByDay.adapter = new CozyListByDateAdapter(Replication.couchDbConnector, TabCalendrier.getViewQuery(), TabListe.this);
+
+				//adapter for folders
 				//listeNotes.setOnItemClickListener(TabListe.this);
 				listeNotes.setOnItemLongClickListener(deleteItem);
 
 				Replication.startReplications(getBaseContext());
+
+				Log.d(TAG, "ektorp started");
+				CozyAndroidActivity.notifyEktorpStarted();
 			}
 		};
 		startupTask.execute();
@@ -266,7 +274,7 @@ public class TabListe extends Activity {
 		public boolean onItemLongClick (AdapterView<?> parent, View view, int position, long id) {
 	        Row row = (Row)parent.getItemAtPosition(position);
 	        final JsonNode item = row.getValueAsNode();
-			JsonNode textNode = item.get("text");
+			JsonNode textNode = item.get("title");
 			String itemText = "";
 			if(textNode != null) {
 				itemText = textNode.getTextValue();

@@ -1,6 +1,7 @@
 package org.cozyAndroid;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import org.codehaus.jackson.JsonNode;
@@ -20,6 +21,7 @@ import com.couchbase.touchdb.TDServer;
 import com.couchbase.touchdb.TDView;
 import com.couchbase.touchdb.TDViewMapBlock;
 import com.couchbase.touchdb.TDViewMapEmitBlock;
+import com.couchbase.touchdb.TDViewReduceBlock;
 import com.couchbase.touchdb.router.TDURLStreamHandlerFactory;
 
 public class Replication {
@@ -33,7 +35,10 @@ public class Replication {
 	public static final String byDateViewName = "byDate";
 	public static final String byTitleViewName = "byTitle";
 	public static final String byTagsViewName = "ByTags";
+	public static final String suggestionsViewName =  "suggestions";
 	public static final String byDayViewName = "ByDay";
+	public static final String byParentViewName = "ByParent";
+	public static final String FolderbyNameViewName = "ByFolder";
 	
 	//couch internals
 	protected static TDServer server;
@@ -64,14 +69,14 @@ public class Replication {
 	    TDView view = db.getViewNamed(String.format("%s/%s", dDocName, byDateViewName));
 	    view.setMapReduceBlocks(new TDViewMapBlock() {
 
-	    	 @Override
-	            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
-	                Object modifiedAt = document.get("modified_at");
-	                if(modifiedAt != null) {
-	                    emitter.emit(modifiedAt.toString(), document);
-	                }
-
-	            }
+	    	@Override
+            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
+                Object modifiedAt = document.get("modified_at");
+                Object type = document.get("type");
+                if( (type == null || type.toString().equals("note")) && modifiedAt != null) {
+                    emitter.emit(modifiedAt.toString(), document);
+                }
+            }
         }, null, "1.0");
 	    //Test pour les suggestions
 	    TDView viewByTitle = db.getViewNamed(String.format("%s/%s", dDocName, byTitleViewName));
@@ -104,6 +109,35 @@ public class Replication {
 
 	}
 	
+	protected static void suggestionView(Context context) {
+	    
+	    //install a view definition needed by the application
+	    TDDatabase db = server.getDatabaseNamed(DATABASE_NOTES);
+	    TDView view = db.getViewNamed(String.format("%s/%s", dDocName, suggestionsViewName));
+	    view.setMapReduceBlocks(new TDViewMapBlock() {
+	    	
+	    	@Override
+            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
+	    		Object title = document.get("title");
+	    		if (title != null) {
+                	String [] mots = title.toString().split(" +");
+                	for (int i = 0; i < mots.length; i++) {
+                        if (mots[i].length() > 3) {
+                        	emitter.emit(mots[i], 1);
+                        }
+                    }
+                }
+	    	}
+	    }, new TDViewReduceBlock() {
+			
+			@Override
+			public Object reduce(List<Object> keys, List<Object> values,
+					boolean rereduce) {
+				return TDView.totalValues(values);
+			}
+		}, "1.0");
+	}
+	
 	protected static void TagView(Context context) {
 		/*String filesDir = context.getFilesDir().getAbsolutePath();
 	    try {
@@ -118,15 +152,15 @@ public class Replication {
 	    view.setMapReduceBlocks(new TDViewMapBlock() {
 	    	
 	    	@Override
-	            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
-	                Object tagged = document.get("tags");
-	                if(tagged != null) {
-	                	if (tagged !="aucun") {
-	                		emitter.emit(tagged.toString(), document);
-	                	}
-	                }
-        }
-    }, null, "1.0");
+            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
+                Object tagged = document.get("tags");
+                if(tagged != null) {
+                	if (tagged !="aucun") {
+                		emitter.emit(tagged.toString(), document);
+                	}
+                }
+	    	}
+	    }, null, "1.0");
 
 	}
 	
@@ -143,15 +177,44 @@ public class Replication {
 	    view.setMapReduceBlocks(new TDViewMapBlock() {
 	    	
 	    	@Override
-	            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
-	                Object createdAt = document.get("created_at");
-	                if(createdAt != null) {     
-	                	if (createdAt.toString().equals(TabCalendrier.getDay().substring(1,11))) {	
-	                		emitter.emit(createdAt.toString(), document);
-	                	}
-	                }
-        }
-    }, null, "1.0");
+            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
+                Object createdAt = document.get("created_at");
+                Object type = document.get("type");
+                if((type == null || type.toString().equals("note")) && createdAt != null) {     
+                	if (createdAt.toString().equals(TabCalendrier.getDay().substring(1,11))) {
+                		emitter.emit(createdAt.toString(), document);
+                	}
+                }
+	        }
+	    }, null, "1.0");
+
+	}
+	
+	protected static void ViewByFolder(Context context) {
+	    TDDatabase db = server.getDatabaseNamed(DATABASE_NOTES);
+	    TDView view1 = db.getViewNamed(String.format("%s/%s", dDocName, byParentViewName));
+	    view1.setMapReduceBlocks(new TDViewMapBlock() {
+	    	
+	    	@Override
+            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
+                Object parent = document.get("parent");
+                if( parent != null) {
+            		emitter.emit(parent.toString(), document);
+                }
+	        }
+	    }, null, "1.0");
+	    
+	    TDView view2 = db.getViewNamed(String.format("%s/%s", dDocName, FolderbyNameViewName));
+	    view2.setMapReduceBlocks(new TDViewMapBlock() {
+	    	
+	    	@Override
+            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
+                Object name = document.get("name");
+                if( name != null) {
+            		emitter.emit(name.toString(), document);
+                }
+	        }
+	    }, null, "1.0");
 
 	}
 	

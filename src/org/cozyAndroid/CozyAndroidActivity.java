@@ -20,6 +20,7 @@ public class CozyAndroidActivity extends TabActivity{
 
 	private static CozyAndroidActivity instance;
 
+	private static boolean ektorpStarted = false;
 
 	public static String TAG = "CozyAndroid";
 
@@ -52,19 +53,6 @@ public class CozyAndroidActivity extends TabActivity{
 		
 
 	}
-	
-    @Override
-    public void onNewIntent (Intent intent) {
-    	int dossierId = intent.getIntExtra("ouvreDossier", -1);
-    	if (dossierId != -1) {
-    		//On veut basculer vers TabDossier et ouvrir le dossier choisi
-    		Dossier d = Dossier.getDossierParId(dossierId);
-    		if (d != null) {
-	    		getTabHost().setCurrentTab(1);
-	    		((TabDossier) getCurrentActivity()).ouvreDossier(Dossier.getDossierParId(dossierId));
-    		}
-    	}
-    }
 
 	public void onResume(){
 		super.onResume();
@@ -87,7 +75,13 @@ public class CozyAndroidActivity extends TabActivity{
 		return view;
 	}
 
-
+	public static void notifyEktorpStarted () {
+		ektorpStarted = true;
+	}
+	
+	public static boolean ektorpStarted() {
+		return ektorpStarted;
+	}
 
 
 }

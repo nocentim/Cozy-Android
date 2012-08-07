@@ -2,19 +2,22 @@ package org.cozyAndroid;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
-import org.cozyAndroid.providers.TablesSQL.Dossiers;
-import org.cozyAndroid.providers.TablesSQL.Notes;
+import org.codehaus.jackson.JsonNode;
+import org.ektorp.UpdateConflictException;
+import org.ektorp.ViewQuery;
+import org.ektorp.ViewResult;
+import org.ektorp.ViewResult.Row;
 
 import android.app.Dialog;
 import android.app.ListActivity;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,18 +28,22 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class TabDossier extends ListActivity implements View.OnClickListener {
 	
+
+	public static final String TAG = "TabDossier";
+	
 	/**
-	 * Historique des dossiers parcourus (par id)
+	 * Historique des dossiers parcourus
 	 * Le dossier courant est accessible avec getDossierCourant()
 	 * On peut acceder a d'autres dossiers de l'historique avec
 	 * getHistorique(int pos)
 	 */
-	private ArrayList<Integer> historique;
+	private ArrayList<String> historique;
 	private int position;
 	
 	//Widget de l'interface par ordre de lecture
@@ -47,28 +54,49 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 	private TextView path;
 	
 	private ListView navigateur;
-	private DossierAdapter dossierAdapter;
+	private  CozySyncFolderAdapter folderAdapter = null;
 	
 	private Button supprimer;
 	
-	private Button creer_note;
 	private Button creer_dossier;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dossier);
-		
+
 		//Initialisation des champs
-		historique = new ArrayList<Integer>();
-		historique.add(Dossier.racine.getId());
+		historique = new ArrayList<String>();
+		historique.add("");
 		position = 0;
+		
 		navigateur = (ListView) findViewById(android.R.id.list);
-		dossierAdapter = new DossierAdapter(this,Dossier.racine);
-		navigateur.setAdapter(dossierAdapter);
 		navigateur.setOnItemClickListener(dossierClick);
+		AsyncTask<Void, Void, Void> waitForEktorpTask = new AsyncTask<Void,Void,Void>() {
+
+			@Override
+			protected Void doInBackground(Void... arg0) {
+				while (!CozyAndroidActivity.ektorpStarted()) {
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+					}
+				}
+				return null;
+			}
+			
+			@Override
+			protected void onPostExecute(Void result) {
+				Log.d(TAG, "ektorp started");
+				ViewQuery fViewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.byParentViewName).key("").descending(true);
+				folderAdapter = new CozySyncFolderAdapter(Replication.couchDbConnector, fViewQuery, TabDossier.this);
+				navigateur.setAdapter(folderAdapter);
+				Log.d(TAG, "adapter de dossiers mis a jour");
+		     }
+		};
+		waitForEktorpTask.execute();
 		
 		path = (TextView) findViewById(R.id.navigateur_path);
-		setPathWithLinks(Dossier.racine);
+		setPathWithLinks("");
 	    
 		//Initialisation de la barre de recherche de dossiers
 		search = (RechercheDossier) findViewById(R.id.search_dossier);
@@ -83,32 +111,21 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		suivant.setEnabled(false);
 		supprimer = (Button) findViewById(R.id.suppr_button);
 		creer_dossier = (Button) findViewById(R.id.add_button);
-		creer_note = (Button) findViewById(R.id.add_note_button);
 		supprimer.setOnClickListener(this);
 		creer_dossier.setOnClickListener(this);
-		creer_note.setOnClickListener(this);
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
-		String projection[] = {Dossiers._ID,Dossiers.NAME,Dossiers.PARENT};
-		Cursor cursor = managedQuery(Dossiers.CONTENT_URI, projection, null, null, Dossiers.NAME);
-		Dossier.newArborescence(cursor);
-		String notesProjection []= {Notes._ID,Notes.TITLE,Notes.BODY,Notes.DOSSIER};
-		Cursor notesCursor = managedQuery(Notes.CONTENT_URI, notesProjection, null, null, Notes.TITLE);
-		Dossier.addNotes(notesCursor);
-		dossierAdapter.setDossier(getDossierCourant());
-		dossierAdapter.notifyDataSetChanged();
+		if (folderAdapter != null) {
+			folderAdapter.notifyDataSetChanged();
+		}
 		enableButtons();
 	}
 	
-	public Dossier getDossierCourant() {
-		return Dossier.getDossierParId(historique.get(position));
-	}
-	
-	public Dossier getHistorique(int pos) {
-		return Dossier.getDossierParId(historique.get(pos));
+	public String getDossierCourant() {
+		return historique.get(position);
 	}
 	
 	public void onClick(View v) {
@@ -128,8 +145,6 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		case R.id.add_button :
 			fenetreCreer();
 			break;
-		case R.id.add_note_button :
-			creerNote();
 		default :
 			break;
 		}
@@ -144,12 +159,12 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		startActivity(editer);
 	}
 	
-	public void ouvreDossier (Dossier d) {
+	public void ouvreDossier (String name) {
 		for (int i = position + 1; i < historique.size();) {
 			historique.remove(i);
 		}
 		
-		historique.add(d.getId());
+		historique.add(name);
 		position++;
 		
 		majInterface();
@@ -172,15 +187,9 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 	 * l'historique ainsi que l'interface
 	 */
 	private void supprimerCourant() {
-		Dossier supprimeMoi = getDossierCourant();
-		int id = supprimeMoi.getId();
-		int count = getContentResolver().delete(Dossiers.CONTENT_URI, Dossiers._ID + "= " + id, null);
-		if (count < 1) {
-			Toast t = Toast.makeText(TabDossier.this, "Echec de la suppression", Toast.LENGTH_SHORT);
-			t.show();
-			return;
-		}
-		Toast t = Toast.makeText(TabDossier.this, "Dossier " +supprimeMoi.nom + " supprimÃ©", Toast.LENGTH_SHORT);
+		String supprimeMoi = getDossierCourant();
+		deleteItem(supprimeMoi);
+		Toast t = Toast.makeText(TabDossier.this, "Dossier " +supprimeMoi + " supprimé", Toast.LENGTH_SHORT);
 		t.show();
 		//position != 0 car la racine ne peut pas etre supprimee
 		position--; 
@@ -188,7 +197,7 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		//Ca marche car courant n'a pas de sous-dossiers :
 		//on ne supprime que des dossiers vides (TODO : est-ce vrai?)
 		for (int i = 1; i < historique.size();) {
-			if (getHistorique(i).equals(supprimeMoi)) {
+			if (historique.get(i).equals(supprimeMoi)) {
 				historique.remove(i);
 				if (i <= position) {
 					position--;
@@ -200,8 +209,8 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		//Il se peut maintenant qu'un dossier soit present 2 fois de suite dans l'historique
 		//On enleve donc les doublons
 		for (int i = 0; i < historique.size() - 1;) {
-			Dossier courant = getHistorique(i);
-			Dossier suivant = getHistorique(i+1);
+			String courant = historique.get(i);
+			String suivant = historique.get(i+1);
 			if (courant.equals(suivant)) {
 				historique.remove(i+1);
 				if (i < position) {
@@ -211,7 +220,6 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 				i++;
 			}
 		}
-		supprimeMoi.parent.supprimerDossier(supprimeMoi);
 		majInterface();
 	}
 	
@@ -242,20 +250,20 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 				String nom = text.getText().toString().trim();
 				text.setText(nom);
 				if (!nom.equals("")) {
-					Dossier courant = getDossierCourant();
-					if (courant.contient(nom)) {
+					String courant = getDossierCourant();
+					String nomComplet;
+					if (courant.equals("")) {
+						nomComplet = nom;
+					} else {
+						nomComplet = courant + "/" + nom;
+					}
+					if (folderAdapter.contient(nomComplet)) {
 						Toast t = Toast.makeText(TabDossier.this,
-								"Un dossier de ce nom existe dÃ©jÃ ", Toast.LENGTH_SHORT);
+								"Un dossier de ce nom existe déjà", Toast.LENGTH_SHORT);
 						t.show();
 					} else {
-						ContentValues values = new ContentValues();
-						values.put(Dossiers.NAME, nom);
-						values.put(Dossiers.PARENT, courant.getId());        
-						Uri uri = getContentResolver().insert(Dossiers.CONTENT_URI, values);
-						int id = Integer.parseInt(uri.getLastPathSegment());
-						courant.addDossier(id, nom);
-						dialog.cancel();
-						majInterface();
+						createOrUpdateFolder(nomComplet, courant, null, null);
+						dialog.dismiss();
 					}
 				} else {
 					Toast t = Toast.makeText(TabDossier.this, "Entrez un nom", Toast.LENGTH_SHORT);
@@ -264,23 +272,10 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 			}
 		};
 		confirm.setOnClickListener(confirmer);
-		
 		dialog.show();
 	}
 	
-	//TODO faire appel a l'editeur une fois qu'il sera fait
-	private void creerNote() {
-		Dossier courant = getDossierCourant();
-		ContentValues values = new ContentValues();
-		values.put(Notes.TITLE, "Nouvelle Note");
-		values.put(Notes.BODY, "");
-		values.put(Notes.DOSSIER, courant.getId());  
-		Uri uri = getContentResolver().insert(Notes.CONTENT_URI, values);
-		int id = Integer.parseInt(uri.getLastPathSegment());
-		Note n = new Note(id, "Nouvelle Note", "", courant.getId());
-		courant.addNote(n);
-		majInterface();
-	}
+	
 	
 	/**
 	 * A appeler quand le dossier courant change.
@@ -288,7 +283,7 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 	 * sur le nouveau dossier.
 	 */
 	private void majInterface() {
-		Dossier courant = getDossierCourant();
+		String courant = getDossierCourant();
 		
 		enableButtons();
 		setPathWithLinks(courant);
@@ -296,8 +291,7 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 	    if ((m == null) || !(m instanceof LinkMovementMethod)) {
 	        path.setMovementMethod(LinkMovementMethod.getInstance());
 	    }
-		dossierAdapter.setDossier(courant);
-		dossierAdapter.notifyDataSetChanged();
+		folderAdapter.setDossier(courant);
 	}
 	
 	/**
@@ -314,27 +308,40 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		} else {
 			suivant.setEnabled(true);
 		}
-		Dossier courant = getDossierCourant();
-		if (courant.size() == 0 && !courant.equals(Dossier.racine)) {
+		String courant = getDossierCourant();
+		if (folderAdapter != null && folderAdapter.getCount() == 0 && !courant.equals("")) {
 			supprimer.setVisibility(View.VISIBLE);
 		} else {
 			supprimer.setVisibility(View.INVISIBLE);
 		}
 	}
 	
-	private void setPathWithLinks (Dossier d) {
-		final ArrayList<Dossier> parents = d.getParents();
-		String pathString = parents.get(0).nom;
-		for (int i = 1; i < parents.size(); i++) {
-			pathString += " / " + parents.get(i).nom;
+	private void setPathWithLinks (String dossier) {
+		String pathString;
+		if (dossier.equals("")) {
+			pathString = "Navigateur";
+		} else {
+			pathString = "Navigateur / " + dossier.replace("/", " / ");
 		}
+		final String [] parents = pathString.split(" / ");
+		final String [] parentsComplet = new String [parents.length-1];
+		String nomComplet = "";
+		if (parentsComplet.length > 0) {
+			parentsComplet[0] = "";
+		}
+		for (int i = 1; i < parentsComplet.length; i++) {
+			nomComplet += parents[i];
+			parentsComplet[i] = nomComplet;
+			nomComplet += "/";
+		}
+		
 		path.setText(pathString);
-		for (int i = 0; i < parents.size() - 1; i++) {
+		for (int i = 1; i < parents.length - 1; i++) {
 			final int iBis = i;
-			LinkSpan.linkify(path, parents.get(iBis).nom, new LinkSpan.OnClickListener() {
+			LinkSpan.linkify(path, parents[iBis], new LinkSpan.OnClickListener() {
 				
 				public void onClick() {
-					ouvreDossier(parents.get(iBis));
+					ouvreDossier(parentsComplet[iBis]);
 				}
 			});
 		}
@@ -344,14 +351,27 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			if (dossierAdapter.isDossier(position)) {
+			if (folderAdapter.isDossier(position)) {
 				//C'est un dossier
-				Dossier d = (Dossier) dossierAdapter.getItem(position);
-				ouvreDossier(d);
+				Row r = (Row) folderAdapter.getItem(position);
+				String name = r.getValueAsNode().get("name").getTextValue();
+				ouvreDossier(name);
 			} else {
 				//C'est une note
-				Note n = (Note) dossierAdapter.getItem(position);
-				editer(n);
+				TabPlus.modif = true;
+				Row row = (Row)folderAdapter.getItem(position);
+				JsonNode item = row.getValueAsNode();
+				JsonNode itemText = item.get("title");
+				Log.d("title", itemText.getTextValue());
+				CozyItemUtils.setRev(item.get("_rev").getTextValue());
+				CozyItemUtils.setId(item.get("_id").getTextValue());
+				CozyItemUtils.setListTags(item.get("tags").getTextValue());   // Pour l'instant on ne teste qu'un tag
+				CozyItemUtils.setDateCreation(item.get("created_at").getTextValue());
+				CozyItemUtils.setDateModification(item.get("modified_at").getTextValue());
+				Log.d("tags", item.get("tags").getTextValue());
+		        CozyItemUtils.setTitleModif(itemText.getTextValue());
+		        TabPlus.formerActivity("tabliste");
+		        CozyAndroidActivity.gettabHost().setCurrentTab(2);
 			}
 		}
 	};
@@ -359,8 +379,75 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 	private OnItemClickListener suggestionClick = new OnItemClickListener() {
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			Cursor c = (Cursor)search.getAdapter().getItem(position);
-			ouvreDossier(Dossier.getDossierParId(c.getInt(0)));
+			Log.d(TAG,"clic sur une suggestion : a implementer");
 		}
 	};
+	
+	private void deleteItem(String name) {
+		final String fName = name;
+		CozySyncEktorpAsyncTask deleteItemTask = new CozySyncEktorpAsyncTask() {
+
+			@Override
+			protected void doInBackground() {
+				ViewQuery viewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.FolderbyNameViewName).key(fName);
+				ViewResult result = Replication.couchDbConnector.queryView(viewQuery);
+				List<Row> rows = result.getRows();
+				if (rows.size() == 0) {
+					throw new UpdateConflictException();
+				}
+				Row r = rows.get(0);
+				JsonNode node = r.getValueAsNode();
+				Replication.couchDbConnector.delete(node.get("_id").getTextValue(),node.get("_rev").getTextValue());
+			}
+
+			@Override
+			protected void onSuccess() {
+				Log.d(TAG, "Document created successfully");
+			}
+
+			@Override
+			protected void onUpdateConflict(
+					UpdateConflictException updateConflictException) {
+				Log.d(TAG, "Got an update conflict for: " + fName);
+				Toast t = Toast.makeText(TabDossier.this, "Echec de la suppression", Toast.LENGTH_SHORT);
+				t.show();
+			}
+		};
+		deleteItemTask.execute();
+	}
+	
+	public void createOrUpdateFolder(String name, String parent, final String rev, String id) {
+		final JsonNode item = CozyItemUtils.createOrUpdateFolder(name, parent, rev, id);
+		CozySyncEktorpAsyncTask createItemTask = new CozySyncEktorpAsyncTask() {
+
+			@Override
+			protected void doInBackground() {
+				if (rev == null) {
+					Replication.couchDbConnector.create(item);
+				} else {
+					Replication.couchDbConnector.update(item);
+				}
+
+			}
+
+			@Override
+			protected void onSuccess() {
+				Log.d(TAG, "Document created successfully");
+				Toast t = Toast.makeText(TabDossier.this, "Dossier " + item.get("name") + " créé.", Toast.LENGTH_SHORT);
+				t.show();
+				folderAdapter.notifyDataSetChanged();
+			}
+
+			@Override
+			protected void onUpdateConflict(
+					UpdateConflictException updateConflictException) {
+				Log.d(TAG, "Got an update conflict for: " + item.toString());
+				Toast t = Toast.makeText(TabDossier.this, "Echec de la création de " + item.get("name") + ".", Toast.LENGTH_SHORT);
+				t.show();
+			}
+		};
+		createItemTask.execute();
+	}
+	
+	
 }
