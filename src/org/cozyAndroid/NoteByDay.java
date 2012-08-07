@@ -27,7 +27,7 @@ public class NoteByDay extends Activity implements View.OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.note_by_day);
 		listeNotesByDay = (ListView) findViewById(R.id.listNotesByDay);
-		//listeNotesByDay.setOnItemClickListener(new clicknote());
+		listeNotesByDay.setOnItemClickListener(new clicknote());
 		Replication.ViewByDay(this);
 		startEktorp();
 		Replication.startReplications(this);
@@ -49,12 +49,19 @@ public class NoteByDay extends Activity implements View.OnClickListener{
 			Row row = (Row)parent.getItemAtPosition(position);
 			JsonNode item = row.getValueAsNode();
 			JsonNode itemText = item.get("title");
-			Log.d("title", itemText.getTextValue());
-	        TabPlus.formerActivity("tabliste");
-	        CozyAndroidActivity.gettabHost().setCurrentTab(2);
-			
+			CozyItemUtils.setRev(item.get("_rev").getTextValue());
+			CozyItemUtils.setId(item.get("_id").getTextValue());
+			CozyItemUtils.setListTags(item.get("tags").getTextValue());   // Pour l'instant on ne teste qu'un tag
+			CozyItemUtils.setDateCreation(item.get("created_at").getTextValue());
+			CozyItemUtils.setDateModification(item.get("modified_at").getTextValue());
+		    CozyItemUtils.setTitleModif(itemText.getTextValue());
+		    TabPlus.formerActivity("tabliste");
+		    finish();
+		    CozyAndroidActivity.gettabHost().setCurrentTab(2);
+				
 		}
 	}
+
 	
 	protected void startEktorp() {
 		Log.v(TAG, "starting ektorp");

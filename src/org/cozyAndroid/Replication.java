@@ -37,7 +37,8 @@ public class Replication {
 	public static final String byTagsViewName = "ByTags";
 	public static final String suggestionsViewName =  "suggestions";
 	public static final String byDayViewName = "ByDay";
-	public static final String byFolderViewName = "ByFolder";
+	public static final String byParentViewName = "ByParent";
+	public static final String FolderbyNameViewName = "ByFolder";
 	
 	//couch internals
 	protected static TDServer server;
@@ -68,15 +69,14 @@ public class Replication {
 	    TDView view = db.getViewNamed(String.format("%s/%s", dDocName, byDateViewName));
 	    view.setMapReduceBlocks(new TDViewMapBlock() {
 
-	    	 @Override
-	            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
-	                Object modifiedAt = document.get("modified_at");
-	                Object type = document.get("type");
-	                if(type != null && ((String)type).equals("note") && modifiedAt != null) {
-	                    emitter.emit(modifiedAt.toString(), document);
-	                }
-
-	            }
+	    	@Override
+            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
+                Object modifiedAt = document.get("modified_at");
+                Object type = document.get("type");
+                if( (type == null || type.toString().equals("note")) && modifiedAt != null) {
+                    emitter.emit(modifiedAt.toString(), document);
+                }
+            }
         }, null, "1.0");
 	    //Test pour les suggestions
 	    TDView viewByTitle = db.getViewNamed(String.format("%s/%s", dDocName, byTitleViewName));
@@ -136,13 +136,13 @@ public class Replication {
 	    view.setMapReduceBlocks(new TDViewMapBlock() {
 	    	
 	    	@Override
-	            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
-	                Object tagged = document.get("tags");
-	                if(tagged != null) {
-	                	if (tagged !="aucun") {
-	                		emitter.emit(tagged.toString(), document);
-	                	}
-	                }
+            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
+                Object tagged = document.get("tags");
+                if(tagged != null) {
+                	if (tagged !="aucun") {
+                		emitter.emit(tagged.toString(), document);
+                	}
+                }
 	    	}
 	    }, null, "1.0");
 
@@ -161,15 +161,14 @@ public class Replication {
 	    view.setMapReduceBlocks(new TDViewMapBlock() {
 	    	
 	    	@Override
-	            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
-	                Object createdAt = document.get("created_at");
-	                Log.d("createdAt", " "+createdAt);
-	                Object type = document.get("type");
-	                if(type != null && ((String)type).equals("note") && createdAt != null) {
-	                	if (createdAt == TabCalendrier.getDay()) {
-	                		emitter.emit(createdAt.toString(), document);
-	                	}
-	                }
+            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
+                Object createdAt = document.get("created_at");
+                Object type = document.get("type");
+                if((type == null || type.toString().equals("note")) && createdAt != null) {     
+                	if (createdAt.toString().equals(TabCalendrier.getDay().substring(1,11))) {
+                		emitter.emit(createdAt.toString(), document);
+                	}
+                }
 	        }
 	    }, null, "1.0");
 
@@ -177,21 +176,31 @@ public class Replication {
 	
 	protected static void ViewByFolder(Context context) {
 	    TDDatabase db = server.getDatabaseNamed(DATABASE_NOTES);
-	    TDView view = db.getViewNamed(String.format("%s/%s", dDocName, byFolderViewName));
-	    view.setMapReduceBlocks(new TDViewMapBlock() {
+	    TDView view1 = db.getViewNamed(String.format("%s/%s", dDocName, byParentViewName));
+	    view1.setMapReduceBlocks(new TDViewMapBlock() {
 	    	
 	    	@Override
-	            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
-	                Object parent = document.get("parent");
-	                Log.d("parent", parent.toString());
-	                if( parent != null) {
-                		emitter.emit(parent.toString(), document);
-	                }
+            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
+                Object parent = document.get("parent");
+                if( parent != null) {
+            		emitter.emit(parent.toString(), document);
+                }
+	        }
+	    }, null, "1.0");
+	    
+	    TDView view2 = db.getViewNamed(String.format("%s/%s", dDocName, FolderbyNameViewName));
+	    view2.setMapReduceBlocks(new TDViewMapBlock() {
+	    	
+	    	@Override
+            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
+                Object name = document.get("name");
+                if( name != null) {
+            		emitter.emit(name.toString(), document);
+                }
 	        }
 	    }, null, "1.0");
 
 	}
-	
 	
 	public static void startReplications(Context context) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

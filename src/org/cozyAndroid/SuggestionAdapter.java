@@ -63,7 +63,7 @@ public class SuggestionAdapter extends CouchbaseViewListAdapter  implements Filt
         	vh = (ViewHolder) v.getTag();
         }
         Row row = getRow(position);
-       CharSequence text = row.getKey();
+        CharSequence text = row.getKey();
         if(text != null) {
 			Spannable textSpan = new SpannableString(text);
         	int start = text.toString().toLowerCase().indexOf(constraint);
