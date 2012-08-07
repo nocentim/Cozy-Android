@@ -4,7 +4,7 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="14" />
+    <uses-sdk android:minSdkVersion="8" />
 
     <application
         android:hardwareAccelerated="false"
@@ -72,7 +72,6 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait">
        	</activity>
->>>>>>> 13d68cb8275bd0bc7ad15f4f4cc5a72d3ba59965
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

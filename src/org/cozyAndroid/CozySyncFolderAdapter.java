@@ -1,9 +1,10 @@
 package org.cozyAndroid;
-import java.util.ArrayList;
+
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
+import java.util.Iterator;
 
+import org.codehaus.jackson.JsonNode;
 import org.ektorp.CouchDbConnector;
 import org.ektorp.DbAccessException;
 import org.ektorp.ViewQuery;
@@ -18,35 +19,50 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.content.Context;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 
-public class SuggestionAdapter extends CouchbaseViewListAdapter  implements Filterable {
+public class CozySyncFolderAdapter extends CouchbaseViewListAdapter {
 
 	private LayoutInflater inflater;
-	private String constraint;
-	private Filter mFilter = null;
-	private static int black;
 	
-	public SuggestionAdapter(CouchDbConnector couchDbConnector, ViewQuery viewQuery, Context context) {
+	
+	public CozySyncFolderAdapter(CouchDbConnector couchDbConnector, ViewQuery viewQuery, Context context) {
 		super(couchDbConnector, viewQuery, true);
 		inflater = LayoutInflater.from(context);
-		black = context.getResources().getColor(android.R.color.black);
 	}
 
+	public boolean isDossier(int position) {
+		Row r = (Row) getItem(position);
+		JsonNode type = r.getValueAsNode().get("type");
+		return type != null && type.getTextValue().equals("folder");
+	}
+	
+	private boolean isDossier(JsonNode n) {
+		JsonNode type = n.get("type");
+		return type != null && type.getTextValue().equals("folder");
+	}
+	
+	public boolean contient (String name) {
+		Iterator<Row> it = listRows.iterator();
+		while (it.hasNext()) {
+			JsonNode n = it.next().getValueAsNode().get("name");
+			if (n != null && n.getTextValue().equals(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	private static class ViewHolder {
-	   TextView title;
-	   ImageView button;
+	   TextView titre;
+	   TextView body;
+	   ImageView icon;
 	}
 
 	@Override
@@ -54,75 +70,58 @@ public class SuggestionAdapter extends CouchbaseViewListAdapter  implements Filt
         View v = itemView;
         ViewHolder vh;
         if (v == null) {
-            v = inflater.inflate(R.layout.suggestion, null);
+            v = inflater.inflate(R.layout.elem_list, null);
             vh = new ViewHolder();
-            vh.title = (TextView) v.findViewById(R.id.textSuggestion);
-            vh.button = (ImageView) v.findViewById(R.id.buttonSuggestion);
+            vh.titre = (TextView) v.findViewById(R.id.titre_note);
+    		vh.body = (TextView)v.findViewById(R.id.body_note);
+    		vh.icon = (ImageView)v.findViewById(R.id.icone);
             v.setTag(vh);
         } else {
         	vh = (ViewHolder) v.getTag();
         }
         Row row = getRow(position);
-        CharSequence text = row.getKey();
-        if(text != null) {
-			Spannable textSpan = new SpannableString(text);
-        	int start = text.toString().toLowerCase().indexOf(constraint);
-			if (start != -1) {
-				ForegroundColorSpan blacktext = new ForegroundColorSpan(black);
-				textSpan.setSpan(blacktext, start, start + constraint.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        JsonNode item = row.getValueAsNode();
+        if (isDossier(position)) {
+			// C'est un dossier :
+			// on affiche son nom et ce qu'il y a dedans
+            String name = item.get("name").getTextValue();
+            String shortName;
+            int start = name.lastIndexOf('/');
+            if (start != -1) {
+            	shortName = name.substring(name.lastIndexOf('/' + 1));
+            } else {
+            	shortName = name;
+            }
+			vh.titre.setText(shortName);
+			//vh.body.setText(d.getInfos());
+			vh.body.setText("");
+			vh.icon.setImageResource(R.drawable.folder);
+		} else {
+			// C'est une note :
+			// on affiche son titre et ses premiers mots
+			String titre = item.get("title").getTextValue();
+			String body = item.get("body").getTextValue().toString().replace("\n", " ");
+			vh.titre.setText(titre);
+			if (body.length() > 150) {
+				vh.body.setText(body.substring(0, 149));
+			} else {
+				vh.body.setText(body);
 			}
-        	vh.title.setText(textSpan);
-        }
-        else {
-        	vh.title.setText("");
-        }
+			vh.icon.setImageResource(R.drawable.note);
+		}
         return v;
 	}
 	
-	public Filter getFilter () {
-		if (mFilter == null) {
-			mFilter = new SFilter();
-		}
-		return mFilter;
+	protected void setDossier(String name) {
+		CozySyncFolderAdapter.this.viewQuery.key(name);
+		CozySyncFolderAdapter.this.updateListItems();
 	}
 	
-	private class SFilter extends Filter {
-
-		@Override
-		public CharSequence convertResultToString (Object resultValue) {
-			Row row = (Row) resultValue;
-			return row.getKey();
-		}
-		
-		@Override
-		protected FilterResults performFiltering(CharSequence constraint) {
-			FilterResults res = new FilterResults();
-			// TODO Auto-generated method stub
-			if (constraint == null || constraint.equals("")) {
-				res.count = 0;
-				return res;
-			}
-			SuggestionAdapter.this.constraint = constraint.toString().toLowerCase();
-			String start = constraint.toString().toLowerCase();
-			String end = start.toUpperCase() + "\u9999";
-			SuggestionAdapter.this.viewQuery.startKey(start).endKey(end).group(true);
-			SuggestionAdapter.this.updateListItems();
-			res.count = getCount();
-			Log.d("filtrage suggestions","count = " + res.count);
-			res.values = null;
-			return res;
-		}
-
-		@Override
-		protected void publishResults(CharSequence constraint, FilterResults results) {
-			if (results.count > 0) {
-                notifyDataSetChanged();
-            } else {
-                notifyDataSetInvalidated();
-            }
-		}
-		
+	public void update() {
+		updateListItems();
 	}
+
+
 	
 	//Copié-collé du code de CouchbaseViewAdapter avec modification de updateListItem()
 	
@@ -151,8 +150,15 @@ public class SuggestionAdapter extends CouchbaseViewListAdapter  implements Filt
 
 							@Override
 							public int compare(Row lhs, Row rhs) {
-								Log.d("tri par valeur", "left : " + lhs.getValueAsInt() + " right : " + rhs.getValueAsInt());
-								return ((Integer)rhs.getValueAsInt()).compareTo(lhs.getValueAsInt());
+								JsonNode l = lhs.getValueAsNode();
+								JsonNode r = rhs.getValueAsNode();
+								if (isDossier(l)) {
+									if (isDossier(r)) {
+										return 0;
+									}
+									return -1;
+								}
+								return 1;
 							}
 						});
 						notifyDataSetChanged();

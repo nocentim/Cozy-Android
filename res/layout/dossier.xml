@@ -71,17 +71,9 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/add_note_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.50"
-            android:text="@string/creer_note" />
-
-        <Button
             android:id="@+id/add_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.50"
             android:text="@string/creer_dossier" />
 
     </LinearLayout>

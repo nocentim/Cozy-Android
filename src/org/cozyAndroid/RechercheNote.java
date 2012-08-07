@@ -243,6 +243,9 @@ public class RechercheNote extends MultiAutoCompleteTextView {
         }
 
         public CharSequence terminateToken(CharSequence text) {
+        	if (text == null) {
+        		return "";
+        	}
             int i = text.length();
 
             if (i > 0 && text.charAt(i - 1) == ' ') {
