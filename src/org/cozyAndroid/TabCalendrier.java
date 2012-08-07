@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import org.ektorp.ViewQuery;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -40,9 +42,18 @@ public class TabCalendrier extends Activity {
     
     // attributs touchDB
     private static String dayclicked;
-	
+    private static ViewQuery dviewQuery;
+    
 	public static String getDay() {
 		return dayclicked;
+	}
+	
+	public static void setViewQuery() {
+		dviewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.byDayViewName).descending(true);
+	}
+	
+	public static ViewQuery getViewQuery(){
+		return dviewQuery;
 	}
 	
 	
@@ -376,6 +387,7 @@ public class TabCalendrier extends Activity {
 				//gridcell.setTextColor(getResources().getColor(R.color.static_text_color));
 				gridcell.setTextColor(Color.BLACK);
 			}
+
 			if (day_color[1].equals("ORANGE")) {
 				gridcell.setText("  "+theday+" *");
 				gridcell.setTextColor(Color.WHITE);

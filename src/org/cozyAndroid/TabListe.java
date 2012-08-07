@@ -200,9 +200,15 @@ public class TabListe extends Activity {
 			JsonNode item = row.getValueAsNode();
 			JsonNode itemText = item.get("title");
 			Log.d("title", itemText.getTextValue());
-			CozyItemUtils.setRev(item.get("_rev").getTextValue());
-			CozyItemUtils.setId(item.get("_id").getTextValue());
-			CozyItemUtils.setListTags(item.get("tags").getTextValue());   // Pour l'instant on ne teste qu'un tag
+			if (item.get("_rev").getTextValue()!=null) {
+				CozyItemUtils.setRev(item.get("_rev").getTextValue());
+			}
+			if (item.get("_id").getTextValue()!=null) {
+				CozyItemUtils.setId(item.get("_id").getTextValue());
+			}
+			if (item.get("tags").getTextValue()!=null) {
+				CozyItemUtils.setListTags(item.get("tags").getTextValue());   // Pour l'instant on ne teste qu'un tag
+			}
 			CozyItemUtils.setDateCreation(item.get("created_at").getTextValue());
 			CozyItemUtils.setDateModification(item.get("modified_at").getTextValue());
 			Log.d("tags", item.get("tags").getTextValue());
@@ -241,6 +247,9 @@ public class TabListe extends Activity {
 				ViewQuery sViewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.byTitleViewName).descending(false);
 				SuggestionAdapter searchAdapter = new SuggestionAdapter(Replication.couchDbConnector, sViewQuery, TabListe.this);
 				rechercheNote.setAdapter(searchAdapter);
+				
+				TabCalendrier.setViewQuery();
+				NoteByDay.adapter = new CozyListByDateAdapter(Replication.couchDbConnector, TabCalendrier.getViewQuery(), TabListe.this);
 				//listeNotes.setOnItemClickListener(TabListe.this);
 				listeNotes.setOnItemLongClickListener(deleteItem);
 

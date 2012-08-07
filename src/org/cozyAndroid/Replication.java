@@ -86,6 +86,22 @@ public class Replication {
 
             }
         }, null, "1.0");
+	    
+	    // Vue pour le calendrier
+	    TDView viewByDay = db.getViewNamed(String.format("%s/%s", dDocName, byDayViewName));
+	    viewByDay.setMapReduceBlocks(new TDViewMapBlock() {
+	    	
+	    	@Override
+	            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
+	                Object createdAt = document.get("created_at");
+	                if(createdAt != null) {     
+	                	//if (createdAt.toString().equals(TabCalendrier.getDay().substring(1,11))) {	
+	                		emitter.emit(createdAt.toString(), document);
+	                	//}
+	                }
+        }
+    }, null, "1.0");
+
 	}
 	
 	protected static void TagView(Context context) {

@@ -20,7 +20,7 @@ import com.couchbase.touchdb.ektorp.TouchDBHttpClient;
 public class NoteByDay extends Activity implements View.OnClickListener{
 	
 	private ListView listeNotesByDay;
-	private CozyListByDateAdapter adapter;
+	static CozyListByDateAdapter adapter;
 	public static String TAG = "NoteByDay";
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -84,7 +84,7 @@ public class NoteByDay extends Activity implements View.OnClickListener{
 			protected void onSuccess() {
 				//attach list adapter to the list and handle clicks
 				ViewQuery viewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.byDayViewName).descending(true);
-				adapter = new CozyListByDateAdapter(NoteByDay.this, Replication.couchDbConnector, viewQuery, NoteByDay.this);
+				adapter = new CozyListByDateAdapter(Replication.couchDbConnector, viewQuery, NoteByDay.this);
 				listeNotesByDay.setAdapter(adapter);
 				listeNotesByDay.setOnItemLongClickListener(deleteItem);
 

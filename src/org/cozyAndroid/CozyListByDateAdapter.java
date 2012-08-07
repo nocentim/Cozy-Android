@@ -9,18 +9,19 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 
-public class CozyListByDateAdapter extends CouchbaseViewListAdapter {
+public class CozyListByDateAdapter extends CouchbaseViewListAdapter implements Filterable{
 
 	private LayoutInflater inflater;
 	protected NoteByDay parent;
 
-	public CozyListByDateAdapter(NoteByDay parent, CouchDbConnector couchDbConnector, ViewQuery viewQuery, Context context) {
+	public CozyListByDateAdapter(CouchDbConnector couchDbConnector, ViewQuery viewQuery, Context context) {
 		super(couchDbConnector, viewQuery, true);
-		this.parent = parent;
 		inflater = LayoutInflater.from(context);
 	}
 
@@ -76,5 +77,11 @@ public class CozyListByDateAdapter extends CouchbaseViewListAdapter {
         }
 
         return v;
+	}
+
+	@Override
+	public Filter getFilter() {
+		
+		return null;
 	}
 }
