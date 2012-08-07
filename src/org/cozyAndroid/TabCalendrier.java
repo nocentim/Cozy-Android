@@ -39,10 +39,10 @@ public class TabCalendrier extends Activity {
     private static final String dateTemplate = "MMMM yyyy";
     
     // attributs touchDB
-    private static String day;
+    private static String dayclicked;
 	
 	public static String getDay() {
-		return day;
+		return dayclicked;
 	}
 	
 	
@@ -448,8 +448,7 @@ public class TabCalendrier extends Activity {
 				}
 				// C'est ici qu'on fait l'action après avoir appuyé sur un jour
 				// IMPORTANT
-				day = dayMonthYear;
-				Log.d("day", "" + day);
+				dayclicked = " "+ day + "-" + month + "-" + year;
 				Intent intent = new Intent(getBaseContext(), NoteByDay.class);
 				startActivity(intent);
 			}

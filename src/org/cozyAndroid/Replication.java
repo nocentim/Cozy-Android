@@ -129,9 +129,8 @@ public class Replication {
 	    	@Override
 	            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
 	                Object createdAt = document.get("created_at");
-	                Log.d("createdAt", " "+createdAt);
-	                if(createdAt != null) {
-	                	if (createdAt == TabCalendrier.getDay()) {
+	                if(createdAt != null) {     
+	                	if (createdAt.toString().equals(TabCalendrier.getDay().substring(1,11))) {	
 	                		emitter.emit(createdAt.toString(), document);
 	                	}
 	                }
@@ -139,7 +138,6 @@ public class Replication {
     }, null, "1.0");
 
 	}
-	
 	
 	public static void startReplications(Context context) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

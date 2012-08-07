@@ -32,12 +32,8 @@ public class TabListe extends Activity {
 	
 	private CozySyncListAdapter adapter;
 	private ListView listeNotes;
-	private static String titleModif;
-	private static String rev;
-	private static String id;
-	private static String created_at;
-	private static String modified_at;
-	private static ArrayList<String> tags;
+	
+	
 	
 	public static String TAG = "TabListe";
 	//Recherche
@@ -57,48 +53,14 @@ public class TabListe extends Activity {
     	return getBaseContext();
     }
     
-    public static String getTitleModif() {
-    	return titleModif;
-    }
     
-    public void setRev(String Rev){
-    	rev=Rev;
-    }
     
-    public static String getRev() {
-    	return rev;
-    }
     
-    public void setId(String Id){
-    	id=Id;
-    }
-    
-    public static String getId() {
-    	return id;
-    }
-    
-    public void setListTags(String s) {
-    	tags.remove(0);
-    	tags.add(s);
-    }
-    
-    public static String getDateCreation() {
-    	return created_at;
-    }
-    
-    public static String getDateModification() {
-    	return modified_at;
-    }
-    
-    public static ArrayList<String> getListTags(){
-    	return tags;
-    }
     
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState);
 		setContentView(R.layout.liste_notes);
-		tags= new ArrayList<String>();
-		tags.add("aucune");
+		CozyItemUtils.initListTags();
 		
 		//connect items from layout
 		
@@ -149,7 +111,7 @@ public class TabListe extends Activity {
 	
 	public void onResume() {
 		super.onResume();
-		titleModif = "";
+		CozyItemUtils.setTitleModif("");
 		//Recupperation des dossiers pour les suggestions
 		String projection[] = {Dossiers._ID,Dossiers.NAME,Dossiers.PARENT};
 		Cursor cursor = managedQuery(Dossiers.CONTENT_URI, projection, null, null, Dossiers.NAME + " COLLATE NOCASE");
@@ -231,20 +193,20 @@ public class TabListe extends Activity {
 	/**
 	 * Handle click on item in list
 	 */
-	private class clicknote implements OnItemClickListener {
+	class clicknote implements OnItemClickListener {
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {		
 			TabPlus.modif = true;
 			Row row = (Row)parent.getItemAtPosition(position);
 			JsonNode item = row.getValueAsNode();
 			JsonNode itemText = item.get("title");
 			Log.d("title", itemText.getTextValue());
-			setRev(item.get("_rev").getTextValue());
-			setId(item.get("_id").getTextValue());
-			setListTags(item.get("tags").getTextValue());   // Pour l'instant on ne teste qu'un tag
-			created_at = item.get("created_at").getTextValue();
-			modified_at = item.get("modified_at").getTextValue();
+			CozyItemUtils.setRev(item.get("_rev").getTextValue());
+			CozyItemUtils.setId(item.get("_id").getTextValue());
+			CozyItemUtils.setListTags(item.get("tags").getTextValue());   // Pour l'instant on ne teste qu'un tag
+			CozyItemUtils.setDateCreation(item.get("created_at").getTextValue());
+			CozyItemUtils.setDateModification(item.get("modified_at").getTextValue());
 			Log.d("tags", item.get("tags").getTextValue());
-	        titleModif = itemText.getTextValue();
+	        CozyItemUtils.setTitleModif(itemText.getTextValue());
 	        TabPlus.formerActivity("tabliste");
 	        CozyAndroidActivity.gettabHost().setCurrentTab(2);
 			

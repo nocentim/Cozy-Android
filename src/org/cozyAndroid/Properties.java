@@ -35,11 +35,11 @@ public class Properties extends Activity implements View.OnClickListener{
 		modified_at = (TextView) findViewById(R.id.modification);
 		if ((TabPlus.modif) && (TabPlus.formerActivity()=="tabliste")) {
 			param = this.getIntent().getExtras();
-			if (TabListe.getListTags()!=null) {
-				Iterator<?> i = TabListe.getListTags().iterator();
+			if (CozyItemUtils.getListTags()!=null) {
+				Iterator<?> i = CozyItemUtils.getListTags().iterator();
 				list_tags.setText((CharSequence) i.next());
-				created_at.setText(TabListe.getDateCreation());
-				modified_at.setText(TabListe.getDateModification());
+				created_at.setText(CozyItemUtils.getDateCreation());
+				modified_at.setText(CozyItemUtils.getDateModification());
 			} else {
 				list_tags.setText(tag);
 			}
