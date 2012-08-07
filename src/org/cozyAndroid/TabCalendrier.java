@@ -318,14 +318,14 @@ public class TabCalendrier extends Activity {
 
 			// Current Month Days			
 			for (int i = 1; i <= daysInMonth; i++) {
-                if (i == getCurrentDayOfMonth())
-                    {
-                        list.add(String.valueOf(i) + "-BLUE" + "-" + getMonthAsString(currentMonth) + "-" + yy);
-                    }
-                else
-                    {
-                        list.add(String.valueOf(i) + "-WHITE" + "-" + getMonthAsString(currentMonth) + "-" + yy);
-                    }
+				String date = getDateDay(i,mm,yy);
+                if (i == getCurrentDayOfMonth()) {
+                	list.add(String.valueOf(i) + "-BLUE" + "-" + getMonthAsString(currentMonth) + "-" + yy);   
+                } else if (dviewQuery.startKey(date).endKey(date)!= null) {
+                	list.add(String.valueOf(i) + "-ORANGE" + "-" + getMonthAsString(currentMonth) + "-" + yy);
+                } else {
+                	list.add(String.valueOf(i) + "-WHITE" + "-" + getMonthAsString(currentMonth) + "-" + yy);
+                }
             }
 			
 			
@@ -387,7 +387,7 @@ public class TabCalendrier extends Activity {
 				//gridcell.setTextColor(getResources().getColor(R.color.static_text_color));
 				gridcell.setTextColor(Color.BLACK);
 			}
-
+			
 			if (day_color[1].equals("ORANGE")) {
 				gridcell.setText("  "+theday+" *");
 				gridcell.setTextColor(Color.WHITE);

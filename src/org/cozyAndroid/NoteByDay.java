@@ -27,9 +27,11 @@ public class NoteByDay extends Activity implements View.OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.note_by_day);
 		listeNotesByDay = (ListView) findViewById(R.id.listNotesByDay);
+		listeNotesByDay.setAdapter(adapter);
 		listeNotesByDay.setOnItemClickListener(new clicknote());
-		Replication.ViewByDay(this);
-		startEktorp();
+		listeNotesByDay.setOnItemLongClickListener(deleteItem);
+		//Replication.ViewByDay(this);
+		//startEktorp();
 		Replication.startReplications(this);
 	}
 	
@@ -49,9 +51,15 @@ public class NoteByDay extends Activity implements View.OnClickListener{
 			Row row = (Row)parent.getItemAtPosition(position);
 			JsonNode item = row.getValueAsNode();
 			JsonNode itemText = item.get("title");
-			CozyItemUtils.setRev(item.get("_rev").getTextValue());
-			CozyItemUtils.setId(item.get("_id").getTextValue());
-			CozyItemUtils.setListTags(item.get("tags").getTextValue());   // Pour l'instant on ne teste qu'un tag
+			if (item.get("_rev").getTextValue()!=null) {
+				CozyItemUtils.setRev(item.get("_rev").getTextValue());
+			}
+			if (item.get("_id").getTextValue()!=null) {
+				CozyItemUtils.setId(item.get("_id").getTextValue());
+			}
+			if (item.get("tags").getTextValue()!=null) {
+				CozyItemUtils.setListTags(item.get("tags").getTextValue());   // Pour l'instant on ne teste qu'un tag
+			}
 			CozyItemUtils.setDateCreation(item.get("created_at").getTextValue());
 			CozyItemUtils.setDateModification(item.get("modified_at").getTextValue());
 		    CozyItemUtils.setTitleModif(itemText.getTextValue());

@@ -49,7 +49,7 @@ public class CozyAndroidActivity extends TabActivity{
 		setupTab("TabTags", new Intent().setClass(this, TabDossier.class),1);
 		setupTab("TabPlus", new Intent().setClass(this, TabPlus.class),2);
 		setupTab("TabCalendrier", new Intent().setClass(this, TabCalendrier.class),3);
-		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		
 
 	}
 	
@@ -68,6 +68,7 @@ public class CozyAndroidActivity extends TabActivity{
 
 	public void onResume(){
 		super.onResume();
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 	}
 
 	public static TabHost gettabHost(){
