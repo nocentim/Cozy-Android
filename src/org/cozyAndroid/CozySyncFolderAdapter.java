@@ -85,7 +85,13 @@ public class CozySyncFolderAdapter extends CouchbaseViewListAdapter {
 			// C'est un dossier :
 			// on affiche son nom et ce qu'il y a dedans
             String name = item.get("name").getTextValue();
-            String shortName = name.substring(name.lastIndexOf('/' + 1));
+            String shortName;
+            int start = name.lastIndexOf('/');
+            if (start != -1) {
+            	shortName = name.substring(name.lastIndexOf('/' + 1));
+            } else {
+            	shortName = name;
+            }
 			vh.titre.setText(shortName);
 			//vh.body.setText(d.getInfos());
 			vh.body.setText("");
