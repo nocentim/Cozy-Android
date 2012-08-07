@@ -92,7 +92,7 @@ public class Replication {
             }
         }, null, "1.0");
 	    
-	    // Vue pour le calendrier
+	    // Calendar View
 	    TDView viewByDay = db.getViewNamed(String.format("%s/%s", dDocName, byDayViewName));
 	    viewByDay.setMapReduceBlocks(new TDViewMapBlock() {
 	    	

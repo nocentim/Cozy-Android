@@ -41,28 +41,17 @@ public class TabListe extends Activity {
 	private RechercheDossier dansDossier;
 	private int methodeTri = TRI_DATE;
 	
-	//constants
-	public static final String DATABASE_NAME = "grocery-sync";
 
-	
 	//splash screen
 	protected SplashScreenDialog splashDialog;
 	
-
-    public Context returnBaseContext() {
-    	return getBaseContext();
-    }
-    
-    
-    
-    
     
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState);
 		setContentView(R.layout.liste_notes);
-		Replication.NotesView(returnBaseContext());
-		Replication.suggestionView(returnBaseContext());
-		Replication.ViewByFolder(returnBaseContext());
+		Replication.NotesView(getBaseContext());
+		Replication.suggestionView(getBaseContext());
+		Replication.ViewByFolder(getBaseContext());
         startEktorp();
         
 		CozyItemUtils.initListTags();
@@ -237,7 +226,7 @@ public class TabListe extends Activity {
 
 			@Override
 			protected void doInBackground() {
-				Replication.couchDbConnector = Replication.dbInstance.createConnector(DATABASE_NAME, true);
+				Replication.couchDbConnector = Replication.dbInstance.createConnector(Replication.DATABASE_NOTES, true);
 			}
 
 			@Override

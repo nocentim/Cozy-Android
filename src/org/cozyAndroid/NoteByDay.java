@@ -27,10 +27,10 @@ public class NoteByDay extends Activity implements View.OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.note_by_day);
 		listeNotesByDay = (ListView) findViewById(R.id.listNotesByDay);
+		adapter.updateListItems();
 		listeNotesByDay.setAdapter(adapter);
 		listeNotesByDay.setOnItemClickListener(new clicknote());
 		listeNotesByDay.setOnItemLongClickListener(deleteItem);
-		//Replication.ViewByDay(this);
 		//startEktorp();
 		Replication.startReplications(this);
 	}
