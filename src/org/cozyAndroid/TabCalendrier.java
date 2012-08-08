@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -41,10 +42,13 @@ public class TabCalendrier extends Activity {
 	private final DateFormat dateFormatter = new DateFormat();
     private static final String dateTemplate = "MMMM yyyy";
     
+    
+    
     // attributs touchDB
     static String dayclicked;
     private static ViewQuery dviewQuery;
     private ViewResult viewResult;
+    private static HashMap<String,ViewResult> hashQuery;
     
     
 	public static String getDay() {
@@ -59,6 +63,13 @@ public class TabCalendrier extends Activity {
 		return dviewQuery;
 	}
 	
+	public static HashMap<String, ViewResult> getHashQuery() {
+		return hashQuery;
+	}
+	
+	public static void initHashQuery() {
+		hashQuery = new HashMap<String, ViewResult>();
+	}
 	
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState);
@@ -68,13 +79,18 @@ public class TabCalendrier extends Activity {
 		view = findViewById(R.id.currentMonth);
 		((TextView) view).setTextColor(Color.parseColor("#FFFFFF"));
 		
+		
+
+	}
+	
+	public void onResume() {
+		super.onResume();
 		_calendar = Calendar.getInstance(Locale.getDefault());
 		month = _calendar.get(Calendar.MONTH) + 1;
 		year = _calendar.get(Calendar.YEAR);
 		
 		// Récupération de la vue associée au jour selectionné sur le calendrier
 		selectedDayMonthYearButton = (Button) this.findViewById(R.id.selectedDayMonthYear);
-		((TextView) view).setTextColor(Color.parseColor("#FFFFFF"));
 		
 		// Récupération de la vue associée au bouton permettant de passer au mois précédent
 		prevMonth = (ImageView) this.findViewById(R.id.prevMonth);
@@ -97,7 +113,6 @@ public class TabCalendrier extends Activity {
 		calendarAdapter = new GridCellAdapter(getApplicationContext(), R.id.calendar_day_gridcell, month, year);
 		calendarAdapter.notifyDataSetChanged();
 		calendarView.setAdapter(calendarAdapter);
-
 	}
 	
 	/**
@@ -259,7 +274,6 @@ public class TabCalendrier extends Activity {
 			int nextMonth = 0;
 			int nextYear = 0;
 			boolean todayInActualMonth = false;
-			boolean cour = false;
 
 			int currentMonth = mm - 1;
 			
@@ -323,9 +337,9 @@ public class TabCalendrier extends Activity {
 			// Current Month Days			
 			for (int i = 1; i <= daysInMonth; i++) {
 				String date = getDateDay(i,mm,yy);
-				getViewQuery().key(date);
 				viewResult = Replication.couchDbConnector.queryView(getViewQuery().key(date));
 				if (viewResult.getSize()>0) {
+					hashQuery.put(date,viewResult);
                 	list.add(String.valueOf(i) + "-ORANGE" + "-" + getMonthAsString(currentMonth) + "-" + yy);
                 } else {
                 	list.add(String.valueOf(i) + "-WHITE" + "-" + getMonthAsString(currentMonth) + "-" + yy);
@@ -463,8 +477,8 @@ public class TabCalendrier extends Activity {
 				// C'est ici qu'on fait l'action après avoir appuyé sur un jour
 				// IMPORTANT
 				dayclicked = " "+ day + "-" + month + "-" + year;
-				viewResult = Replication.couchDbConnector.queryView(getViewQuery().key(dayclicked));
-				NoteByDay.adapter.notifyDataSetChanged();
+				//viewResult = Replication.couchDbConnector.queryView(getViewQuery().key(dayclicked));
+				//NoteByDay.adapter.notifyDataSetChanged();
 				Intent intent = new Intent(TabCalendrier.this, NoteByDay.class);
 				startActivity(intent);
 			}

@@ -40,6 +40,7 @@ public class CozyAndroidActivity extends TabActivity{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		TabCalendrier.initHashQuery();
 		tabHost = getTabHost();
 		layoutTab = new int[4];
 		layoutTab[0] = R.layout.tab_notes;

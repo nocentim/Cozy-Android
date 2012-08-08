@@ -1,6 +1,4 @@
 package org.cozyAndroid;
-import java.util.Collections;
-import java.util.Comparator;
 
 import org.codehaus.jackson.JsonNode;
 import org.ektorp.CouchDbConnector;
@@ -17,17 +15,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 
-public class CozyListByDateAdapter extends CouchbaseViewListAdapter{
+public class CozyListByDateAdapter extends CouchbaseViewListAdapter {
 
 	private LayoutInflater inflater;
 	protected NoteByDay parent;
@@ -42,6 +37,7 @@ public class CozyListByDateAdapter extends CouchbaseViewListAdapter{
 	   TextView title;
 	   TextView body;
 	}
+
 
 	@Override
 	public View getView(int position, View itemView, ViewGroup parent) {
@@ -108,7 +104,7 @@ public class CozyListByDateAdapter extends CouchbaseViewListAdapter{
 
 					@Override
 					protected void doInBackground() {
-						viewResult = couchDbConnector.queryView(viewQuery.key(TabCalendrier.dayclicked));
+						viewResult = NoteByDay.vResult;
 					}
 
 					protected void onSuccess() {

@@ -2,6 +2,7 @@ package org.cozyAndroid;
 
 import org.codehaus.jackson.JsonNode;
 import org.ektorp.ViewQuery;
+import org.ektorp.ViewResult;
 import org.ektorp.ViewResult.Row;
 import org.ektorp.impl.StdCouchDbInstance;
 
@@ -22,16 +23,17 @@ public class NoteByDay extends Activity implements View.OnClickListener{
 	private ListView listeNotesByDay;
 	static CozyListByDateAdapter adapter;
 	public static String TAG = "NoteByDay";
+	public static ViewResult vResult;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.note_by_day);
 		listeNotesByDay = (ListView) findViewById(R.id.listNotesByDay);
-		adapter.updateListItems();
+		vResult = TabCalendrier.getHashQuery().get(TabCalendrier.dayclicked.substring(1,11));
 		listeNotesByDay.setAdapter(adapter);
+		adapter.updateListItems();
 		listeNotesByDay.setOnItemClickListener(new clicknote());
 		listeNotesByDay.setOnItemLongClickListener(deleteItem);
-		//startEktorp();
 		Replication.startReplications(this);
 	}
 	
