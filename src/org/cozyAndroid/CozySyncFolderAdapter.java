@@ -30,11 +30,13 @@ import android.widget.TextView;
 public class CozySyncFolderAdapter extends CouchbaseViewListAdapter {
 
 	private LayoutInflater inflater;
+	private TabDossier context;
 	
 	
-	public CozySyncFolderAdapter(CouchDbConnector couchDbConnector, ViewQuery viewQuery, Context context) {
+	public CozySyncFolderAdapter(CouchDbConnector couchDbConnector, ViewQuery viewQuery, TabDossier context) {
 		super(couchDbConnector, viewQuery, true);
 		inflater = LayoutInflater.from(context);
+		this.context = context;
 	}
 
 	public boolean isDossier(int position) {
@@ -88,7 +90,7 @@ public class CozySyncFolderAdapter extends CouchbaseViewListAdapter {
             String shortName;
             int start = name.lastIndexOf('/');
             if (start != -1) {
-            	shortName = name.substring(name.lastIndexOf('/' + 1));
+            	shortName = name.substring(start + 1);
             } else {
             	shortName = name;
             }
@@ -185,7 +187,8 @@ public class CozySyncFolderAdapter extends CouchbaseViewListAdapter {
 						}
 						updateListItems();
 					}
-
+					context.enableButtons();
+					
 				}
 
 				@Override
