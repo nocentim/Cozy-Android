@@ -2,6 +2,7 @@ package org.cozyAndroid;
 
 import org.codehaus.jackson.JsonNode;
 import org.ektorp.ViewQuery;
+import org.ektorp.ViewResult;
 import org.ektorp.ViewResult.Row;
 import org.ektorp.impl.StdCouchDbInstance;
 
@@ -20,16 +21,19 @@ import com.couchbase.touchdb.ektorp.TouchDBHttpClient;
 public class NoteByDay extends Activity implements View.OnClickListener{
 	
 	private ListView listeNotesByDay;
-	private CozyListByDateAdapter adapter;
+	static CozyListByDateAdapter adapter;
 	public static String TAG = "NoteByDay";
+	public static ViewResult vResult;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.note_by_day);
 		listeNotesByDay = (ListView) findViewById(R.id.listNotesByDay);
+		vResult = TabCalendrier.getHashQuery().get(TabCalendrier.dayclicked.substring(1,11));
+		listeNotesByDay.setAdapter(adapter);
+		adapter.updateListItems();
 		listeNotesByDay.setOnItemClickListener(new clicknote());
-		Replication.ViewByDay(this);
-		startEktorp();
+		listeNotesByDay.setOnItemLongClickListener(deleteItem);
 		Replication.startReplications(this);
 	}
 	
@@ -49,9 +53,15 @@ public class NoteByDay extends Activity implements View.OnClickListener{
 			Row row = (Row)parent.getItemAtPosition(position);
 			JsonNode item = row.getValueAsNode();
 			JsonNode itemText = item.get("title");
-			CozyItemUtils.setRev(item.get("_rev").getTextValue());
-			CozyItemUtils.setId(item.get("_id").getTextValue());
-			CozyItemUtils.setListTags(item.get("tags").getTextValue());   // Pour l'instant on ne teste qu'un tag
+			if (item.get("_rev").getTextValue()!=null) {
+				CozyItemUtils.setRev(item.get("_rev").getTextValue());
+			}
+			if (item.get("_id").getTextValue()!=null) {
+				CozyItemUtils.setId(item.get("_id").getTextValue());
+			}
+			if (item.get("tags").getTextValue()!=null) {
+				CozyItemUtils.setListTags(item.get("tags").getTextValue());   // Pour l'instant on ne teste qu'un tag
+			}
 			CozyItemUtils.setDateCreation(item.get("created_at").getTextValue());
 			CozyItemUtils.setDateModification(item.get("modified_at").getTextValue());
 		    CozyItemUtils.setTitleModif(itemText.getTextValue());
@@ -84,7 +94,7 @@ public class NoteByDay extends Activity implements View.OnClickListener{
 			protected void onSuccess() {
 				//attach list adapter to the list and handle clicks
 				ViewQuery viewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.byDayViewName).descending(true);
-				adapter = new CozyListByDateAdapter(NoteByDay.this, Replication.couchDbConnector, viewQuery, NoteByDay.this);
+				adapter = new CozyListByDateAdapter(Replication.couchDbConnector, viewQuery, NoteByDay.this);
 				listeNotesByDay.setAdapter(adapter);
 				listeNotesByDay.setOnItemLongClickListener(deleteItem);
 

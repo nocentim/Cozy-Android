@@ -4,9 +4,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+
+import org.ektorp.ViewQuery;
+import org.ektorp.ViewResult;
 
 import android.app.Activity;
 import android.content.Context;
@@ -32,19 +36,40 @@ public class TabCalendrier extends Activity {
 	private ImageView prevMonth;
 	private ImageView nextMonth;
 	private GridView calendarView;
-	private GridCellAdapter adapter;
+	private GridCellAdapter calendarAdapter;
 	private Calendar _calendar;
 	private int month, year;
 	private final DateFormat dateFormatter = new DateFormat();
     private static final String dateTemplate = "MMMM yyyy";
     
+    
+    
     // attributs touchDB
-    private static String dayclicked;
-	
+    static String dayclicked;
+    private static ViewQuery dviewQuery;
+    private ViewResult viewResult;
+    private static HashMap<String,ViewResult> hashQuery;
+    
+    
 	public static String getDay() {
 		return dayclicked;
 	}
 	
+	public static void setViewQuery() {
+		dviewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.byDayViewName).descending(true);
+	}
+	
+	public static ViewQuery getViewQuery(){
+		return dviewQuery;
+	}
+	
+	public static HashMap<String, ViewResult> getHashQuery() {
+		return hashQuery;
+	}
+	
+	public static void initHashQuery() {
+		hashQuery = new HashMap<String, ViewResult>();
+	}
 	
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState);
@@ -54,17 +79,25 @@ public class TabCalendrier extends Activity {
 		view = findViewById(R.id.currentMonth);
 		((TextView) view).setTextColor(Color.parseColor("#FFFFFF"));
 		
+		
+
+	}
+	
+	public void onResume() {
+		super.onResume();
 		_calendar = Calendar.getInstance(Locale.getDefault());
 		month = _calendar.get(Calendar.MONTH) + 1;
 		year = _calendar.get(Calendar.YEAR);
+		
 		// Récupération de la vue associée au jour selectionné sur le calendrier
 		selectedDayMonthYearButton = (Button) this.findViewById(R.id.selectedDayMonthYear);
-		((TextView) view).setTextColor(Color.parseColor("#FFFFFF"));
 		
 		// Récupération de la vue associée au bouton permettant de passer au mois précédent
 		prevMonth = (ImageView) this.findViewById(R.id.prevMonth);
 		prevMonth.setOnClickListener(prevORnextMonthClicked);
 		currentMonth = (Button) this.findViewById(R.id.currentMonth);
+		
+		// permet de fixer le format de date
 		SimpleDateFormat s;
 		s = new SimpleDateFormat("MMMM yyyy",Locale.FRANCE)	;	
 		
@@ -77,11 +110,9 @@ public class TabCalendrier extends Activity {
 		//Récupération du calendrier en lui-même
 		calendarView = (GridView) this.findViewById(R.id.calendar);
 	
-		
-		adapter = new GridCellAdapter(getApplicationContext(), R.id.calendar_day_gridcell, month, year);
-		adapter.notifyDataSetChanged();
-		calendarView.setAdapter(adapter);
-
+		calendarAdapter = new GridCellAdapter(getApplicationContext(), R.id.calendar_day_gridcell, month, year);
+		calendarAdapter.notifyDataSetChanged();
+		calendarView.setAdapter(calendarAdapter);
 	}
 	
 	/**
@@ -90,13 +121,13 @@ public class TabCalendrier extends Activity {
     * @param year
     */   
    private void setGridCellAdapterToDate(int month, int year) {
-		adapter = new GridCellAdapter(getApplicationContext(), R.id.calendar_day_gridcell, month, year);
+		calendarAdapter = new GridCellAdapter(getApplicationContext(), R.id.calendar_day_gridcell, month, year);
 		_calendar.set(year,month-1,1);
 		SimpleDateFormat s;
 		s = new SimpleDateFormat("MMMM yyyy",Locale.FRANCE)	;
 		currentMonth.setText(s.format(_calendar.getTime()));
-		adapter.notifyDataSetChanged();
-		calendarView.setAdapter(adapter);
+		calendarAdapter.notifyDataSetChanged();
+		calendarView.setAdapter(calendarAdapter);
 	}
 
    public void onClick(View v) {
@@ -122,11 +153,10 @@ public class TabCalendrier extends Activity {
    }
 
    @Override
-   public void onDestroy()
-       {
-           Log.d(tag, "Destroying View ...");
-           super.onDestroy();
-       }
+   public void onDestroy(){
+	   Log.d(tag, "Destroying View ...");
+       super.onDestroy();
+   }
    
 // Listener sur les boutons permettant de changer de mois
 	private View.OnClickListener prevORnextMonthClicked = new View.OnClickListener() {
@@ -244,7 +274,6 @@ public class TabCalendrier extends Activity {
 			int nextMonth = 0;
 			int nextYear = 0;
 			boolean todayInActualMonth = false;
-			boolean cour = false;
 
 			int currentMonth = mm - 1;
 			
@@ -307,16 +336,15 @@ public class TabCalendrier extends Activity {
 
 			// Current Month Days			
 			for (int i = 1; i <= daysInMonth; i++) {
-                if (i == getCurrentDayOfMonth())
-                    {
-                        list.add(String.valueOf(i) + "-BLUE" + "-" + getMonthAsString(currentMonth) + "-" + yy);
-                    }
-                else
-                    {
-                        list.add(String.valueOf(i) + "-WHITE" + "-" + getMonthAsString(currentMonth) + "-" + yy);
-                    }
+				String date = getDateDay(i,mm,yy);
+				viewResult = Replication.couchDbConnector.queryView(getViewQuery().key(date));
+				if (viewResult.getSize()>0) {
+					hashQuery.put(date,viewResult);
+                	list.add(String.valueOf(i) + "-ORANGE" + "-" + getMonthAsString(currentMonth) + "-" + yy);
+                } else {
+                	list.add(String.valueOf(i) + "-WHITE" + "-" + getMonthAsString(currentMonth) + "-" + yy);
+                }
             }
-			
 			
 			// Leading Month days
 			for (int i = 0; i < list.size() % 7; i++) {
@@ -355,7 +383,6 @@ public class TabCalendrier extends Activity {
 			gridcell.setOnClickListener(dayClicked);
 
 			// ACCOUNT FOR SPACING
-
 			String[] day_color = list.get(position).split("-");
 			String theday = day_color[0];
 			String themonth = day_color[2];
@@ -376,6 +403,7 @@ public class TabCalendrier extends Activity {
 				//gridcell.setTextColor(getResources().getColor(R.color.static_text_color));
 				gridcell.setTextColor(Color.BLACK);
 			}
+			
 			if (day_color[1].equals("ORANGE")) {
 				gridcell.setText("  "+theday+" *");
 				gridcell.setTextColor(Color.WHITE);
@@ -449,7 +477,9 @@ public class TabCalendrier extends Activity {
 				// C'est ici qu'on fait l'action après avoir appuyé sur un jour
 				// IMPORTANT
 				dayclicked = " "+ day + "-" + month + "-" + year;
-				Intent intent = new Intent(getBaseContext(), NoteByDay.class);
+				//viewResult = Replication.couchDbConnector.queryView(getViewQuery().key(dayclicked));
+				//NoteByDay.adapter.notifyDataSetChanged();
+				Intent intent = new Intent(TabCalendrier.this, NoteByDay.class);
 				startActivity(intent);
 			}
 		};
