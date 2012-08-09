@@ -41,28 +41,17 @@ public class TabListe extends Activity {
 	private RechercheDossier dansDossier;
 	private int methodeTri = TRI_DATE;
 	
-	//constants
-	public static final String DATABASE_NAME = "grocery-sync";
 
-	
 	//splash screen
 	protected SplashScreenDialog splashDialog;
 	
-
-    public Context returnBaseContext() {
-    	return getBaseContext();
-    }
-    
-    
-    
-    
     
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState);
 		setContentView(R.layout.liste_notes);
-		Replication.NotesView(returnBaseContext());
-		Replication.suggestionView(returnBaseContext());
-		Replication.ViewByFolder(returnBaseContext());
+		Replication.NotesView(getBaseContext());
+		Replication.suggestionView(getBaseContext());
+		Replication.ViewByFolder(getBaseContext());
         startEktorp();
         
 		CozyItemUtils.initListTags();
@@ -203,9 +192,15 @@ public class TabListe extends Activity {
 			JsonNode item = row.getValueAsNode();
 			JsonNode itemText = item.get("title");
 			Log.d("title", itemText.getTextValue());
-			CozyItemUtils.setRev(item.get("_rev").getTextValue());
-			CozyItemUtils.setId(item.get("_id").getTextValue());
-			CozyItemUtils.setListTags(item.get("tags").getTextValue());   // Pour l'instant on ne teste qu'un tag
+			if (item.get("_rev").getTextValue()!=null) {
+				CozyItemUtils.setRev(item.get("_rev").getTextValue());
+			}
+			if (item.get("_id").getTextValue()!=null) {
+				CozyItemUtils.setId(item.get("_id").getTextValue());
+			}
+			if (item.get("tags").getTextValue()!=null) {
+				CozyItemUtils.setListTags(item.get("tags").getTextValue());   // Pour l'instant on ne teste qu'un tag
+			}
 			CozyItemUtils.setDateCreation(item.get("created_at").getTextValue());
 			CozyItemUtils.setDateModification(item.get("modified_at").getTextValue());
 			Log.d("tags", item.get("tags").getTextValue());
@@ -231,7 +226,7 @@ public class TabListe extends Activity {
 
 			@Override
 			protected void doInBackground() {
-				Replication.couchDbConnector = Replication.dbInstance.createConnector(DATABASE_NAME, true);
+				Replication.couchDbConnector = Replication.dbInstance.createConnector(Replication.DATABASE_NOTES, true);
 			}
 
 			@Override
@@ -244,6 +239,10 @@ public class TabListe extends Activity {
 				ViewQuery sViewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.suggestionsViewName).descending(false);
 				SuggestionAdapter searchAdapter = new SuggestionAdapter(Replication.couchDbConnector, sViewQuery, TabListe.this);
 				rechercheNote.setAdapter(searchAdapter);
+				
+				TabCalendrier.setViewQuery();
+				NoteByDay.adapter = new CozyListByDateAdapter(Replication.couchDbConnector, TabCalendrier.getViewQuery(), TabListe.this);
+
 				//adapter for folders
 				//listeNotes.setOnItemClickListener(TabListe.this);
 				listeNotes.setOnItemLongClickListener(deleteItem);

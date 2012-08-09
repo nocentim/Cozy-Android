@@ -107,7 +107,7 @@ public class SuggestionAdapter extends CouchbaseViewListAdapter  implements Filt
 			String end = start.toUpperCase() + "\u9999";
 			SuggestionAdapter.this.viewQuery.startKey(start).endKey(end).group(true);
 			SuggestionAdapter.this.updateListItems();
-			res.count = getCount();
+			res.count = getCount();	
 			Log.d("filtrage suggestions","count = " + res.count);
 			res.values = null;
 			return res;
@@ -124,110 +124,110 @@ public class SuggestionAdapter extends CouchbaseViewListAdapter  implements Filt
 		
 	}
 	
-	//Copié-collé du code de CouchbaseViewAdapter avec modification de updateListItem()
+		//Copiï¿½-collï¿½ du code de CouchbaseViewAdapter avec modification de updateListItem()
+		
+		private static final Logger LOG = LoggerFactory
+	            .getLogger(CouchbaseViewListAdapter.class);
+		protected CouchbaseListChangesAsyncTask couchChangesAsyncTask;
 	
-	private static final Logger LOG = LoggerFactory
-            .getLogger(CouchbaseViewListAdapter.class);
-	protected CouchbaseListChangesAsyncTask couchChangesAsyncTask;
-
-	protected void updateListItems() {
-		//if we're not already in the process of updating the list, start a task to do so
-		if(updateListItemsTask == null) {
-
-			updateListItemsTask = new EktorpAsyncTask() {
-
-				protected ViewResult viewResult;
-
-				@Override
-				protected void doInBackground() {
-					viewResult = couchDbConnector.queryView(viewQuery);
-				}
-
-				protected void onSuccess() {
-					if(viewResult != null) {
-						lastUpdateView = viewResult.getUpdateSeq();
-						listRows = viewResult.getRows();
-						Collections.sort(listRows, new Comparator<Row>() {
-
-							@Override
-							public int compare(Row lhs, Row rhs) {
-								Log.d("tri par valeur", "left : " + lhs.getValueAsInt() + " right : " + rhs.getValueAsInt());
-								return ((Integer)rhs.getValueAsInt()).compareTo(lhs.getValueAsInt());
-							}
-						});
-						notifyDataSetChanged();
+		protected void updateListItems() {
+			//if we're not already in the process of updating the list, start a task to do so
+			if(updateListItemsTask == null) {
+	
+				updateListItemsTask = new EktorpAsyncTask() {
+	
+					protected ViewResult viewResult;
+	
+					@Override
+					protected void doInBackground() {
+						viewResult = couchDbConnector.queryView(viewQuery);
 					}
-					updateListItemsTask = null;
-
-					//we want to start our changes feed AFTER
-					//getting our first copy of the view
-					if(couchChangesAsyncTask == null && followChanges) {
-						//create an ansyc task to get updates
-						ChangesCommand changesCmd = new ChangesCommand.Builder().since(lastUpdateView)
-								.includeDocs(false)
-								.continuous(true)
-								.heartbeat(5000)
-								.build();
-
-						couchChangesAsyncTask = new CouchbaseListChangesAsyncTask(couchDbConnector, changesCmd);
-						couchChangesAsyncTask.execute();
-					}
-
-					if(lastUpdateChangesFeed > lastUpdateView) {
-						if (LOG.isDebugEnabled()) {
-				            LOG.debug("Finished, but still behind " + lastUpdateChangesFeed + " > " + lastUpdateView);
+	
+					protected void onSuccess() {
+						if(viewResult != null) {
+							lastUpdateView = viewResult.getUpdateSeq();
+							listRows = viewResult.getRows();
+							Collections.sort(listRows, new Comparator<Row>() {
+	
+								@Override
+								public int compare(Row lhs, Row rhs) {
+									Log.d("tri par valeur", "left : " + lhs.getValueAsInt() + " right : " + rhs.getValueAsInt());
+									return ((Integer)rhs.getValueAsInt()).compareTo(lhs.getValueAsInt());
+								}
+							});
+							notifyDataSetChanged();
 						}
-						updateListItems();
+						updateListItemsTask = null;
+	
+						//we want to start our changes feed AFTER
+						//getting our first copy of the view
+						if(couchChangesAsyncTask == null && followChanges) {
+							//create an ansyc task to get updates
+							ChangesCommand changesCmd = new ChangesCommand.Builder().since(lastUpdateView)
+									.includeDocs(false)
+									.continuous(true)
+									.heartbeat(5000)
+									.build();
+	
+							couchChangesAsyncTask = new CouchbaseListChangesAsyncTask(couchDbConnector, changesCmd);
+							couchChangesAsyncTask.execute();
+						}
+	
+						if(lastUpdateChangesFeed > lastUpdateView) {
+							if (LOG.isDebugEnabled()) {
+					            LOG.debug("Finished, but still behind " + lastUpdateChangesFeed + " > " + lastUpdateView);
+							}
+							updateListItems();
+						}
+	
 					}
-
-				}
-
-				@Override
-				protected void onDbAccessException(
-						DbAccessException dbAccessException) {
-					handleViewAsyncTaskDbAccessException(dbAccessException);
-				}
-
-			};
-
-			updateListItemsTask.execute();
+	
+					@Override
+					protected void onDbAccessException(
+							DbAccessException dbAccessException) {
+						handleViewAsyncTaskDbAccessException(dbAccessException);
+					}
+	
+				};
+	
+				updateListItemsTask.execute();
+			}
 		}
-	}
-
-	protected void handleViewAsyncTaskDbAccessException(DbAccessException dbAccessException) {
-		LOG.error("DbAccessException accessing view for list", dbAccessException);
-	}
-
-	private class CouchbaseListChangesAsyncTask extends ChangesFeedAsyncTask {
-
-		public CouchbaseListChangesAsyncTask(CouchDbConnector couchDbConnector,
-				ChangesCommand changesCommand) {
-			super(couchDbConnector, changesCommand);
+	
+		protected void handleViewAsyncTaskDbAccessException(DbAccessException dbAccessException) {
+			LOG.error("DbAccessException accessing view for list", dbAccessException);
 		}
-
-		@Override
-		protected void handleDocumentChange(DocumentChange change) {
-			lastUpdateChangesFeed = change.getSequence();
-			updateListItems();
+	
+		private class CouchbaseListChangesAsyncTask extends ChangesFeedAsyncTask {
+	
+			public CouchbaseListChangesAsyncTask(CouchDbConnector couchDbConnector,
+					ChangesCommand changesCommand) {
+				super(couchDbConnector, changesCommand);
+			}
+	
+			@Override
+			protected void handleDocumentChange(DocumentChange change) {
+				lastUpdateChangesFeed = change.getSequence();
+				updateListItems();
+			}
+	
+			@Override
+			protected void onDbAccessException(DbAccessException dbAccessException) {
+				handleChangesAsyncTaskDbAccessException(dbAccessException);
+			}
+	
 		}
-
-		@Override
-		protected void onDbAccessException(DbAccessException dbAccessException) {
-			handleChangesAsyncTaskDbAccessException(dbAccessException);
+	
+		protected void handleChangesAsyncTaskDbAccessException(DbAccessException dbAccessException) {
+			LOG.error("DbAccessException following changes feed for list", dbAccessException);
 		}
-
-	}
-
-	protected void handleChangesAsyncTaskDbAccessException(DbAccessException dbAccessException) {
-		LOG.error("DbAccessException following changes feed for list", dbAccessException);
-	}
-
-	/**
-	 * Cancel the following of continuous changes, necessary to properly clean up resources
-	 */
-	public void cancelContinuous() {
-		if(couchChangesAsyncTask != null) {
-			couchChangesAsyncTask.cancel(true);
+	
+		/**
+		 * Cancel the following of continuous changes, necessary to properly clean up resources
+		 */
+		public void cancelContinuous() {
+			if(couchChangesAsyncTask != null) {
+				couchChangesAsyncTask.cancel(true);
+			}
 		}
-	}
 }
