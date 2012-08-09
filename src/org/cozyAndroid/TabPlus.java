@@ -27,7 +27,7 @@ public class TabPlus extends Activity implements View.OnClickListener{
 	private EditText newName = null ;
 	private String title;
 	static boolean modif = false ;
-	static boolean retour=false;
+	static boolean retour=false ;
 	private WebView webView;
 	private static ArrayList<String> tags = new ArrayList<String>();
 	private static String formerActivity;
@@ -45,18 +45,6 @@ public class TabPlus extends Activity implements View.OnClickListener{
 	    TDURLStreamHandlerFactory.registerSelfIgnoreError();
 		}
 
-	public static void addTag(String s) {
-		tags.add(s);
-	}
-	
-	public static void formerActivity(String a) {
-		formerActivity = a;
-	}
-	
-	public static String formerActivity() {
-		return formerActivity;
-	}
-	
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState) ;
 
@@ -77,15 +65,7 @@ public class TabPlus extends Activity implements View.OnClickListener{
 		webView.loadUrl("file:///android_asset/www/index.html");
 		}
 
-	public EditText getNewName() {
-		return newName;
-	}
-
 	//TODO pour ouvrir une note existante il faudra charger son body grace à la fonction js setEditorContent
-
-	public void setNewName(String name) {
-		newName.setText(name);
-	}
 
 	public void onResume() {
 		super.onResume();
@@ -99,8 +79,6 @@ public class TabPlus extends Activity implements View.OnClickListener{
 		}
 		
 	}
-
-	//TODO verifier le bon fonctionnement de cette methode suite a toutes les modifications
 
 	public void onClick(View v) {
 		int id = v.getId() ;
@@ -122,6 +100,7 @@ public class TabPlus extends Activity implements View.OnClickListener{
 			title = newName.getText().toString();
 			TabPlus.this.startActivity(properties);
 			break;
+			
 		case R.id.save :
 			//TODO il faut remettre le titre et le corps a zero, on peut inverser l'ordre des deux premiers case et
 			//pas mettre de break entre les deux pour qu'après la sauvegarde il y ai directement la remise à zero
@@ -235,6 +214,27 @@ public class TabPlus extends Activity implements View.OnClickListener{
 		};
 		createItemTask.execute();
 	}
+
+	public void setNewName(String name) {
+		newName.setText(name);
+	}
+
+	public static void addTag(String s) {
+		tags.add(s);
+	}
+	
+	public static void formerActivity(String a) {
+		formerActivity = a;
+	}
+	
+	public static String formerActivity() {
+		return formerActivity;
+	}
+	
+	public EditText getNewName() {
+		return newName;
+	}
+
 
 }
 
