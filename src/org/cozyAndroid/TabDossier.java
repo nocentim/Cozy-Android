@@ -140,7 +140,7 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 			ouvreSuivant();
 			break;
 		case R.id.suppr_button :
-			if (folderAdapter.getCount() == 0) {
+			if (folderAdapter != null && folderAdapter.getCount() == 0) {
 				supprimerCourant();
 			}
 			break;
@@ -258,14 +258,13 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 	 */
 	private void majInterface() {
 		String courant = getDossierCourant();
-		
+		folderAdapter.setDossier(courant); 
 		enableButtons();
 		setPathWithLinks(courant);
 		MovementMethod m = path.getMovementMethod();
 	    if ((m == null) || !(m instanceof LinkMovementMethod)) {
 	        path.setMovementMethod(LinkMovementMethod.getInstance());
 	    }
-		folderAdapter.setDossier(courant);
 	}
 	
 	/**

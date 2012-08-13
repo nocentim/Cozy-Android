@@ -78,8 +78,6 @@ public class TabCalendrier extends Activity {
 		((TextView) view).setTextColor(Color.parseColor("#FFFFFF"));
 		view = findViewById(R.id.currentMonth);
 		((TextView) view).setTextColor(Color.parseColor("#FFFFFF"));
-		
-		
 
 	}
 	

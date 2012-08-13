@@ -99,7 +99,8 @@ public class Replication {
 	    	@Override
 	            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
 	                Object createdAt = document.get("created_at");
-	                if(createdAt != null) {     
+	                Object type = document.get("type");
+	                if(type != null && type.toString().equals("note") && createdAt != null) {     
 	                	//if (createdAt.toString().equals(TabCalendrier.getDay().substring(1,11))) {	
 	                		emitter.emit(createdAt.toString(), document);
 	                	//}
@@ -160,32 +161,6 @@ public class Replication {
                 	}
                 }
 	    	}
-	    }, null, "1.0");
-
-	}
-	
-	protected static void ViewByDay(Context context) {
-		/*String filesDir = context.getFilesDir().getAbsolutePath();
-	    try {
-            server = new TDServer(filesDir);
-        } catch (IOException e) {
-            Log.e(TAG, "Error starting TDServer", e);
-        }*/
-	    //install a view definition needed by the application
-	    TDDatabase db = server.getDatabaseNamed(DATABASE_NOTES);
-	    TDView view = db.getViewNamed(String.format("%s/%s", dDocName, byDayViewName));
-	    view.setMapReduceBlocks(new TDViewMapBlock() {
-	    	
-	    	@Override
-            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
-                Object createdAt = document.get("created_at");
-                Object type = document.get("type");
-                if((type == null || type.toString().equals("note")) && createdAt != null) {     
-                	if (createdAt.toString().equals(TabCalendrier.getDay().substring(1,11))) {
-                		emitter.emit(createdAt.toString(), document);
-                	}
-                }
-	        }
 	    }, null, "1.0");
 
 	}
