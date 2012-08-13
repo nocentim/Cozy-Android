@@ -8,7 +8,7 @@
     <org.cozyAndroid.RechercheNote
         android:id="@+id/recherche_note"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:ems="10"
         android:hint="@string/search_hint"
         android:inputType="textPersonName" >
@@ -29,10 +29,10 @@
         <org.cozyAndroid.RechercheDossier
             android:id="@+id/dans_dossier"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:ems="10"
             android:hint="tous les dossiers"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"/>
     </LinearLayout>
 
     <TextView
@@ -45,7 +45,10 @@
     <ListView
         android:id="@+id/listNotes"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content" 
+        android:divider="#b5b5b5"
+        android:dividerHeight="1dp"
+        android:listSelector="@drawable/list_selector" >
     </ListView>
 
 </LinearLayout>

@@ -19,6 +19,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class TabCalendrier extends Activity {
 	
@@ -475,10 +477,17 @@ public class TabCalendrier extends Activity {
 				// C'est ici qu'on fait l'action après avoir appuyé sur un jour
 				// IMPORTANT
 				dayclicked = " "+ day + "-" + month + "-" + year;
-				//viewResult = Replication.couchDbConnector.queryView(getViewQuery().key(dayclicked));
-				//NoteByDay.adapter.notifyDataSetChanged();
-				Intent intent = new Intent(TabCalendrier.this, NoteByDay.class);
-				startActivity(intent);
+				if (hashQuery.containsKey(dayclicked.substring(1,11))) {
+					//viewResult = Replication.couchDbConnector.queryView(getViewQuery().key(dayclicked));
+					//NoteByDay.adapter.notifyDataSetChanged();
+					Intent intent = new Intent(TabCalendrier.this, NoteByDay.class);
+					startActivity(intent);
+				} else {
+					Toast t;
+					t = Toast.makeText(TabCalendrier.this, "Aucune note pour le jour sélctionné", Toast.LENGTH_SHORT);
+					t.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 170);
+					t.show();
+				}
 			}
 		};
 
