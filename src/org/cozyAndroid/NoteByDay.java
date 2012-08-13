@@ -1,22 +1,17 @@
 package org.cozyAndroid;
 
 import org.codehaus.jackson.JsonNode;
-import org.ektorp.ViewQuery;
 import org.ektorp.ViewResult;
 import org.ektorp.ViewResult.Row;
-import org.ektorp.impl.StdCouchDbInstance;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-
-import com.couchbase.touchdb.ektorp.TouchDBHttpClient;
 
 public class NoteByDay extends Activity implements View.OnClickListener{
 	
@@ -72,37 +67,6 @@ public class NoteByDay extends Activity implements View.OnClickListener{
 		}
 	}
 
-	
-	protected void startEktorp() {
-		Log.v(TAG, "starting ektorp");
-
-		if(Replication.httpClient != null) {
-			Replication.httpClient.shutdown();
-		}
-
-		Replication.httpClient = new TouchDBHttpClient(Replication.server);
-		Replication.dbInstance = new StdCouchDbInstance(Replication.httpClient);
-
-		CozySyncEktorpAsyncTask startupTask = new CozySyncEktorpAsyncTask() {
-
-			@Override
-			protected void doInBackground() {
-				Replication.couchDbConnector = Replication.dbInstance.createConnector(Replication.DATABASE_NOTES, true);
-			}
-
-			@Override
-			protected void onSuccess() {
-				//attach list adapter to the list and handle clicks
-				ViewQuery viewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.byDayViewName).descending(true);
-				adapter = new CozyListByDateAdapter(Replication.couchDbConnector, viewQuery, NoteByDay.this);
-				listeNotesByDay.setAdapter(adapter);
-				listeNotesByDay.setOnItemLongClickListener(deleteItem);
-
-				Replication.startReplications(getBaseContext());
-			}
-		};
-		startupTask.execute();
-	}
 	
 	/**
 	 * Handle long-click on item in list
