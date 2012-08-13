@@ -106,6 +106,21 @@ public class Replication {
 	                }
         }
     }, null, "1.0");
+	    
+	//Tags View
+	TDView viewByTags = db.getViewNamed(String.format("%s/%s", dDocName, byTagsViewName));
+    viewByTags.setMapReduceBlocks(new TDViewMapBlock() {
+    	
+    	@Override
+        public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
+            Object tagged = document.get("tags");
+            if(tagged != null) {	
+            	if (!tagged.toString().equals("aucun")) {
+            		emitter.emit(tagged.toString(), document);
+            	}
+            }
+    	}
+    }, null, "1.0");
 
 	}
 	
@@ -138,13 +153,7 @@ public class Replication {
 		}, "1.0");
 	}
 	
-	protected static void TagView(Context context) {
-		/*String filesDir = context.getFilesDir().getAbsolutePath();
-	    try {
-            server = new TDServer(filesDir);
-        } catch (IOException e) {
-            Log.e(TAG, "Error starting TDServer", e);
-        }*/
+	/*protected static void TagView(Context context) {
 	    
 	    //install a view definition needed by the application
 	    TDDatabase db = server.getDatabaseNamed(DATABASE_NOTES);
@@ -154,23 +163,17 @@ public class Replication {
 	    	@Override
             public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
                 Object tagged = document.get("tags");
-                if(tagged != null) {
-                	if (tagged !="aucun") {
+                if(tagged != null) {	
+                	if (!tagged.toString().equals("aucun")) {
                 		emitter.emit(tagged.toString(), document);
                 	}
                 }
 	    	}
 	    }, null, "1.0");
 
-	}
+	}*/
 	
 	protected static void ViewByDay(Context context) {
-		/*String filesDir = context.getFilesDir().getAbsolutePath();
-	    try {
-            server = new TDServer(filesDir);
-        } catch (IOException e) {
-            Log.e(TAG, "Error starting TDServer", e);
-        }*/
 	    //install a view definition needed by the application
 	    TDDatabase db = server.getDatabaseNamed(DATABASE_NOTES);
 	    TDView view = db.getViewNamed(String.format("%s/%s", dDocName, byDayViewName));

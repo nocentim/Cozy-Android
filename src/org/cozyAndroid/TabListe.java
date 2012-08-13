@@ -243,6 +243,9 @@ public class TabListe extends Activity {
 				TabCalendrier.setViewQuery();
 				NoteByDay.adapter = new CozyListByDateAdapter(Replication.couchDbConnector, TabCalendrier.getViewQuery(), TabListe.this);
 
+				TagNote.adapter = new CozySyncEtiqAdapter(Replication.couchDbConnector, TagNote.vQuery, TabListe.this);
+				
+				
 				//adapter for folders
 				//listeNotes.setOnItemClickListener(TabListe.this);
 				listeNotes.setOnItemLongClickListener(deleteItem);
