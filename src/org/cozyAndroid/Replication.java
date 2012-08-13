@@ -139,12 +139,6 @@ public class Replication {
 	}
 	
 	protected static void TagView(Context context) {
-		/*String filesDir = context.getFilesDir().getAbsolutePath();
-	    try {
-            server = new TDServer(filesDir);
-        } catch (IOException e) {
-            Log.e(TAG, "Error starting TDServer", e);
-        }*/
 	    
 	    //install a view definition needed by the application
 	    TDDatabase db = server.getDatabaseNamed(DATABASE_NOTES);
@@ -165,12 +159,6 @@ public class Replication {
 	}
 	
 	protected static void ViewByDay(Context context) {
-		/*String filesDir = context.getFilesDir().getAbsolutePath();
-	    try {
-            server = new TDServer(filesDir);
-        } catch (IOException e) {
-            Log.e(TAG, "Error starting TDServer", e);
-        }*/
 	    //install a view definition needed by the application
 	    TDDatabase db = server.getDatabaseNamed(DATABASE_NOTES);
 	    TDView view = db.getViewNamed(String.format("%s/%s", dDocName, byDayViewName));
