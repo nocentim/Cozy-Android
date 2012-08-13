@@ -32,6 +32,8 @@ public class TabPlus extends Activity implements View.OnClickListener{
 	private static ArrayList<String> tags = new ArrayList<String>();
 	private static String formerActivity;
 	
+	private String body ;
+	
 	public static final String TAG = "TabPlus";
 	// setup clock
 	Calendar cal = null;
@@ -100,8 +102,11 @@ public class TabPlus extends Activity implements View.OnClickListener{
 			title = newName.getText().toString();
 			TabPlus.this.startActivity(properties);
 			break;
-			
+								
 		case R.id.save :
+			webView.loadUrl("javascript:getEditorContentAndroid()") ;
+//			Toast.makeText (TabPlus.this, body, Toast.LENGTH_LONG).show();
+		
 			//TODO il faut remettre le titre et le corps a zero, on peut inverser l'ordre des deux premiers case et
 			//pas mettre de break entre les deux pour qu'après la sauvegarde il y ai directement la remise à zero
 			String inputTitle = newName.getText().toString();
@@ -162,7 +167,7 @@ public class TabPlus extends Activity implements View.OnClickListener{
 		public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
 			// cette methode vient du livre android  mais elle n'avait pas exactement cette forme,
 			// il peut etre interessant de retourner la voir
-			Toast.makeText (TabPlus.this, "Interception d'une alertejs:\n" + message, Toast.LENGTH_LONG).show();
+			Toast.makeText (TabPlus.this, "Interception d'une alerte js:\n" + message, Toast.LENGTH_LONG).show();
 			result.confirm();
 			return true;
 		}
@@ -184,6 +189,10 @@ public class TabPlus extends Activity implements View.OnClickListener{
 		/** Show a toast from the web page */
 		public void showToast(String toast) {
 			Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
+		}
+		
+		public void setBody (String b) {
+			body = b ;
 		}
 	}
 

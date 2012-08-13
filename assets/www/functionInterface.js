@@ -28,8 +28,13 @@ function titleListAndroid() {
 	editorCtrler.titleList() ;
 }
  
-function getEditorContentAndroid() {  //TODO pour la récupération du texte seul cett fonction a été écrite
+function aaagetEditorContentAndroid() {
 	var editorBody$  = $("#__ed-iframe-body") ;
 	var editorCtrler = editorBody$.prop( '__editorCtl') ;
-	editorCtrler.getEditorContent() ;
+	alert(editorCtrler.getEditorContent()) ;
  }
+ 
+function getEditorContentAndroid() {
+	alert(document.getElementById("__ed-iframe-body").innerHTML);
+}
+ 
