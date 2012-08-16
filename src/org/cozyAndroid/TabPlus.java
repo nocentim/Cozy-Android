@@ -24,34 +24,45 @@ import com.couchbase.touchdb.router.TDURLStreamHandlerFactory;
 
 public class TabPlus extends Activity implements View.OnClickListener{
 
+	/* editText conenant le titre de la note */
 	private EditText newName = null ;
-	private String title;
+	private String title ;
+
+	/*webView contenant et interprétant le javaScript*/
+	private WebView webView ;
+	
+	/*String contenant le contenu de la note, celui retourné par la méthode getContentEditor de l'éditeur*/
+	private String body ;
+	
 	static boolean modif = false ;
 	static boolean retour=false ;
-	private WebView webView;
 	private static ArrayList<String> tags = new ArrayList<String>();
-	private static String formerActivity;
+	private static String formerActivity ;
 	
-	private String body ;
 	
 	public static final String TAG = "TabPlus";
 	// setup clock
-	Calendar cal = null;
-	Date starttime = null;
-	long long_starttime = 0;
+	Calendar cal = null ;
+	Date starttime = null ;
+	long long_starttime = 0 ;
 
 	/*
 	 * TODO voir avec benjamin pour remettre a zero la note
 	 */
 	{
-	    TDURLStreamHandlerFactory.registerSelfIgnoreError();
+	    TDURLStreamHandlerFactory.registerSelfIgnoreError() ;
 		}
 
+	/**
+	 * Méthode appelé lors de la création de l'activité
+	 */
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState) ;
-
-		setContentView(R.layout.plus );	    
+		setContentView(R.layout.plus );	   
+		
 		newName = (EditText) findViewById(R.id.nameNewNote) ;
+		
+		/*On place this comme listener pour les boutons*/
 		findViewById(R.id.clear).setOnClickListener(this); 
 		findViewById(R.id.save).setOnClickListener(this);
 		findViewById(R.id.indent).setOnClickListener(this)     ; 
@@ -60,6 +71,7 @@ public class TabPlus extends Activity implements View.OnClickListener{
 		findViewById(R.id.listNum).setOnClickListener(this)   ; 
 		findViewById(R.id.properties).setOnClickListener(this);
 
+		/*On met*/
 		webView = (WebView) findViewById(R.id.webView) ;
 		webView.getSettings().setJavaScriptEnabled(true) ;  //elle est pas inutile mais eclipse ne le voit pas
 		webView.setWebChromeClient (new chromeclient()) ; 

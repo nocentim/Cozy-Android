@@ -36,5 +36,6 @@ function aaagetEditorContentAndroid() {
  
 function getEditorContentAndroid() {
 	alert(document.getElementById("__ed-iframe-body").innerHTML);
+	//console.log("allo");
 }
  
