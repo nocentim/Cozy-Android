@@ -442,7 +442,9 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 			@Override
 			protected void doInBackground() {
 				if (rev == null) {
+					Log.d(TAG, "creation du dossier...");
 					Replication.couchDbConnector.create(item);
+					Log.d(TAG, "dossier cree");
 				} else {
 					Replication.couchDbConnector.update(item);
 				}

@@ -115,8 +115,9 @@ public class CozySyncFolderAdapter extends CouchbaseViewListAdapter {
 	}
 	
 	protected void setDossier(String name) {
-		CozySyncFolderAdapter.this.viewQuery.key(name);
-		CozySyncFolderAdapter.this.updateListItems();
+		viewQuery.key(name);
+		updateListItems();
+		Log.d("CozySyncFolder","setDossier :" + name);
 	}
 	
 	public void update() {
@@ -131,6 +132,7 @@ public class CozySyncFolderAdapter extends CouchbaseViewListAdapter {
             .getLogger(CouchbaseViewListAdapter.class);
 	protected CouchbaseListChangesAsyncTask couchChangesAsyncTask;
 
+	@Override
 	protected void updateListItems() {
 		//if we're not already in the process of updating the list, start a task to do so
 		if(updateListItemsTask == null) {
