@@ -44,8 +44,8 @@ public class Replication {
 	public static final String byWordAndPathViewName = "ByWordAndPath";
 	
 	//couch internals
-	protected static TDServer server;
-	protected static HttpClient httpClient;
+	public static TDServer server;
+	public static HttpClient httpClient;
 	protected static TDDatabase db;
 	
 	//ektorp impl
@@ -55,7 +55,7 @@ public class Replication {
 	protected static ReplicationCommand pullReplicationCommand;
 
     
-	protected static void NotesView(Context context) {
+	public static void NotesView(Context context) {
 	    String filesDir = context.getFilesDir().getAbsolutePath();
 	    try {
             server = new TDServer(filesDir);
@@ -182,7 +182,7 @@ public class Replication {
 		}, null, "1.0");
 	}
 	
-	protected static void suggestionView(Context context) {
+	public static void suggestionView(Context context) {
 	    
 	    //install a view definition needed by the application
 		db = server.getDatabaseNamed(DATABASE_NOTES);
@@ -231,7 +231,7 @@ public class Replication {
 
 	}*/
 	
-	protected static void ViewByFolder(Context context) {
+	public static void ViewByFolder(Context context) {
 	    db = server.getDatabaseNamed(DATABASE_NOTES);
 	    TDView view1 = db.getViewNamed(String.format("%s/%s", dDocName, byParentViewName));
 	    view1.setMapReduceBlocks(new TDViewMapBlock() {

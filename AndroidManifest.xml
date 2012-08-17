@@ -23,22 +23,22 @@
 
 
         <activity
-            android:name=".TabListe"
+            android:name=".ListeNotes.TabListe"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".TabCalendrier"
+            android:name=".Calendar.TabCalendrier"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".TabPlus"
+            android:name=".NotesEdit.TabPlus"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".TabDossier"
+            android:name=".ListeDossiers.TabDossier"
             android:configChanges="keyboardHidden|orientation"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" >
@@ -54,17 +54,17 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".Properties"
+            android:name=".NotesEdit.Properties"
             android:configChanges="orientation"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".TagNote"
+            android:name=".NotesEdit.TagNote"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
        	</activity>
        	<activity 
-       	    android:name=".NoteByDay"
+       	    android:name=".Calendar.NoteByDay"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
        	</activity>

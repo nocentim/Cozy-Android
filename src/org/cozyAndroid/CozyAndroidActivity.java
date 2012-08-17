@@ -1,5 +1,12 @@
 package org.cozyAndroid;
 
+import org.cozyAndroid.Calendar.NoteByDay;
+import org.cozyAndroid.Calendar.TabCalendrier;
+import org.cozyAndroid.ListeDossiers.TabDossier;
+import org.cozyAndroid.ListeNotes.TabListe;
+import org.cozyAndroid.NotesEdit.TabPlus;
+import org.cozyAndroid.NotesEdit.TagNote;
+
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -52,6 +59,7 @@ public class CozyAndroidActivity extends TabActivity{
 		setupTab("TabTags", new Intent().setClass(this, TabDossier.class),1);
 		setupTab("TabPlus", new Intent().setClass(this, TabPlus.class),2);
 		setupTab("TabCalendrier", new Intent().setClass(this, TabCalendrier.class),3);
+		TabPlus.formerActivity("aucune");
 	}
 
 	public void onResume(){

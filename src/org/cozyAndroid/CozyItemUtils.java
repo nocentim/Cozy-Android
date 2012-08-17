@@ -10,6 +10,7 @@ import java.util.UUID;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.node.JsonNodeFactory;
 import org.codehaus.jackson.node.ObjectNode;
+import org.cozyAndroid.NotesEdit.TabPlus;
 import org.ektorp.UpdateConflictException;
 import org.ektorp.ViewResult.Row;
 

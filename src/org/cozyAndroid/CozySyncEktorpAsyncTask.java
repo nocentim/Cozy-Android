@@ -1,5 +1,6 @@
 package org.cozyAndroid;
 
+import org.cozyAndroid.ListeNotes.TabListe;
 import org.ektorp.DbAccessException;
 import org.ektorp.android.util.EktorpAsyncTask;
 
