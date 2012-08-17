@@ -89,7 +89,7 @@ public class CozyItemUtils {
     }
 	
 	public static void setTitleModif(String s) {
-		titleModif = s;;
+		titleModif = s;
 	}
 	
 	public static void setRev(String Rev){

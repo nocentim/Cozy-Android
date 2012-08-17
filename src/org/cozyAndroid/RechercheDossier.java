@@ -1,6 +1,5 @@
 package org.cozyAndroid;
 
-import org.cozyAndroid.providers.TablesSQL.Dossiers;
 
 import android.app.Activity;
 import android.content.Context;
@@ -35,18 +34,18 @@ public class RechercheDossier extends AutoCompleteTextView {
 	
 	public RechercheDossier(Context context) {
 		super(context);
-		init((Activity) context);
+		//init((Activity) context);
 	}
 	
 	public RechercheDossier(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		init((Activity) context);
+		//init((Activity) context);
 	}
 	
 	public RechercheDossier(Context context, AttributeSet attrs,
 			int defStyle) {
 		super(context, attrs, defStyle);
-		init((Activity) context);
+		//init((Activity) context);
 	}
 	
 	//Creation de la string a afficher de la TextView a partir du cursor
@@ -91,7 +90,7 @@ public class RechercheDossier extends AutoCompleteTextView {
 			if (constraint == null || constraint.equals("")) {
 				return null;
 			}
-			String pattern = constraint.toString().toLowerCase();
+			/*String pattern = constraint.toString().toLowerCase();
 			filterPattern = pattern;
 			String[] projection = {Dossiers._ID};
 			Cursor all = context.managedQuery(Dossiers.CONTENT_URI, projection, null, null, null);
@@ -102,13 +101,14 @@ public class RechercheDossier extends AutoCompleteTextView {
 					String path = temp.getCheminComplet();
 					path = path.toLowerCase();
 					if (path.startsWith(pattern)
-						|| path.matches(".*/" + pattern + ".*")) {
+						|| path.matches(".*//*" + pattern + ".*")) {
 						Object[] id = {all.getInt(0)};
 						filtered.addRow(id);
 					}
 				} while (all.moveToNext());
 			}
-			return filtered;
+			return filtered;*/
+			return null;
 		}
 	};
 	
@@ -117,7 +117,7 @@ public class RechercheDossier extends AutoCompleteTextView {
 	 * Il faut impérativement l'appeler avec d'utiliser la recherche
 	 * @param context L'onglet de gestion des dossiers
 	 */
-	private void init(Activity context) {
+	/*private void init(Activity context) {
 		this.context = context;
 		setThreshold(1);
 		searchAdapter = new SimpleCursorAdapter(
@@ -130,7 +130,7 @@ public class RechercheDossier extends AutoCompleteTextView {
 		searchAdapter.setViewBinder(viewBinder);
 		setValidator(new DossierValidator());
 		
-	}
+	}*/
 	
 	@Override
 	public boolean onKeyDown (int keyCode, KeyEvent event) {

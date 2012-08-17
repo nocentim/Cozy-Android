@@ -1,9 +1,8 @@
 package org.cozyAndroid;
 
-import java.util.ArrayList;
-
 import org.codehaus.jackson.JsonNode;
 import org.ektorp.ViewQuery;
+import org.ektorp.ViewResult;
 import org.ektorp.ViewResult.Row;
 import org.ektorp.impl.StdCouchDbInstance;
 
@@ -13,6 +12,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -23,20 +23,27 @@ import com.couchbase.touchdb.ektorp.TouchDBHttpClient;
 public class TagNote extends Activity implements View.OnClickListener{
 	private ListView listeTags;
 	public static final String TAG = "TagNote";
-	private CozySyncEtiqAdapter adapter;
+	public static CozySyncEtiqAdapter adapter;
 	private EditText tag;
 	private Bundle param;
+	public static ViewResult vResult;
+	public static ViewQuery vQuery = new ViewQuery().
+			designDocId(Replication.dDocId).viewName(Replication.byTagsViewName);
 	
 	public void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tag_note);
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN); 
 		listeTags = (ListView) findViewById(R.id.listTags);
-		findViewById(R.id.oktag).setOnClickListener(this);
+		
+		vResult= Replication.couchDbConnector.queryView(vQuery);
+		listeTags.setAdapter(adapter);
+		adapter.updateListItems();
 		tag = (EditText) findViewById(R.id.TagEdition);
 		param = this.getIntent().getExtras();
-		Replication.TagView(this);
-		startEktorp();
+		findViewById(R.id.oktag).setOnClickListener(this);
 		Replication.startReplications(this);
+
 	}
 	
 	@Override
@@ -71,7 +78,7 @@ public class TagNote extends Activity implements View.OnClickListener{
 			protected void onSuccess() {
 				//attach list adapter to the list and handle clicks
 				ViewQuery viewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.byTagsViewName).descending(true);
-				adapter = new CozySyncEtiqAdapter(TagNote.this, Replication.couchDbConnector, viewQuery, TagNote.this);
+				adapter = new CozySyncEtiqAdapter(Replication.couchDbConnector, viewQuery, TagNote.this);
 				listeTags.setAdapter(adapter);
 				//listeNotes.setOnItemClickListener(TabListe.this);
 				listeTags.setOnItemLongClickListener(deleteItem);

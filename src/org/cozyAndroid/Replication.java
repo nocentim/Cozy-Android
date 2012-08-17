@@ -43,6 +43,7 @@ public class Replication {
 	//couch internals
 	protected static TDServer server;
 	protected static HttpClient httpClient;
+	protected static TDDatabase db;
 	
 	//ektorp impl
 	public static CouchDbInstance dbInstance;
@@ -50,11 +51,6 @@ public class Replication {
 	protected static ReplicationCommand pushReplicationCommand;
 	protected static ReplicationCommand pullReplicationCommand;
 
-	 //static inializer to ensure that touchdb:// URLs are handled properly
-    {
-        TDURLStreamHandlerFactory.registerSelfIgnoreError();
-    }
-	
     
 	protected static void NotesView(Context context) {
 	    String filesDir = context.getFilesDir().getAbsolutePath();
@@ -65,7 +61,7 @@ public class Replication {
         }
 
 	    //install a view definition needed by the application
-	    TDDatabase db = server.getDatabaseNamed(DATABASE_NOTES);
+	    db = server.getDatabaseNamed(DATABASE_NOTES);
 	    TDView view = db.getViewNamed(String.format("%s/%s", dDocName, byDateViewName));
 	    view.setMapReduceBlocks(new TDViewMapBlock() {
 
@@ -106,13 +102,28 @@ public class Replication {
 	                }
         }
     }, null, "1.0");
+	    
+	//Tags View
+	TDView viewByTags = db.getViewNamed(String.format("%s/%s", dDocName, byTagsViewName));
+    viewByTags.setMapReduceBlocks(new TDViewMapBlock() {
+    	
+    	@Override
+        public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
+            Object tagged = document.get("tags");
+            if(tagged != null) {	
+            	if (!tagged.toString().equals("aucun")) {
+            		emitter.emit(tagged.toString(), document);
+            	}
+            }
+    	}
+    }, null, "1.0");
 
 	}
 	
 	protected static void suggestionView(Context context) {
 	    
 	    //install a view definition needed by the application
-	    TDDatabase db = server.getDatabaseNamed(DATABASE_NOTES);
+		db = server.getDatabaseNamed(DATABASE_NOTES);
 	    TDView view = db.getViewNamed(String.format("%s/%s", dDocName, suggestionsViewName));
 	    view.setMapReduceBlocks(new TDViewMapBlock() {
 	    	
@@ -138,7 +149,7 @@ public class Replication {
 		}, "1.0");
 	}
 	
-	protected static void TagView(Context context) {
+	/*protected static void TagView(Context context) {
 	    
 	    //install a view definition needed by the application
 	    TDDatabase db = server.getDatabaseNamed(DATABASE_NOTES);
@@ -148,19 +159,19 @@ public class Replication {
 	    	@Override
             public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
                 Object tagged = document.get("tags");
-                if(tagged != null) {
-                	if (tagged !="aucun") {
+                if(tagged != null) {	
+                	if (!tagged.toString().equals("aucun")) {
                 		emitter.emit(tagged.toString(), document);
                 	}
                 }
 	    	}
 	    }, null, "1.0");
 
-	}
+	}*/
 	
 	protected static void ViewByDay(Context context) {
 	    //install a view definition needed by the application
-	    TDDatabase db = server.getDatabaseNamed(DATABASE_NOTES);
+	    db = server.getDatabaseNamed(DATABASE_NOTES);
 	    TDView view = db.getViewNamed(String.format("%s/%s", dDocName, byDayViewName));
 	    view.setMapReduceBlocks(new TDViewMapBlock() {
 	    	
@@ -179,7 +190,7 @@ public class Replication {
 	}
 	
 	protected static void ViewByFolder(Context context) {
-	    TDDatabase db = server.getDatabaseNamed(DATABASE_NOTES);
+	    db = server.getDatabaseNamed(DATABASE_NOTES);
 	    TDView view1 = db.getViewNamed(String.format("%s/%s", dDocName, byParentViewName));
 	    view1.setMapReduceBlocks(new TDViewMapBlock() {
 	    	

@@ -4,6 +4,7 @@ import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -51,15 +52,42 @@ public class CozyAndroidActivity extends TabActivity{
 		setupTab("TabTags", new Intent().setClass(this, TabDossier.class),1);
 		setupTab("TabPlus", new Intent().setClass(this, TabPlus.class),2);
 		setupTab("TabCalendrier", new Intent().setClass(this, TabCalendrier.class),3);
-		
-
 	}
 
 	public void onResume(){
 		super.onResume();
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 	}
+	
+	/*public void onPause() {
+		super.onPause();
+		Log.d("destroy", "passe par la");
+		System.gc();
+	}*/
+	
+	
+	protected void onDestroy() {
+		Log.v(TAG, "onDestroy");
 
+		//need to stop the async task thats following the changes feed
+		TabListe.adapter.cancelContinuous();
+		NoteByDay.adapter.cancelContinuous();
+		TagNote.adapter.cancelContinuous();
+		TabListe.searchAdapter.cancelContinuous();
+		
+
+		//clean up our http client connection manager
+		if(Replication.httpClient != null) {
+			Replication.httpClient.shutdown();
+		}
+
+		if(Replication.server != null) {
+		    Replication.server.close();
+		}
+
+		super.onDestroy();
+	}
+	
 	public static TabHost gettabHost(){
 		return tabHost;
 	}

@@ -1,30 +1,12 @@
 package org.cozyAndroid;
 
-import java.util.ArrayList;
-
-import org.cozyAndroid.providers.TablesSQL.Notes;
-import org.cozyAndroid.providers.TablesSQL.Suggestions;
-import org.ektorp.ViewQuery;
-
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.database.MatrixCursor;
-import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.FilterQueryProvider;
-import android.widget.ImageView;
 import android.widget.MultiAutoCompleteTextView;
-import android.widget.TextView;
 
 public class RechercheNote extends MultiAutoCompleteTextView {
 	
@@ -106,7 +88,7 @@ public class RechercheNote extends MultiAutoCompleteTextView {
 						
 						@Override
 						public void onClick(View v) {
-							Log.d("rechercheNote", "bouton note cliqué");
+							Log.d("rechercheNote", "bouton note cliquï¿½");
 							String [] projection = {Notes.BODY};
 							Cursor c = context.managedQuery(Notes.CONTENT_URI, projection, Notes._ID + " = " + noteId, null, null);
 							if (c.moveToFirst()) {
@@ -127,7 +109,7 @@ public class RechercheNote extends MultiAutoCompleteTextView {
 						
 						@Override
 						public void onClick(View v) {
-							Log.d("rechercheNote", "bouton dossier cliqué");
+							Log.d("rechercheNote", "bouton dossier cliquï¿½");
 							Intent ouvreDossier = new Intent(context, CozyAndroidActivity.class);
 							ouvreDossier.addCategory("android.intent.category.LAUNCHER");
 							ouvreDossier.putExtra("ouvreDossier",dossierId);

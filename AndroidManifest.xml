@@ -21,9 +21,6 @@
             </intent-filter>
         </activity>
 
-        <provider
-            android:name="org.cozyAndroid.providers.NotesProvider"
-            android:authorities="org.cozyAndroid.providers.NotesProvider" />
 
         <activity
             android:name=".TabListe"

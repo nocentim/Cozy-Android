@@ -28,7 +28,7 @@ public class CozyListByDateAdapter extends CouchbaseViewListAdapter {
 	protected NoteByDay parent;
 
 	public CozyListByDateAdapter(CouchDbConnector couchDbConnector, ViewQuery viewQuery, Context context) {
-		super(couchDbConnector, viewQuery, true);
+		super(couchDbConnector, viewQuery, false);
 		inflater = LayoutInflater.from(context);
 	}
 

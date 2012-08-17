@@ -33,7 +33,7 @@ public class CozySyncFolderAdapter extends CouchbaseViewListAdapter {
 	
 	
 	public CozySyncFolderAdapter(CouchDbConnector couchDbConnector, ViewQuery viewQuery, Context context) {
-		super(couchDbConnector, viewQuery, true);
+		super(couchDbConnector, viewQuery, false);
 		inflater = LayoutInflater.from(context);
 	}
 
@@ -123,7 +123,7 @@ public class CozySyncFolderAdapter extends CouchbaseViewListAdapter {
 
 
 	
-	//Copié-collé du code de CouchbaseViewAdapter avec modification de updateListItem()
+	//Copiï¿½-collï¿½ du code de CouchbaseViewAdapter avec modification de updateListItem()
 	
 	private static final Logger LOG = LoggerFactory
             .getLogger(CouchbaseViewListAdapter.class);

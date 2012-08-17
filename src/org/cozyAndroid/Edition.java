@@ -1,6 +1,5 @@
 package org.cozyAndroid;
 
-import org.cozyAndroid.providers.TablesSQL.Notes;
 
 import android.app.Activity;
 import android.content.ContentValues;
@@ -30,7 +29,7 @@ public class Edition extends Activity {
 		Button cancel = (Button) findViewById(R.id.DeleteButton);
 		cancel.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				getContentResolver().delete(Notes.CONTENT_URI, "_id = " + id, null);
+				//getContentResolver().delete(Notes.CONTENT_URI, "_id = " + id, null);
 				finish();
 			}
 		});
@@ -50,9 +49,9 @@ public class Edition extends Activity {
 	private OnClickListener OKClicked = new OnClickListener() {
 		public void onClick(View v) {
 			ContentValues values = new ContentValues();
-			values.put(Notes.TITLE, name.getText()+ "");
-			values.put(Notes.BODY, body.getText() + "");
-			getContentResolver().update(Notes.CONTENT_URI, values, "_id = " + id, null);
+			//values.put(Notes.TITLE, name.getText()+ "");
+			//values.put(Notes.BODY, body.getText() + "");
+			//getContentResolver().update(Notes.CONTENT_URI, values, "_id = " + id, null);
 			finish();
 		}
 	};

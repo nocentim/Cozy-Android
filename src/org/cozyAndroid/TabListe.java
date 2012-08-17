@@ -1,19 +1,14 @@
 package org.cozyAndroid;
 
-import java.util.ArrayList;
-
 import org.codehaus.jackson.JsonNode;
-import org.cozyAndroid.providers.TablesSQL.Dossiers;
 import org.ektorp.ViewQuery;
 import org.ektorp.ViewResult.Row;
 import org.ektorp.impl.StdCouchDbInstance;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -30,9 +25,10 @@ public class TabListe extends Activity {
 	private int TRI_CHEMIN = 1;
 	private int TRI_DATE = 2;
 	
-	private CozySyncListAdapter adapter;
+	public static CozySyncListAdapter adapter;
 	private ListView listeNotes;
-	
+	private CozySyncEktorpAsyncTask startupTask;
+	public static SuggestionAdapter searchAdapter;
 	
 	
 	public static String TAG = "TabListe";
@@ -105,11 +101,17 @@ public class TabListe extends Activity {
 		super.onResume();
 		CozyItemUtils.setTitleModif("");
 		//Recupperation des dossiers pour les suggestions
-		String projection[] = {Dossiers._ID,Dossiers.NAME,Dossiers.PARENT};
+		/*String projection[] = {Dossiers._ID,Dossiers.NAME,Dossiers.PARENT};
 		Cursor cursor = managedQuery(Dossiers.CONTENT_URI, projection, null, null, Dossiers.NAME + " COLLATE NOCASE");
-		Dossier.newArborescence(cursor);
-
+		Dossier.newArborescence(cursor);*/
 	}
+	
+	/*public void onPause() {
+		super.onPause();
+		System.gc();
+		Log.d("ok", "on sort par la");
+	}*/
+	
 	
 	public void setTri (int tri) {
 		methodeTri = tri;
@@ -222,7 +224,8 @@ public class TabListe extends Activity {
 		Replication.httpClient = new TouchDBHttpClient(Replication.server);
 		Replication.dbInstance = new StdCouchDbInstance(Replication.httpClient);
 
-		CozySyncEktorpAsyncTask startupTask = new CozySyncEktorpAsyncTask() {
+		
+		startupTask = new CozySyncEktorpAsyncTask() {
 
 			@Override
 			protected void doInBackground() {
@@ -235,30 +238,39 @@ public class TabListe extends Activity {
 				ViewQuery viewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.byDateViewName).descending(true);
 				adapter = new CozySyncListAdapter(TabListe.this, Replication.couchDbConnector, viewQuery, TabListe.this);
 				listeNotes.setAdapter(adapter);
+				
 				//adapter for suggestions
 				ViewQuery sViewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.suggestionsViewName).descending(false);
-				SuggestionAdapter searchAdapter = new SuggestionAdapter(Replication.couchDbConnector, sViewQuery, TabListe.this);
+				searchAdapter = new SuggestionAdapter(Replication.couchDbConnector, sViewQuery, TabListe.this);
 				rechercheNote.setAdapter(searchAdapter);
 				
+				// adapter for calendar
 				TabCalendrier.setViewQuery();
 				NoteByDay.adapter = new CozyListByDateAdapter(Replication.couchDbConnector, TabCalendrier.getViewQuery(), TabListe.this);
 
+				// adapter for tag
+				TagNote.adapter = new CozySyncEtiqAdapter(Replication.couchDbConnector, TagNote.vQuery, TabListe.this);
+
+				
 				//adapter for folders
 				//listeNotes.setOnItemClickListener(TabListe.this);
 				listeNotes.setOnItemLongClickListener(deleteItem);
 
-				Replication.startReplications(getBaseContext());
+				Replication.startReplications(getBaseContext());	
 
 				Log.d(TAG, "ektorp started");
 				CozyAndroidActivity.notifyEktorpStarted();
 			}
 		};
 		startupTask.execute();
+		Log.d("ok", "il ne se passera rien ici");
 	}
+	
+	
 	
 	/**
 	 * Handle long-click on item in list
-	 */
+	 */				
 	private AdapterView.OnItemLongClickListener deleteItem = new AdapterView.OnItemLongClickListener() {
 		public boolean onItemLongClick (AdapterView<?> parent, View view, int position, long id) {
 	        Row row = (Row)parent.getItemAtPosition(position);

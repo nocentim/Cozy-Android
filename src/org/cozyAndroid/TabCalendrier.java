@@ -33,7 +33,6 @@ import android.widget.Toast;
 public class TabCalendrier extends Activity {
 	
 	private static final String tag = "TabCalendrier";
-	private Button selectedDayMonthYearButton;
 	private Button currentMonth;
 	private ImageView prevMonth;
 	private ImageView nextMonth;
@@ -58,7 +57,7 @@ public class TabCalendrier extends Activity {
 	}
 	
 	public static void setViewQuery() {
-		dviewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.byDayViewName).descending(true);
+		dviewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.byDayViewName);
 	}
 	
 	public static ViewQuery getViewQuery(){
@@ -80,9 +79,15 @@ public class TabCalendrier extends Activity {
 		((TextView) view).setTextColor(Color.parseColor("#FFFFFF"));
 		view = findViewById(R.id.currentMonth);
 		((TextView) view).setTextColor(Color.parseColor("#FFFFFF"));
+		// Récupération de la vue associée au bouton permettant de passer au mois précédent
+		prevMonth = (ImageView) this.findViewById(R.id.prevMonth);
+		currentMonth = (Button) this.findViewById(R.id.currentMonth);
 		
+		// Récupération de la vue associée au bouton permettant de passer au mois suivant
+		nextMonth = (ImageView) this.findViewById(R.id.nextMonth);
 		
-
+		//Récupération du calendrier en lui-même
+		calendarView = (GridView) this.findViewById(R.id.calendar);
 	}
 	
 	public void onResume() {
@@ -90,27 +95,14 @@ public class TabCalendrier extends Activity {
 		_calendar = Calendar.getInstance(Locale.getDefault());
 		month = _calendar.get(Calendar.MONTH) + 1;
 		year = _calendar.get(Calendar.YEAR);
-		
-		// Récupération de la vue associée au jour selectionné sur le calendrier
-		selectedDayMonthYearButton = (Button) this.findViewById(R.id.selectedDayMonthYear);
-		
-		// Récupération de la vue associée au bouton permettant de passer au mois précédent
-		prevMonth = (ImageView) this.findViewById(R.id.prevMonth);
+	
 		prevMonth.setOnClickListener(prevORnextMonthClicked);
-		currentMonth = (Button) this.findViewById(R.id.currentMonth);
+		nextMonth.setOnClickListener(prevORnextMonthClicked);
 		
 		// permet de fixer le format de date
 		SimpleDateFormat s;
 		s = new SimpleDateFormat("MMMM yyyy",Locale.FRANCE)	;	
-		
 		currentMonth.setText(s.format(_calendar.getTime()));
-		
-		// Récupération de la vue associée au bouton permettant de passer au mois suivant
-		nextMonth = (ImageView) this.findViewById(R.id.nextMonth);
-		nextMonth.setOnClickListener(prevORnextMonthClicked);
-		
-		//Récupération du calendrier en lui-même
-		calendarView = (GridView) this.findViewById(R.id.calendar);
 	
 		calendarAdapter = new GridCellAdapter(getApplicationContext(), R.id.calendar_day_gridcell, month, year);
 		calendarAdapter.notifyDataSetChanged();
@@ -434,7 +426,6 @@ public class TabCalendrier extends Activity {
 				String day = dayMonthYear.substring(0,index0);
 				String month = dayMonthYear.substring(index0+1,index0+index1+1);
 				String year = dayMonthYear.substring(index0+index1+2,dayMonthYear.length());
-				selectedDayMonthYearButton.setText(dayMonthYear);
 				
 				if (day.length() == 1) {
 					day = "0"+day;
