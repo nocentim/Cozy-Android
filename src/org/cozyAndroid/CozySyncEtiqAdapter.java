@@ -27,8 +27,7 @@ public class CozySyncEtiqAdapter extends CouchbaseViewListAdapter {
 	protected TagNote parent;
 	
 	public CozySyncEtiqAdapter(CouchDbConnector couchDbConnector, ViewQuery viewQuery, Context context) {
-		super(couchDbConnector, viewQuery, false);
-		this.parent = parent;
+		super(couchDbConnector, viewQuery, true);
 		inflater = LayoutInflater.from(context);
 	}
 

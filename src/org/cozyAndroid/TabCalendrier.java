@@ -88,6 +88,7 @@ public class TabCalendrier extends Activity {
 		
 		//Récupération du calendrier en lui-même
 		calendarView = (GridView) this.findViewById(R.id.calendar);
+
 	}
 	
 	public void onResume() {

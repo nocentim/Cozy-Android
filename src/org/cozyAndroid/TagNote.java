@@ -23,19 +23,19 @@ import com.couchbase.touchdb.ektorp.TouchDBHttpClient;
 public class TagNote extends Activity implements View.OnClickListener{
 	private ListView listeTags;
 	public static final String TAG = "TagNote";
+	
 	public static CozySyncEtiqAdapter adapter;
 	private EditText tag;
 	private Bundle param;
 	public static ViewResult vResult;
 	public static ViewQuery vQuery = new ViewQuery().
 			designDocId(Replication.dDocId).viewName(Replication.byTagsViewName);
-	
+
 	public void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tag_note);
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN); 
 		listeTags = (ListView) findViewById(R.id.listTags);
-		
 		vResult= Replication.couchDbConnector.queryView(vQuery);
 		listeTags.setAdapter(adapter);
 		adapter.updateListItems();
@@ -56,7 +56,7 @@ public class TagNote extends Activity implements View.OnClickListener{
 		tag.setText(" ");
 		finish();
 	}
-	
+
 	protected void startEktorp() {
 		Log.v(TAG, "starting ektorp");
 

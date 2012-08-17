@@ -140,7 +140,9 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 			ouvreSuivant();
 			break;
 		case R.id.suppr_button :
-			supprimerCourant();
+			if (folderAdapter != null && folderAdapter.getCount() == 0) {
+				supprimerCourant();
+			}
 			break;
 		case R.id.add_button :
 			fenetreCreer();
@@ -183,47 +185,6 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 	}
 	
 	/**
-	 * Supprime le dossier courant et met Ã  jour
-	 * l'historique ainsi que l'interface
-	 */
-	private void supprimerCourant() {
-		String supprimeMoi = getDossierCourant();
-		deleteItem(supprimeMoi);
-		Toast t = Toast.makeText(TabDossier.this, "Dossier " +supprimeMoi + " supprimé", Toast.LENGTH_SHORT);
-		t.show();
-		//position != 0 car la racine ne peut pas etre supprimee
-		position--; 
-		//Mise a jour de l'historique : on enleve toutes les occurences de courant.
-		//Ca marche car courant n'a pas de sous-dossiers :
-		//on ne supprime que des dossiers vides (TODO : est-ce vrai?)
-		for (int i = 1; i < historique.size();) {
-			if (historique.get(i).equals(supprimeMoi)) {
-				historique.remove(i);
-				if (i <= position) {
-					position--;
-				}
-			} else {
-				i++;
-			}
-		}
-		//Il se peut maintenant qu'un dossier soit present 2 fois de suite dans l'historique
-		//On enleve donc les doublons
-		for (int i = 0; i < historique.size() - 1;) {
-			String courant = historique.get(i);
-			String suivant = historique.get(i+1);
-			if (courant.equals(suivant)) {
-				historique.remove(i+1);
-				if (i < position) {
-					position--;
-				}
-			} else {
-				i++;
-			}
-		}
-		majInterface();
-	}
-	
-	/**
 	 * Fait apparaitre une fenetre demandant le nom du dossier a creer
 	 */
 	private void fenetreCreer() {
@@ -261,9 +222,13 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 						Toast t = Toast.makeText(TabDossier.this,
 								"Un dossier de ce nom existe déjà", Toast.LENGTH_SHORT);
 						t.show();
-					} else {
+					} else if (nomValide(nom)){
 						createOrUpdateFolder(nomComplet, courant, null, null);
 						dialog.dismiss();
+					} else {
+						Toast t = Toast.makeText(TabDossier.this,
+								"Un nom de dossier ne peux pas contenir de \'/\'", Toast.LENGTH_SHORT);
+						t.show();
 					}
 				} else {
 					Toast t = Toast.makeText(TabDossier.this, "Entrez un nom", Toast.LENGTH_SHORT);
@@ -275,7 +240,16 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		dialog.show();
 	}
 	
-	
+	/**
+	 * Verifie qu'un nom de dossier est valide
+	 * Pour le moment seul le '/' pose problème
+	 * TODO autres caracteres ?
+	 * @param nom
+	 * @return true si le nom est valide, false sinon
+	 */
+	private boolean nomValide(String nom) {
+		return !nom.contains("/");
+	}
 	
 	/**
 	 * A appeler quand le dossier courant change.
@@ -284,20 +258,19 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 	 */
 	private void majInterface() {
 		String courant = getDossierCourant();
-		
+		folderAdapter.setDossier(courant); 
 		enableButtons();
 		setPathWithLinks(courant);
 		MovementMethod m = path.getMovementMethod();
 	    if ((m == null) || !(m instanceof LinkMovementMethod)) {
 	        path.setMovementMethod(LinkMovementMethod.getInstance());
 	    }
-		folderAdapter.setDossier(courant);
 	}
 	
 	/**
-	 * GÃ¨re l'activation et la visibilitÃ© des boutons
+	 * Gere l'activation et la visibilité des boutons
 	 */
-	private void enableButtons () {
+	public void enableButtons () {
 		if (position == 0) {
 			precedent.setEnabled(false);
 		} else {
@@ -336,6 +309,15 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		}
 		
 		path.setText(pathString);
+		if (dossier.equals("")) {
+			return;
+		}
+		LinkSpan.linkify(path, "Navigateur", new LinkSpan.OnClickListener() {
+			
+			public void onClick() {
+				ouvreDossier("");
+			}
+		});
 		for (int i = 1; i < parents.length - 1; i++) {
 			final int iBis = i;
 			LinkSpan.linkify(path, parents[iBis], new LinkSpan.OnClickListener() {
@@ -383,13 +365,18 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 		}
 	};
 	
-	private void deleteItem(String name) {
-		final String fName = name;
+	
+	/**
+	 * Supprime le dossier courant et met Ã  jour
+	 * l'historique ainsi que l'interface
+	 */
+	private void supprimerCourant() {
+		final String courant = getDossierCourant();
 		CozySyncEktorpAsyncTask deleteItemTask = new CozySyncEktorpAsyncTask() {
 
 			@Override
 			protected void doInBackground() {
-				ViewQuery viewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.FolderbyNameViewName).key(fName);
+				ViewQuery viewQuery = new ViewQuery().designDocId(Replication.dDocId).viewName(Replication.FolderbyNameViewName).key(courant);
 				ViewResult result = Replication.couchDbConnector.queryView(viewQuery);
 				List<Row> rows = result.getRows();
 				if (rows.size() == 0) {
@@ -403,12 +390,44 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 			@Override
 			protected void onSuccess() {
 				Log.d(TAG, "Document created successfully");
+				Toast t = Toast.makeText(TabDossier.this, "Dossier " + courant + " supprimé", Toast.LENGTH_SHORT);
+				t.show();
+				//position != 0 car la racine ne peut pas etre supprimee
+				position--; 
+				//Mise a jour de l'historique : on enleve toutes les occurences de courant.
+				//Ca marche car courant n'a pas de sous-dossiers :
+				//on ne supprime que des dossiers vides (TODO : est-ce vrai?)
+				for (int i = 1; i < historique.size();) {
+					if (historique.get(i).equals(courant)) {
+						historique.remove(i);
+						if (i <= position) {
+							position--;
+						}
+					} else {
+						i++;
+					}
+				}
+				//Il se peut maintenant qu'un dossier soit present 2 fois de suite dans l'historique
+				//On enleve donc les doublons
+				for (int i = 0; i < historique.size() - 1;) {
+					String courant = historique.get(i);
+					String suivant = historique.get(i+1);
+					if (courant.equals(suivant)) {
+						historique.remove(i+1);
+						if (i < position) {
+							position--;
+						}
+					} else {
+						i++;
+					}
+				}
+				majInterface();
 			}
 
 			@Override
 			protected void onUpdateConflict(
 					UpdateConflictException updateConflictException) {
-				Log.d(TAG, "Got an update conflict for: " + fName);
+				Log.d(TAG, "Got an update conflict for: " + courant);
 				Toast t = Toast.makeText(TabDossier.this, "Echec de la suppression", Toast.LENGTH_SHORT);
 				t.show();
 			}
@@ -423,7 +442,9 @@ public class TabDossier extends ListActivity implements View.OnClickListener {
 			@Override
 			protected void doInBackground() {
 				if (rev == null) {
+					Log.d(TAG, "creation du dossier...");
 					Replication.couchDbConnector.create(item);
+					Log.d(TAG, "dossier cree");
 				} else {
 					Replication.couchDbConnector.update(item);
 				}

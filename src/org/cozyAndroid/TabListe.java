@@ -21,9 +21,9 @@ import com.couchbase.touchdb.ektorp.TouchDBHttpClient;
 
 public class TabListe extends Activity {
 	
-	private int TRI_PERTINENCE = 0;
-	private int TRI_CHEMIN = 1;
-	private int TRI_DATE = 2;
+	public static int TRI_PERTINENCE = 0;
+	public static int TRI_CHEMIN = 1;
+	public static int TRI_DATE = 2;
 	
 	public static CozySyncListAdapter adapter;
 	private ListView listeNotes;
@@ -68,17 +68,7 @@ public class TabListe extends Activity {
 		Cursor cursor = managedQuery(Dossiers.CONTENT_URI, projection, null, null, Dossiers.NAME + " COLLATE NOCASE");
 		Dossier.newArborescence(cursor);*/
 		//Tri :
-		TextView textTri= (TextView) findViewById(R.id.textTri);
-		String[] tris = getResources().getStringArray(R.array.sort_array);
-		for (int i = 0; i < tris.length; i++) {
-			final int ii = i;
-			LinkSpan.linkify(textTri, tris[i],new LinkSpan.OnClickListener() {
-				public void onClick() {
-					setTri(ii);
-					//lanceRecherche();
-				}
-			});
-		}
+		setTri(TRI_DATE);
 		
 	}
 	
@@ -115,73 +105,24 @@ public class TabListe extends Activity {
 	
 	public void setTri (int tri) {
 		methodeTri = tri;
+		TextView textTri= (TextView) findViewById(R.id.textTri);
+		textTri.setText(R.string.sort);
+		String[] tris = getResources().getStringArray(R.array.sort_array);
+		for (int i = 0; i < tris.length; i++) {
+			if ( i != methodeTri) {
+				final int ii = i;
+				LinkSpan.linkify(textTri, tris[i],new LinkSpan.OnClickListener() {
+					public void onClick() {
+						setTri(ii);
+						lanceRecherche();
+					}
+				});
+			}
+		}
 	}
 	
-	/*public void lanceRecherche() {
-		String constraint = rechercheNote.getText().toString();
-		String chemin = dansDossier.getText().toString();
-		int idDossier;
-		ArrayList<Integer> dossiersAChercher; 
-		if (chemin.equals("")) {
-			idDossier = 0;
-			dossiersAChercher = null;
-		} else {
-			Dossier d = Dossier.getDossierParChemin(chemin);
-			if (d == null) {
-				Toast t = Toast.makeText(this, "Dossier " + chemin + " introuvable.", Toast.LENGTH_SHORT);
-				t.show();
-				return;
-			}
-			dossiersAChercher = d.getTousLesFils();
-		}
-		String selection = "";
-		if (dossiersAChercher != null && !dossiersAChercher.isEmpty()) {
-			selection = Notes.DOSSIER + " IN (" + dossiersAChercher.get(0);
-			for (int i = 1; i < dossiersAChercher.size(); i++) {
-				selection += "," + dossiersAChercher.get(i);
-			}
-			selection += ")";
-			if (!constraint.matches(" *")) {
-				selection += " AND (";
-			}
-		}
-		if (!constraint.matches(" *")) {
-			String [] mots = constraint.split(" +");
-			for (int i = 0; i < mots.length - 1; i++) {
-				selection += "(" + Notes.TITLE +" LIKE \'%" + mots[i] + "%\' OR " + Notes.BODY +" LIKE \'%" + mots[i] + "%\') AND ";
-			}
-			selection += "(" + Notes.TITLE +" LIKE \'%" + mots[mots.length-1] + "%\' OR " + Notes.BODY +" LIKE \'%" + mots[mots.length-1] + "%\')";
-			if (dossiersAChercher != null && !dossiersAChercher.isEmpty()) {
-				selection += ")";
-			}
-		}
-		ArrayList<Note> note = new ArrayList<Note>();
-		String projection[] = {Notes._ID,Notes.TITLE,Notes.BODY,Notes.DOSSIER};
-		Cursor cursor = managedQuery(Notes.CONTENT_URI, projection, selection, null, null);
-		if (cursor.moveToFirst()) {
-			do {
-				note.add(new Note(cursor)) ;
-			} while (cursor.moveToNext());
-		}
-
-		adapter.setListe(note);
-		adapter.notifyDataSetChanged();
-		
-	}*/
-	
-	private class EditListener implements OnItemClickListener {
-
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
-
-			Note note = (Note) adapter.getItem(position);
-			Intent editer = new Intent(TabListe.this, Edition.class);
-			editer.putExtra("id", note.id);
-			editer.putExtra("titre", note.titre);
-			editer.putExtra("body", note.body);
-			TabListe.this.startActivity(editer);
-		}
-		
+	public void lanceRecherche() {
+		adapter.lanceRecherche(rechercheNote.getText().toString(), methodeTri);
 	}
 	
 	/**
@@ -251,8 +192,6 @@ public class TabListe extends Activity {
 				// adapter for tag
 				TagNote.adapter = new CozySyncEtiqAdapter(Replication.couchDbConnector, TagNote.vQuery, TabListe.this);
 
-				
-				//adapter for folders
 				//listeNotes.setOnItemClickListener(TabListe.this);
 				listeNotes.setOnItemLongClickListener(deleteItem);
 

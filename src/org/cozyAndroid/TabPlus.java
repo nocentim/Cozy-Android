@@ -24,44 +24,45 @@ import com.couchbase.touchdb.router.TDURLStreamHandlerFactory;
 
 public class TabPlus extends Activity implements View.OnClickListener{
 
+	/* editText conenant le titre de la note */
 	private EditText newName = null ;
-	private String title;
+	private String title ;
+
+	/*webView contenant et interprétant le javaScript*/
+	private WebView webView ;
+	
+	/*String contenant le contenu de la note, celui retourné par la méthode getContentEditor de l'éditeur*/
+	private String body ;
+	
 	static boolean modif = false ;
-	static boolean retour=false;
-	private WebView webView;
+	static boolean retour=false ;
 	private static ArrayList<String> tags = new ArrayList<String>();
-	private static String formerActivity;
+	private static String formerActivity ;
+	
 	
 	public static final String TAG = "TabPlus";
 	// setup clock
-	Calendar cal = null;
-	Date starttime = null;
-	long long_starttime = 0;
+	Calendar cal = null ;
+	Date starttime = null ;
+	long long_starttime = 0 ;
 
 	/*
 	 * TODO voir avec benjamin pour remettre a zero la note
 	 */
 	{
-	    TDURLStreamHandlerFactory.registerSelfIgnoreError();
+	    TDURLStreamHandlerFactory.registerSelfIgnoreError() ;
 		}
 
-	public static void addTag(String s) {
-		tags.add(s);
-	}
-	
-	public static void formerActivity(String a) {
-		formerActivity = a;
-	}
-	
-	public static String formerActivity() {
-		return formerActivity;
-	}
-	
+	/**
+	 * Méthode appelé lors de la création de l'activité
+	 */
 	public void onCreate(Bundle saveInstanceState) {
 		super.onCreate(saveInstanceState) ;
-
-		setContentView(R.layout.plus );	    
+		setContentView(R.layout.plus );	   
+		
 		newName = (EditText) findViewById(R.id.nameNewNote) ;
+		
+		/*On place this comme listener pour les boutons*/
 		findViewById(R.id.clear).setOnClickListener(this); 
 		findViewById(R.id.save).setOnClickListener(this);
 		findViewById(R.id.indent).setOnClickListener(this)     ; 
@@ -70,6 +71,7 @@ public class TabPlus extends Activity implements View.OnClickListener{
 		findViewById(R.id.listNum).setOnClickListener(this)   ; 
 		findViewById(R.id.properties).setOnClickListener(this);
 
+		/*On met*/
 		webView = (WebView) findViewById(R.id.webView) ;
 		webView.getSettings().setJavaScriptEnabled(true) ;  //elle est pas inutile mais eclipse ne le voit pas
 		webView.setWebChromeClient (new chromeclient()) ; 
@@ -77,15 +79,7 @@ public class TabPlus extends Activity implements View.OnClickListener{
 		webView.loadUrl("file:///android_asset/www/index.html");
 		}
 
-	public EditText getNewName() {
-		return newName;
-	}
-
 	//TODO pour ouvrir une note existante il faudra charger son body grace Ã  la fonction js setEditorContent
-
-	public void setNewName(String name) {
-		newName.setText(name);
-	}
 
 	public void onResume() {
 		super.onResume();
@@ -99,8 +93,6 @@ public class TabPlus extends Activity implements View.OnClickListener{
 		}
 		
 	}
-
-	//TODO verifier le bon fonctionnement de cette methode suite a toutes les modifications
 
 	public void onClick(View v) {
 		int id = v.getId() ;
@@ -122,7 +114,11 @@ public class TabPlus extends Activity implements View.OnClickListener{
 			title = newName.getText().toString();
 			TabPlus.this.startActivity(properties);
 			break;
+								
 		case R.id.save :
+			webView.loadUrl("javascript:getEditorContentAndroid()") ;
+//			Toast.makeText (TabPlus.this, body, Toast.LENGTH_LONG).show();
+		
 			//TODO il faut remettre le titre et le corps a zero, on peut inverser l'ordre des deux premiers case et
 			//pas mettre de break entre les deux pour qu'aprÃ¨s la sauvegarde il y ai directement la remise Ã  zero
 			String inputTitle = newName.getText().toString();
@@ -183,7 +179,7 @@ public class TabPlus extends Activity implements View.OnClickListener{
 		public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
 			// cette methode vient du livre android  mais elle n'avait pas exactement cette forme,
 			// il peut etre interessant de retourner la voir
-			Toast.makeText (TabPlus.this, "Interception d'une alertejs:\n" + message, Toast.LENGTH_LONG).show();
+			Toast.makeText (TabPlus.this, "Interception d'une alerte js:\n" + message, Toast.LENGTH_LONG).show();
 			result.confirm();
 			return true;
 		}
@@ -205,6 +201,10 @@ public class TabPlus extends Activity implements View.OnClickListener{
 		/** Show a toast from the web page */
 		public void showToast(String toast) {
 			Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
+		}
+		
+		public void setBody (String b) {
+			body = b ;
 		}
 	}
 
@@ -235,6 +235,27 @@ public class TabPlus extends Activity implements View.OnClickListener{
 		};
 		createItemTask.execute();
 	}
+
+	public void setNewName(String name) {
+		newName.setText(name);
+	}
+
+	public static void addTag(String s) {
+		tags.add(s);
+	}
+	
+	public static void formerActivity(String a) {
+		formerActivity = a;
+	}
+	
+	public static String formerActivity() {
+		return formerActivity;
+	}
+	
+	public EditText getNewName() {
+		return newName;
+	}
+
 
 }
 
