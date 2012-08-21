@@ -34,6 +34,13 @@ public class CozyItemUtils {
 		return createOrUpdateNote(title, body, rev, id, tags, ""); 
 	}
     
+    /* Méthode permettant la création ou la modification d'une note.
+     * On crée un noeud de type Json et on rajoute un couple clé/valeur.
+     * Lors d'une création de note, le champ _rev est null et une valeur pour ce champ est créée
+     * automatiquement. Si ce champ n'est pas null, c'est qu'on est en train de modifier une note.
+     * La façon dont est construite la valeur du champ _id assure qu'il n'y aura pas de conflit de note.
+     * (Le caractère "-" permet que la création d'un même id du coté serveur est impossible.
+     */
 	public static JsonNode createOrUpdateNote(String title, String body, String rev, String id, ArrayList<String> tags, String folder) {
 		ObjectNode item = JsonNodeFactory.instance.objectNode();
 		Calendar calendar = GregorianCalendar.getInstance();
@@ -140,7 +147,9 @@ public class CozyItemUtils {
     }
 	
 	/**
-	 * Handle click on item in list
+	 * click sur un item de la liste, on passe les paramètres nécessaires à 
+	 * l'affichage ou à la modification d'une note (champ _id pour identifier la note et
+	 * champ _rev pour le numéro de version).
 	 */
 	class clicknote implements OnItemClickListener {
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {		

@@ -19,29 +19,21 @@ import android.widget.TabHost;
 
 import com.couchbase.touchdb.router.TDURLStreamHandlerFactory;
 
-
-
 public class CozyAndroidActivity extends TabActivity{
-	/** Called when the activity is first created. */
-	private static TabHost tabHost;
+	
+	private static TabHost tabHost;      // tableau des onglets
 	private int [] layoutTab;
 
-	private static CozyAndroidActivity instance;
+	private static boolean ektorpStarted = false;  // booléen permettant le création des dossiers
 
-	private static boolean ektorpStarted = false;
-
-	public static String TAG = "CozyAndroid";
+	private static String TAG = "CozyAndroid";
 
 	{
 		TDURLStreamHandlerFactory.registerSelfIgnoreError();
 	}
 
-	public CozyAndroidActivity() {
-		instance = this;
-	}
-
-	public static Context getContext() {
-		return instance;
+	public static TabHost gettabHost(){
+		return tabHost;
 	}
 
 	@Override
@@ -67,24 +59,18 @@ public class CozyAndroidActivity extends TabActivity{
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 	}
 	
-	/*public void onPause() {
-		super.onPause();
-		Log.d("destroy", "passe par la");
-		System.gc();
-	}*/
-	
 	
 	protected void onDestroy() {
 		Log.v(TAG, "onDestroy");
 
-		//need to stop the async task thats following the changes feed
+		//On arrete les taches de sychronisation qui changent les affichages
 		TabListe.adapter.cancelContinuous();
 		NoteByDay.adapter.cancelContinuous();
 		TagNote.adapter.cancelContinuous();
 		TabListe.searchAdapter.cancelContinuous();
 		
 
-		//clean up our http client connection manager
+		// On arrete le gestionnaire de connexion http
 		if(Replication.httpClient != null) {
 			Replication.httpClient.shutdown();
 		}
@@ -96,9 +82,6 @@ public class CozyAndroidActivity extends TabActivity{
 		super.onDestroy();
 	}
 	
-	public static TabHost gettabHost(){
-		return tabHost;
-	}
 
 	private void setupTab(String tag, Intent intent, int layoutTabIndex) {
 		tabHost.addTab(tabHost.newTabSpec(tag).setIndicator( createTabView(tabHost.getContext(), layoutTabIndex)).setContent(intent));
@@ -108,7 +91,6 @@ public class CozyAndroidActivity extends TabActivity{
 	private View createTabView(final Context context, int layoutTabIndex) {
 		View view = LayoutInflater.from(context).inflate(layoutTab[layoutTabIndex], null);
 		view.refreshDrawableState();
-		//view.setBackgroundResource(R.color.Ensimag);
 		return view;
 	}
 

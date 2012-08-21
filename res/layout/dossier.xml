@@ -5,7 +5,7 @@
     android:paddingTop="2dp"
     android:orientation="vertical" >
 
-    <org.cozyAndroid.RechercheDossier
+    <org.cozyAndroid.ListeDossiers.RechercheDossier
         android:id="@+id/search_dossier"
         android:inputType="textPersonName"
         android:layout_width="fill_parent"

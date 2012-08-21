@@ -211,25 +211,6 @@ public class Replication {
 		}, "1.0");
 	}
 	
-	/*protected static void TagView(Context context) {
-	    
-	    //install a view definition needed by the application
-	    TDDatabase db = server.getDatabaseNamed(DATABASE_NOTES);
-	    TDView view = db.getViewNamed(String.format("%s/%s", dDocName, byTagsViewName));
-	    view.setMapReduceBlocks(new TDViewMapBlock() {
-	    	
-	    	@Override
-            public void map(Map<String, Object> document, TDViewMapEmitBlock emitter) {
-                Object tagged = document.get("tags");
-                if(tagged != null) {	
-                	if (!tagged.toString().equals("aucun")) {
-                		emitter.emit(tagged.toString(), document);
-                	}
-                }
-	    	}
-	    }, null, "1.0");
-
-	}*/
 	
 	public static void ViewByFolder(Context context) {
 	    db = server.getDatabaseNamed(DATABASE_NOTES);
@@ -261,6 +242,8 @@ public class Replication {
 	
 	public static void startReplications(Context context) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		
+		// Envoies des notes sur le serveur distant
 		pushReplicationCommand = new ReplicationCommand.Builder()
 			.source(DATABASE_NOTES)
 			.target(prefs.getString("sync_url", "http://mschoch.iriscouch.com/grocery-test"))
@@ -277,6 +260,7 @@ public class Replication {
 
 		pushReplication.execute();
 
+		// Récupération des notes coté serveur
 		pullReplicationCommand = new ReplicationCommand.Builder()
 			.source(prefs.getString("sync_url", "http://mschoch.iriscouch.com/grocery-test"))
 			.target(DATABASE_NOTES)
@@ -294,7 +278,10 @@ public class Replication {
 		pullReplication.execute();
 	}
 	
-	 public static void deleteGroceryItem(final JsonNode item) {
+	/*
+	 * suppression de l'item
+	 */
+	 public static void deleteCozyItem(final JsonNode item) {
 	        CozySyncEktorpAsyncTask deleteTask = new CozySyncEktorpAsyncTask() {
 
 				@Override
